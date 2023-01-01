@@ -80,7 +80,7 @@ export default function PublicProcess() {
 
           <h2
             className="
-              mt-5
+              mt-3
               text-3xl
               font-bold
               tracking-tight
@@ -102,11 +102,11 @@ export default function PublicProcess() {
 
         <div
           className="
-            mt-12
+            mt-10
             grid
             gap-5
 
-            sm:mt-16
+            sm:mt-12
 
             lg:grid-cols-3
           "
@@ -215,7 +215,7 @@ export default function PublicProcess() {
 
                 <h3
                   className="
-                    mt-6
+                    mt-3
                     text-xl
                     font-semibold
 
@@ -232,7 +232,7 @@ export default function PublicProcess() {
 
                 <p
                   className="
-                    mt-4
+                    mt-3
                     leading-7
 
                     text-muted-foreground

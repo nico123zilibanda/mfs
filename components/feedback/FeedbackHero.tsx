@@ -124,7 +124,7 @@ export default function FeedbackHero() {
           delay: 0.25,
         }}
         className="
-          mt-7
+          mt-3
           inline-flex
           items-center
           rounded-full
@@ -200,7 +200,7 @@ export default function FeedbackHero() {
         }}
         className="
           mx-auto
-          mt-4
+          mt-2
           max-w-2xl
 
           text-sm
@@ -213,7 +213,7 @@ export default function FeedbackHero() {
           dark:text-slate-400
         "
       >
-        Jaza fomu hapa chini kwa usahihi. Baada ya kutuma
+        Baada ya kutuma
         taarifa yako, utapokea namba ya kumbukumbu kwa ajili
         ya ufuatiliaji.
       </motion.p>

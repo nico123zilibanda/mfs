@@ -60,7 +60,7 @@ export default function TrackingPage() {
             {/* Title Badge */}
             <div
               className="
-                mt-6
+                mt-3
                 inline-flex
                 items-center
                 gap-2
@@ -84,7 +84,7 @@ export default function TrackingPage() {
             </div>
 
 
-            <p
+            {/* <p
               className="
                 mx-auto
                 mt-5
@@ -96,7 +96,7 @@ export default function TrackingPage() {
             >
               Weka namba ya kumbukumbu uliyopokea baada ya kutuma taarifa ili
               uone hatua iliyofikiwa.
-            </p>
+            </p> */}
 
           </div>
 
@@ -104,7 +104,7 @@ export default function TrackingPage() {
           {/* Tracking Form Container */}
           <div
             className="
-              mt-10
+              mt-3
               rounded-3xl
               border
               border-slate-200

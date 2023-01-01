@@ -65,7 +65,7 @@ export default function CitizenInformationStep({
   onNext,
 }: CitizenInformationStepProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <StepHeading
         icon={UserRound}
         title="Taarifa za mwananchi"
