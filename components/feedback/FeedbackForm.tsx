@@ -11,10 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createFeedback } from "@/lib/actions/feedback";
 
 // Schema
-import {
-  feedbackSchema,
-  type FeedbackInput,
-} from "@/lib/schemas/feedback";
+import { feedbackSchema, type FeedbackInput } from "@/lib/schemas/feedback";
 
 // Components
 import FeedbackSuccessCard from "@/components/feedback/FeedbackSuccessCard";
@@ -33,20 +30,24 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { FileText, User } from "lucide-react";
 import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/components/ui/radio-group";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "../ui/card";
 
 export default function FeedbackForm() {
   /**
    * Success State
    */
-  const [submittedFeedback, setSubmittedFeedback] =
-    useState<{
-      id: string;
-      referenceNumber: string;
-    } | null>(null);
+  const [submittedFeedback, setSubmittedFeedback] = useState<{
+    id: string;
+    referenceNumber: string;
+  } | null>(null);
 
   /**
    * React Hook Form
@@ -80,16 +81,14 @@ export default function FeedbackForm() {
 
       if (!result.success) {
         if (result.errors) {
-          Object.entries(result.errors).forEach(
-            ([field, messages]) => {
-              if (!messages?.length) return;
+          Object.entries(result.errors).forEach(([field, messages]) => {
+            if (!messages?.length) return;
 
-              setError(field as keyof FeedbackInput, {
-                type: "server",
-                message: messages[0],
-              });
-            }
-          );
+            setError(field as keyof FeedbackInput, {
+              type: "server",
+              message: messages[0],
+            });
+          });
         }
 
         toast.error(result.message);
@@ -103,14 +102,9 @@ export default function FeedbackForm() {
 
       reset();
     } catch (error) {
-      console.error(
-        "[FeedbackForm] Submit Error:",
-        error
-      );
+      console.error("[FeedbackForm] Submit Error:", error);
 
-      toast.error(
-        "Something went wrong while submitting your feedback."
-      );
+      toast.error("Something went wrong while submitting your feedback.");
     }
   }
 
@@ -120,9 +114,7 @@ export default function FeedbackForm() {
   if (submittedFeedback) {
     return (
       <FeedbackSuccessCard
-        referenceNumber={
-          submittedFeedback.referenceNumber
-        }
+        referenceNumber={submittedFeedback.referenceNumber}
         onSubmitAnother={() => {
           setSubmittedFeedback(null);
           reset();
@@ -136,194 +128,228 @@ export default function FeedbackForm() {
    */
   return (
     <Form {...form}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-10"
-      >
-                {/* =========================
-            CITIZEN INFO
-        ========================= */}
-        <section className="space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold">
-              Taarifa za Mwananchi
-            </h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+        {/* =========================
+    CITIZEN INFO
+========================= */}
+        <Card className="border-primary/15 shadow-sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-primary/10 p-2">
+                <User className="h-5 w-5 text-primary" />
+              </div>
 
-            <p className="text-sm text-muted-foreground">
-              Tafadhali jaza taarifa zako kwa usahihi.
-            </p>
-          </div>
+              <div>
+                <CardTitle>Taarifa za Mwananchi</CardTitle>
 
-          <Separator />
-
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Full Name */}
-            <FormField
-              control={control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Jina Kamili</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Mfano: Nicolaus Alex"
-                      disabled={isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Village */}
-            <FormField
-              control={control}
-              name="village"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kijiji</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Mfano: Usevya"
-                      disabled={isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Ward */}
-            <FormField
-              control={control}
-              name="ward"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kata</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Mfano: Inyonga"
-                      disabled={isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Phone */}
-            <FormField
-              control={control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Namba ya Simu</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="0712345678"
-                      disabled={isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </section>
-                {/* =========================
-            COMPLAINT INFO
-        ========================= */}
-        <section className="space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold">
-              Taarifa ya Malalamiko
-            </h2>
-
-            <p className="text-sm text-muted-foreground">
-              Eleza kwa kina kuhusu tukio la rushwa.
-            </p>
-          </div>
+                <CardDescription>
+                  Tafadhali jaza taarifa zako kwa usahihi.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
 
           <Separator />
 
-          {/* Description */}
-          <FormField
-            control={control}
-            name="corruptionDescription"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Maelezo</FormLabel>
+          <CardContent className="space-y-6 pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Full Name */}
+              <FormField
+                control={control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Jina Kamili</FormLabel>
 
-                <FormControl>
-                  <Textarea
-                    className="min-h-32"
-                    placeholder="Eleza kilichotokea..."
-                    disabled={isSubmitting}
-                    {...field}
-                  />
-                </FormControl>
+                    <FormControl>
+                      <Input
+                        className="h-11"
+                        placeholder="Mfano: Nicolaus Alex"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Radio */}
-          <FormField
-            control={control}
-            name="hasBribeRequest"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>
-                  Je, uliombwa rushwa?
-                </FormLabel>
+              {/* Village */}
+              <FormField
+                control={control}
+                name="village"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kijiji</FormLabel>
 
-                <FormControl>
-                  <RadioGroup
-                    value={field.value ? "true" : "false"}
-                    onValueChange={(value) =>
-                      field.onChange(value === "true")
-                    }
-                    disabled={isSubmitting}
-                    className="flex flex-col gap-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem value="true" />
-                      <span>Ndiyo</span>
-                    </div>
+                    <FormControl>
+                      <Input
+                        className="h-11"
+                        placeholder="Mfano: Usevya"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
 
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem value="false" />
-                      <span>Hapana</span>
-                    </div>
-                  </RadioGroup>
-                </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </section>
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Ward */}
+              <FormField
+                control={control}
+                name="ward"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kata</FormLabel>
+
+                    <FormControl>
+                      <Input
+                        className="h-11"
+                        placeholder="Mfano: Inyonga"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Phone */}
+              <FormField
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Namba ya Simu</FormLabel>
+
+                    <FormControl>
+                      <Input
+                        className="h-11"
+                        type="tel"
+                        placeholder="0712345678"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* =========================
-            SUBMIT
-        ========================= */}
-        <div className="pt-4">
+    COMPLAINT INFO
+========================= */}
+        <Card className="border-primary/15 shadow-sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-primary/10 p-2">
+                <FileText className="h-5 w-5 text-primary" />
+              </div>
+
+              <div>
+                <CardTitle>Taarifa ya Malalamiko</CardTitle>
+
+                <CardDescription>
+                  Eleza kwa kina kuhusu tukio unaloripoti.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+
+          <Separator />
+
+          <CardContent className="space-y-6 pt-6">
+            {/* Description */}
+            <FormField
+              control={control}
+              name="corruptionDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Maelezo ya Tukio</FormLabel>
+
+                  <FormControl>
+                    <Textarea
+                      className="min-h-40"
+                      placeholder="Eleza kilichotokea..."
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Radio */}
+            <FormField
+              control={control}
+              name="hasBribeRequest"
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <FormLabel>Je, uliombwa kutoa rushwa?</FormLabel>
+
+                  <FormControl>
+                    <RadioGroup
+                      value={field.value ? "true" : "false"}
+                      onValueChange={(value) =>
+                        field.onChange(value === "true")
+                      }
+                      disabled={isSubmitting}
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center space-x-3 rounded-lg border p-4">
+                        <RadioGroupItem value="true" />
+                        <div>
+                          <p className="font-medium">Ndiyo</p>
+
+                          <p className="text-sm text-muted-foreground">
+                            Niliombwa kutoa rushwa.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3 rounded-lg border p-4">
+                        <RadioGroupItem value="false" />
+                        <div>
+                          <p className="font-medium">Hapana</p>
+
+                          <p className="text-sm text-muted-foreground">
+                            Sikuombwa kutoa rushwa.
+                          </p>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+        {/* =========================
+    SUBMIT
+========================= */}
+        <div className="flex justify-center pt-4">
           <Button
             type="submit"
-            className="w-full"
+            size="lg"
+            className="w-full md:w-auto md:min-w-72"
             disabled={isSubmitting}
           >
-            {isSubmitting
-              ? "Inatuma..."
-              : "Tuma Taarifa"}
+            {isSubmitting ? "Inatuma taarifa..." : "Tuma Taarifa"}
           </Button>
         </div>
       </form>
