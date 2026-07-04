@@ -39,7 +39,7 @@ export async function updateReport(
     return {
       success: true,
       message: "Report updated successfully",
-      data,
+      data: undefined,
     };
   } catch (error) {
     console.error(error);

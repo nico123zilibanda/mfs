@@ -8,6 +8,8 @@ export type ReportListItem = Pick<
   | "id"
   | "referenceNumber"
   | "fullName"
+  | "corruptionDescription"
+  | "hasBribeRequest"
   | "village"
   | "ward"
   | "phone"

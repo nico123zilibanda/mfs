@@ -1,12 +1,15 @@
+
 export type ActionSuccess<T = undefined> = {
   success: true;
-  data: T;
+  data?: T;
   message?: string;
+
 };
 
 export type ActionError = {
   success: false;
   message: string;
+
   errors?: Record<string, string[] | undefined>;
 };
 
