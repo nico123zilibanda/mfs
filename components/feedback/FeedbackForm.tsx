@@ -164,7 +164,7 @@ export default function FeedbackForm() {
                     <FormControl>
                       <Input
                         className="h-11"
-                        placeholder="Mfano: Nicolaus Alex"
+                        placeholder="Andika Majina Yako"
                         disabled={isSubmitting}
                         {...field}
                       />
@@ -186,7 +186,7 @@ export default function FeedbackForm() {
                     <FormControl>
                       <Input
                         className="h-11"
-                        placeholder="Mfano: Usevya"
+                        placeholder="kijiji"
                         disabled={isSubmitting}
                         {...field}
                       />
@@ -210,7 +210,7 @@ export default function FeedbackForm() {
                     <FormControl>
                       <Input
                         className="h-11"
-                        placeholder="Mfano: Inyonga"
+                        placeholder="kata"
                         disabled={isSubmitting}
                         {...field}
                       />
@@ -233,7 +233,7 @@ export default function FeedbackForm() {
                       <Input
                         className="h-11"
                         type="tel"
-                        placeholder="0712345678"
+                        placeholder="0xxxxxxxxx"
                         disabled={isSubmitting}
                         {...field}
                       />
