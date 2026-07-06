@@ -34,15 +34,23 @@ export async function createFeedback(
     const { data, error } = await supabase
       .from("feedback")
       .insert({
-        full_name: validated.data.fullName.trim(),
-        village: validated.data.village.trim(),
-        ward: validated.data.ward.trim(),
-        phone: validated.data.phone.trim(),
-        corruption_description:
-          validated.data.corruptionDescription.trim(),
-        has_bribe_request:
-          validated.data.hasBribeRequest,
-      })
+  full_name:
+    validated.data.fullName.trim() === ""
+      ? null
+      : validated.data.fullName.trim(),
+
+  village: validated.data.village.trim(),
+
+  ward: validated.data.ward.trim(),
+
+  phone: validated.data.phone.trim(),
+
+  corruption_description:
+    validated.data.corruptionDescription.trim(),
+
+  has_bribe_request:
+    validated.data.hasBribeRequest,
+})
       .select("id, reference_number")
       .single();
 

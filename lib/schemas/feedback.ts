@@ -2,10 +2,13 @@ import { z } from "zod";
 
 export const feedbackSchema = z.object({
   fullName: z
-    .string()
-    .trim()
-    .min(3, "Full name is required")
-    .max(100),
+  .string()
+  .trim()
+  .max(100)
+  .refine(
+    (value) => value === "" || value.length >= 3,
+    "Full name must be at least 3 characters"
+  ),
 
   village: z
     .string()

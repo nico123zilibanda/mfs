@@ -20,6 +20,7 @@ import FeedbackSuccessCard from "@/components/feedback/FeedbackSuccessCard";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -159,16 +160,25 @@ export default function FeedbackForm() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Jina Kamili</FormLabel>
+                    <FormLabel>
+                      Jina Kamili{" "}
+                      <span className="text-muted-foreground text-sm">
+                        (Hiari)
+                      </span>
+                    </FormLabel>
 
                     <FormControl>
                       <Input
                         className="h-11"
-                        placeholder="Andika Majina Yako"
+                        placeholder="Andika majina yako (si lazima)"
                         disabled={isSubmitting}
                         {...field}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Unaweza kuacha sehemu hii wazi kama ungependa kutuma
+                      taarifa bila kutaja jina lako.
+                    </FormDescription>
 
                     <FormMessage />
                   </FormItem>
