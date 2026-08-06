@@ -139,7 +139,7 @@ export default function ReportTable({
                 updateParams({ search: "", status: "all" });
               }}
             >
-              <RotateCcw className="mr-2 h-4 w-4" /> Weka upya
+              <RotateCcw className="mr-3 h-5 w-5" /> Weka upya
             </Button>
           )}
         </div>
