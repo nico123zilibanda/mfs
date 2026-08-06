@@ -1,81 +1,38 @@
 import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
 import EmptyState from "@/components/admin/dashboard/empty-state";
 
-import { getReportById } from "@/lib/actions/report-details";
+import ReportHeader from "@/components/admin/report-details/report-header";
+import ReportDetailsLayout from "@/components/admin/report-details/report-details-layout";
 
+import { getReport } from "@/lib/actions/get-report";
 
-export default async function ReportDetailsPage({
-  params,
-}: {
+type ReportDetailsPageProps = {
   params: Promise<{
     id: string;
   }>;
-}) {
+};
+
+export default async function ReportDetailsPage({
+  params,
+}: ReportDetailsPageProps) {
   const { id } = await params;
 
-  const result = await getReportById(id);
+  const result = await getReport(id);
 
   return (
     <main className="space-y-6">
       <DashboardHeader
-        title="Report Details"
-        description="View full citizen complaint information"
+        title="Maelezo ya taarifa"
+        description="Kagua taarifa ya mwananchi na simamia hatua za ushughulikiaji."
       />
-
       {!result.success ? (
-        <EmptyState
-          title="Report not found"
-          description={result.message}
-        />
+        <EmptyState title="Taarifa haijapatikana" description={result.message} />
       ) : (
-        <div className="grid gap-6">
-          <div className="rounded-lg border p-6">
-            <p className="text-sm text-muted-foreground">
-              Reference Number
-            </p>
-            <h2 className="text-xl font-semibold">
-              {result.data.referenceNumber}
-            </h2>
-          </div>
+        <>
+          <ReportHeader report={result.data} />
 
-          <div className="rounded-lg border p-6">
-            <p className="text-sm text-muted-foreground">
-              Citizen Information
-            </p>
-
-            <div className="mt-2 space-y-1">
-              <p className="font-medium">
-                {result.data.fullName}
-              </p>
-              <p className="text-sm">
-                {result.data.phone}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {result.data.village}, {result.data.ward}
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-lg border p-6">
-            <p className="text-sm text-muted-foreground">
-              Complaint Description
-            </p>
-
-            <p className="mt-2 whitespace-pre-line">
-              {result.data.corruptionDescription}
-            </p>
-          </div>
-
-          <div className="rounded-lg border p-6">
-            <p className="text-sm text-muted-foreground">
-              Current Status
-            </p>
-
-            <p className="mt-2 font-medium">
-              {result.data.status}
-            </p>
-          </div>
-        </div>
+          <ReportDetailsLayout report={result.data} />
+        </>
       )}
     </main>
   );

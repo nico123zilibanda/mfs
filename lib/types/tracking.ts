@@ -1,17 +1,20 @@
-export type FeedbackStatus =
-  | "received"
-  | "in_review"
-  | "resolved";
+import type {
+  Feedback,
+  FeedbackStatus,
+} from "./feedback";
 
-export type FeedbackTracking = {
-  id: string;
-  referenceNumber: string;
-  fullName: string;
-  village: string;
-  ward: string;
-  phone: string;
-  corruptionDescription: string;
-  hasBribeRequest: boolean;
-  status: FeedbackStatus;
-  createdAt: string;
-};
+export type { FeedbackStatus };
+
+export type FeedbackTracking = Pick<
+  Feedback,
+  | "id"
+  | "referenceNumber"
+  | "fullName"
+  | "village"
+  | "ward"
+  | "phone"
+  | "corruptionDescription"
+  | "hasBribeRequest"
+  | "status"
+  | "createdAt"
+>;

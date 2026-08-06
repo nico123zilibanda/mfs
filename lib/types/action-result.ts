@@ -1,9 +1,7 @@
-
 export type ActionSuccess<T = undefined> = {
   success: true;
   data: T;
   message?: string;
-
 };
 
 export type ActionError = {
@@ -13,6 +11,4 @@ export type ActionError = {
   errors?: Record<string, string[] | undefined>;
 };
 
-export type ActionResult<T = undefined> =
-  | ActionSuccess<T>
-  | ActionError;
+export type ActionResult<T = undefined> = ActionSuccess<T> | ActionError;

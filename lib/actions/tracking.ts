@@ -1,86 +1,61 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/lib/db/server";
-
 import {
-  trackingSchema,
-  type TrackingInput,
+  actionError,
+  actionFailure,
+  actionSuccess,
+} from "@/lib/actions/utils";
+
+import { trackingSchema } from "@/lib/schemas/tracking";
+
+import { feedbackRepository } from "@/lib/repositories/feedback.repository";
+
+import { mapFeedbackTracking } from "@/lib/mappers/feedback";
+
+import type {
+  TrackingInput,
 } from "@/lib/schemas/tracking";
 
-import type { ActionResult } from "@/lib/types/action-result";
-import type { FeedbackTracking } from "@/lib/types/tracking";
+import type {
+  FeedbackTracking,
+} from "@/lib/types/tracking";
 
-export async function trackFeedbackByReference(
+import type {
+  ActionResult,
+} from "@/lib/types/action-result";
+
+export async function trackFeedback(
   input: TrackingInput
 ): Promise<ActionResult<FeedbackTracking>> {
-  const validated = trackingSchema.safeParse(input);
+  const validation =
+    trackingSchema.safeParse(input);
 
-  if (!validated.success) {
-    return {
-      success: false,
-      message: "Namba ya marejeleo si sahihi.",
-      errors: validated.error.flatten().fieldErrors,
-    };
+  if (!validation.success) {
+    return actionFailure(
+      "Validation failed.",
+      validation.error.flatten().fieldErrors
+    );
   }
 
   try {
-    const supabase = createSupabaseServerClient();
+    const feedback =
+      await feedbackRepository.findByReferenceNumber(
+        validation.data.referenceNumber
+      );
 
-    const { data, error } = await supabase
-      .from("feedback")
-      .select(`
-        id,
-        reference_number,
-        full_name,
-        village,
-        ward,
-        phone,
-        corruption_description,
-        has_bribe_request,
-        status,
-        created_at
-      `)
-      .eq(
-        "reference_number",
-        validated.data.referenceNumber
-      )
-      .eq("is_deleted", false)
-      .single();
-
-    if (error || !data) {
-      return {
-        success: false,
-        message:
-          "Hakuna mrejesho uliopatikana kwa namba hiyo ya marejeleo.",
-      };
+    if (!feedback) {
+      return actionFailure(
+        "No feedback was found with the provided reference number."
+      );
     }
 
-    return {
-      success: true,
-      message:
-        "Mrejesho umepatikana kwa mafanikio.",
-      data: {
-        id: data.id,
-        referenceNumber: data.reference_number,
-        fullName: data.full_name,
-        village: data.village,
-        ward: data.ward,
-        phone: data.phone,
-        corruptionDescription:
-          data.corruption_description,
-        hasBribeRequest:
-          data.has_bribe_request,
-        status: data.status,
-        createdAt: data.created_at,
-      },
-    };
+    return actionSuccess(
+      mapFeedbackTracking(feedback)
+    );
   } catch (error) {
-    console.error("[trackFeedbackByReference]", error);
-
-    return {
-      success: false,
-      message:
-        "Hitilafu ya mfumo imetokea. Tafadhali jaribu tena baadaye.",
-    };
+    return actionError(
+      error,
+      "Failed to track feedback."
+    );
   }
 }

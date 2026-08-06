@@ -1,0 +1,40 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import {
+  actionFailure,
+  executeAction,
+} from "@/lib/actions/utils";
+
+import { feedbackDeleteSchema } from "@/lib/schemas/feedback-delete";
+import { feedbackRepository } from "@/lib/repositories/feedback.repository";
+
+import type { ActionResult } from "@/lib/types/action-result";
+import type { FeedbackDeleteInput } from "@/lib/schemas/feedback-delete";
+
+export async function deleteFeedback(
+  input: FeedbackDeleteInput
+): Promise<ActionResult<void>> {
+  const validation =
+    feedbackDeleteSchema.safeParse(input);
+
+  if (!validation.success) {
+    return actionFailure(
+      "Validation failed.",
+      validation.error.flatten().fieldErrors
+    );
+  }
+
+  return executeAction(async () => {
+    await feedbackRepository.softDelete(
+      validation.data
+    );
+
+    revalidatePath("/dashboard");
+    revalidatePath("/reports");
+    revalidatePath(`/reports/${validation.data.id}`);
+
+    return;
+  }, "Failed to delete feedback.");
+}

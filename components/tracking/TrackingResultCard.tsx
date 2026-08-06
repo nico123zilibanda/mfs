@@ -23,11 +23,11 @@ export default function TrackingResultCard({
     <Card>
       <CardHeader>
         <CardTitle>
-          Taarifa za Mrejesho
+          Taarifa yako
         </CardTitle>
 
         <CardDescription>
-          Hapa unaweza kuona taarifa za mrejesho uliowasilisha pamoja na hali yake ya sasa.
+          Hapa unaweza kuona maelezo ya taarifa uliyowasilisha pamoja na hali yake ya sasa.
         </CardDescription>
       </CardHeader>
 
@@ -35,7 +35,7 @@ export default function TrackingResultCard({
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm text-muted-foreground">
-              Hali ya Mrejesho
+              Hali ya Taarifa
             </p>
 
             <StatusBadge status={feedback.status} />

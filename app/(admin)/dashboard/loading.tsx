@@ -6,7 +6,7 @@ export default function Loading() {
     <main className="space-y-6">
       <DashboardHeader
         title="Dashboard"
-        description="Monitor citizen feedback and system statistics."
+        description="Inapakia muhtasari wa taarifa za wananchi."
       />
 
       <DashboardSkeleton />

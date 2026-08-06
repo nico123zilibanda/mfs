@@ -1,97 +1,19 @@
 "use client";
 
+import { Check, CheckCircle2, ClipboardCopy, Plus } from "lucide-react";
 import { useState } from "react";
-import { CheckCircle2, ClipboardCopy, Check } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-
 import { toast } from "sonner";
 
-type FeedbackSuccessCardProps = {
-  referenceNumber: string;
-  onSubmitAnother: () => void;
-};
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function FeedbackSuccessCard({
-  referenceNumber,
-  onSubmitAnother,
-}: FeedbackSuccessCardProps) {
+type FeedbackSuccessCardProps = { referenceNumber: string; onSubmitAnother: () => void };
+
+export default function FeedbackSuccessCard({ referenceNumber, onSubmitAnother }: FeedbackSuccessCardProps) {
   const [copied, setCopied] = useState(false);
-
   async function copyReference() {
-    try {
-      await navigator.clipboard.writeText(referenceNumber);
-
-      setCopied(true);
-      toast.success("Reference number copied!");
-
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error("Copy failed:", error);
-
-      toast.error("Imeshindwa kunakili namba ya malejereo");
-    }
+    try { await navigator.clipboard.writeText(referenceNumber); setCopied(true); toast.success("Namba ya kumbukumbu imenakiliwa."); setTimeout(() => setCopied(false), 2000); }
+    catch { toast.error("Imeshindwa kunakili namba ya kumbukumbu."); }
   }
-
-  return (
-    <Card className="mx-auto max-w-2xl border-green-200">
-      <CardHeader className="text-center items-center">
-        <div className="mb-4 rounded-full bg-green-100 p-4">
-          <CheckCircle2 className="h-10 w-10 text-green-600" />
-        </div>
-
-        <CardTitle className="text-2xl">
-          Maoni Yamewasilishwa kwa Mafanikio.
-        </CardTitle>
-
-        <CardDescription className="max-w-md">
-        Asante kwa kuripoti ufisadi.
-        Ripoti yako imepokelewa kwa mafanikio.
-        Tafadhali hifadhi nambari yako ya marejeleo kwa ajili ya ufuatiliaji.
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
-        {/* Reference Number Box */}
-        <div className="rounded-lg border bg-muted/40 p-5">
-          <p className="text-sm text-muted-foreground mb-2">
-            Namba ya Marejeleo
-          </p>
-
-          <div className="flex items-center justify-between gap-3">
-            <code className="text-lg font-bold tracking-wider">
-              {referenceNumber}
-            </code>
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={copyReference}
-            >
-              {copied ? (
-                <Check className="h-4 w-4 text-green-600" />
-              ) : (
-                <ClipboardCopy className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* Action Button */}
-        <Button
-          className="w-full"
-          onClick={onSubmitAnother}
-        >
-          Tuma Maoni Mengine
-        </Button>
-      </CardContent>
-    </Card>
-  );
+  return <Card className="mx-auto max-w-2xl border border-emerald-900/15 bg-white shadow-xl shadow-emerald-950/5"><CardHeader className="items-center px-5 pt-8 text-center sm:px-8"><div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100"><CheckCircle2 className="h-9 w-9 text-[#006b3c]" /></div><CardTitle className="text-2xl text-slate-950">Taarifa imetumwa</CardTitle><CardDescription className="max-w-md leading-6">Asante kwa kushiriki. Hifadhi namba hii ya kumbukumbu ili uweze kufuatilia hatua za taarifa yako.</CardDescription></CardHeader><CardContent className="space-y-6 px-5 pb-8 sm:px-8"><div className="rounded-2xl border border-emerald-900/15 bg-emerald-50/70 p-5"><p className="text-sm font-medium text-slate-600">Namba ya kumbukumbu</p><div className="mt-2 flex items-center justify-between gap-3"><code className="text-base font-bold tracking-wider text-[#006b3c] sm:text-lg">{referenceNumber}</code><Button type="button" variant="outline" size="icon" className="border-emerald-900/20 bg-white" onClick={copyReference} aria-label="Nakili namba ya kumbukumbu">{copied ? <Check className="h-4 w-4 text-[#006b3c]" /> : <ClipboardCopy className="h-4 w-4" />}</Button></div></div><Button type="button" className="h-11 w-full bg-[#006b3c] hover:bg-[#005631]" onClick={onSubmitAnother}><Plus className="mr-2 h-4 w-4" /> Tuma taarifa nyingine</Button></CardContent></Card>;
 }

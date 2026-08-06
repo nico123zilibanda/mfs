@@ -14,9 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ongea na DED Mlele",
+  title: {
+    default: "Ongea na DED Mlele",
+    template: "%s | Ongea na DED Mlele",
+  },
   description:
     "Mfumo wa kupokea maoni na taarifa kutoka kwa wananchi wa Halmashauri ya Wilaya ya Mlele.",
+  applicationName: "Ongea na DED Mlele",
+  keywords: ["Mlele", "Katavi", "maoni", "malalamiko", "taarifa za wananchi"],
 };
 
 export default function RootLayout({
@@ -30,12 +35,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            expand={false}
-          />
+        <Toaster position="top-right" richColors closeButton expand={false} />
       </body>
     </html>
   );

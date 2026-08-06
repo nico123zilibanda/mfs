@@ -14,8 +14,8 @@ type TrackingEmptyStateProps = {
 };
 
 export default function TrackingEmptyState({
-  title = "No Feedback Found",
-  description = "We couldn't find any feedback matching the reference number you entered. Please check the reference number and try again.",
+  title = "Taarifa haijapatikana",
+  description = "Hatukupata taarifa yenye namba ya kumbukumbu uliyoweka. Tafadhali hakikisha namba hiyo kisha ujaribu tena.",
 }: TrackingEmptyStateProps) {
   return (
     <Card>
@@ -36,7 +36,7 @@ export default function TrackingEmptyState({
         <ul className="mt-3 list-disc space-y-1 pl-5 text-left">
           <li>Namba ya marejeleo ulioweka ni sahihi.</li>
           <li>Hakuna nafasi ya ziada.</li>
-          <li>Mrejesho umetumwa kikamilifu.</li>
+          <li>Taarifa ilitumwa kikamilifu.</li>
         </ul>
       </CardContent>
     </Card>

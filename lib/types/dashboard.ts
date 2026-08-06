@@ -1,6 +1,4 @@
-import type {
-  Feedback,
-} from "@/lib/types/feedback";
+import type { Feedback } from "./feedback";
 
 export type DashboardStats = {
   total: number;

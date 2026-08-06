@@ -1,56 +1,130 @@
 import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
-import EmptyState from "@/components/admin/dashboard/empty-state";
-import RecentFeedbackTable from "@/components/admin/dashboard/recent-feedback-table";
-import StatsGrid from "@/components/admin/dashboard/stats-grid";
+import DashboardPage from "@/components/admin/dashboard/dashboard-page";
+import PageSection from "@/components/admin/dashboard/page-section";
+import QuickActions from "@/components/admin/dashboard/quick-actions";
+import StatsGrid from "@/components/admin/dashboard/stat-grid";
+
+import DataTableEmpty from "@/components/admin/table/data-table-empty";
+
+import RecentRptTable from "./recent-rpt-table";
 
 import {
   getDashboardStats,
   getRecentFeedback,
 } from "@/lib/actions/dashboard";
 
+
 export default async function AdminPage() {
-  const [statsResult, recentResult] = await Promise.all([
+  const [
+    statsResult,
+    recentResult,
+  ] = await Promise.all([
     getDashboardStats(),
     getRecentFeedback(),
   ]);
 
+
   if (!statsResult.success) {
     return (
-      <main className="space-y-6">
+      <DashboardPage>
+
         <DashboardHeader
-          title="Dashboard"
-          description="Monitor citizen feedback and system statistics."
+          title="Dashibodi"
+          description="Fuatilia taarifa za wananchi na mwenendo wa mfumo."
         />
 
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6">
-          <h2 className="text-lg font-semibold text-destructive">
-            Failed to load dashboard
+
+        <div
+          className="
+            rounded-xl
+            border
+            border-destructive/20
+            bg-destructive/5
+            p-6
+          "
+        >
+
+          <h2
+            className="
+              text-lg
+              font-semibold
+              text-destructive
+            "
+          >
+            Dashibodi haikuweza kupakiwa
           </h2>
 
-          <p className="mt-2 text-sm text-muted-foreground">
+
+          <p
+            className="
+              mt-2
+              text-sm
+              text-muted-foreground
+            "
+          >
             {statsResult.message}
           </p>
+
         </div>
-      </main>
+
+      </DashboardPage>
     );
   }
 
+
+  const recentFeedback =
+    recentResult.success
+      ? recentResult.data
+      : [];
+
+
   return (
-    <main className="space-y-6">
+    <DashboardPage>
+
+      {/* Header */}
+
       <DashboardHeader
-        title="Dashboard"
-        description="Monitor citizen feedback and system statistics."
+        title="Dashibodi"
+        description="Muhtasari wa taarifa za wananchi na hatua za ushughulikiaji."
       />
 
-      <StatsGrid stats={statsResult.data} />
 
-      {recentResult.success && recentResult.data.length > 0 ? (
-        <RecentFeedbackTable
-          feedback={recentResult.data}
-        />
-      ) : (
-        <EmptyState />
-      )}
-    </main>
+
+      {/* Statistics */}
+
+      <StatsGrid
+        stats={statsResult.data}
+      />
+
+
+
+      {/* Recent Reports */}
+
+      <PageSection>
+
+        {recentFeedback.length > 0 ? (
+
+          <RecentRptTable
+            reports={recentFeedback}
+          />
+
+        ) : (
+
+          <DataTableEmpty
+            title="Hakuna taarifa za karibuni"
+            description="Taarifa za wananchi zitaonekana hapa zitakapowasilishwa."
+          />
+
+        )}
+
+      </PageSection>
+
+
+
+      {/* Quick Actions */}
+
+      <QuickActions />
+
+    </DashboardPage>
   );
 }

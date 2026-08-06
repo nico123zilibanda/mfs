@@ -1,10 +1,16 @@
 export const SITE = {
-  name: "Ongea na DED Mlele",
+ council:
+   "Halmashauri ya Wilaya ya Mlele",
 
-  description:
-    "Mfumo wa kupokea maoni na taarifa kutoka kwa wananchi wa Halmashauri ya Wilaya ya Mlele.",
+ portal:
+   "Ongea na DED Mlele",
 
-  phone: "0786077372",
+ description:
+   "Mfumo wa kidigitali wa kupokea maoni, malalamiko na taarifa kutoka kwa wananchi.",
 
-  district: "Mlele",
+ phone:
+   "0786077372",
+
+ location:
+   "Mlele, Katavi"
 };

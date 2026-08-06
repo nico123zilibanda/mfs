@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,7 @@ import {
   type TrackingInput,
 } from "@/lib/schemas/tracking";
 
-import { trackFeedbackByReference } from "@/lib/actions/tracking";
+import { trackFeedback } from "@/lib/actions/tracking";
 
 import type { FeedbackTracking } from "@/lib/types/tracking";
 
@@ -40,6 +41,9 @@ export default function TrackingForm() {
   const [notFound, setNotFound] =
     useState(false);
 
+  const [isPending, startTransition] =
+    useTransition();
+
   const form = useForm<TrackingInput>({
     resolver: zodResolver(trackingSchema),
     defaultValues: {
@@ -47,35 +51,27 @@ export default function TrackingForm() {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: {
-      isSubmitting,
-    },
-  } = form;
-
   async function onSubmit(
     values: TrackingInput
   ) {
     setResult(null);
     setNotFound(false);
 
-    try {
+    startTransition(async () => {
       const response =
-        await trackFeedbackByReference(values);
+        await trackFeedback(values);
 
       if (!response.success) {
         if (response.errors) {
           Object.entries(response.errors).forEach(
             ([field, messages]) => {
-              if (!messages?.length) return;
+              if (!messages?.length) {
+                return;
+              }
 
-              setError(
+              form.setError(
                 field as keyof TrackingInput,
                 {
-                  type: "server",
                   message: messages[0],
                 }
               );
@@ -92,61 +88,60 @@ export default function TrackingForm() {
 
       setResult(response.data);
 
-      toast.success(response.message);
-    } catch (error) {
-      console.error(
-        "[TrackingForm]",
-        error
+      toast.success(
+        response.message ??
+          "Feedback found successfully."
       );
-
-      toast.error(
-        "Hitilafu imetokea wakati wa kutafuta mrejesho."
-      );
-    }
+    });
   }
 
   return (
-    <Form {...form}>
-      <section className="space-y-6">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-8 px-4 py-4"
-        >
-          <FormField
-            control={control}
-            name="referenceNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Namba ya Marejeleo
-                </FormLabel>
-
-                <FormControl>
-                  <Input
-                    placeholder="Mfano: MLL-2026-000001"
-                    disabled={isSubmitting}
-                    {...field}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
+    <>
+      <Form {...form}>
+        <section className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(
+              onSubmit
             )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
+            className="space-y-6 p-4 sm:p-6"
           >
-            <Search className="mr-2 h-4 w-4" />
+            <FormField
+              control={form.control}
+              name="referenceNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-left text-slate-800">
+                    Namba ya Marejeleo
+                  </FormLabel>
 
-            {isSubmitting
-              ? "Inatafuta..."
-              : "Fuatilia Mrejesho"}
-          </Button>
-        </form>
-      </section>
+                  <FormControl>
+                    <Input
+                      placeholder="Mfano: MLE-2026-0001"
+                      disabled={isPending}
+                      className="h-12 border-slate-300 bg-white text-base focus-visible:ring-[#006b3c]"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="h-12 w-full bg-[#006b3c] text-base hover:bg-[#005631]"
+              disabled={isPending}
+            >
+              <Search className="mr-2 h-4 w-4" />
+
+              {isPending
+                ? "Inatafuta..."
+                : "Fuatilia taarifa"}
+            </Button>
+          </form>
+        </section>
+      </Form>
 
       {result && (
         <TrackingResultCard
@@ -157,6 +152,6 @@ export default function TrackingForm() {
       {!result && notFound && (
         <TrackingEmptyState />
       )}
-    </Form>
+    </>
   );
 }

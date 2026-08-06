@@ -1,9 +1,6 @@
 import { Inbox } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 type EmptyStateProps = {
   title?: string;
@@ -22,9 +19,7 @@ export default function EmptyState({
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-semibold">
-            {title}
-          </h2>
+          <h2 className="text-xl font-semibold">{title}</h2>
 
           <p className="max-w-md text-sm text-muted-foreground">
             {description}

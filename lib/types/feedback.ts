@@ -3,7 +3,23 @@ export type FeedbackStatus =
   | "in_review"
   | "resolved";
 
+
+export const FEEDBACK_STATUS = [
+  "received",
+  "in_review",
+  "resolved",
+] as const;
+
+
+export const FEEDBACK_STATUS_LABELS = {
+  received: "Received",
+  in_review: "In Review",
+  resolved: "Resolved",
+} as const;
+
+
 export interface Feedback {
+  [x: string]: any;
   id: string;
 
   referenceNumber: string;
