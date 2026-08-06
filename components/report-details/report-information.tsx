@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import FeedbackStatusBadge from "@/components/admin/status/feedback-status-badge";
+import FeedbackStatusBadge from "@/components/feedback/feedback-status-badge";
 
 import type { Feedback } from "@/lib/types/feedback";
 

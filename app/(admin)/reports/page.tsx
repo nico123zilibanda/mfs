@@ -1,8 +1,8 @@
-import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
-import DashboardPage from "@/components/admin/dashboard/dashboard-page";
-import PageSection from "@/components/admin/dashboard/page-section";
+import DashboardHeader from "@/components/dashboard/dashboard-header";
+import DashboardPage from "@/components/dashboard/dashboard-page";
+import PageSection from "@/components/dashboard/page-section";
 
-import DataTableError from "@/components/admin/table/data-table-error";
+import DataTableError from "@/components/table/data-table-error";
 
 import ReportsTable from "./reports-table";
 

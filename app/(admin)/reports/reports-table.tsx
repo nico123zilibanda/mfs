@@ -1,4 +1,4 @@
-import ReportTable from "@/components/admin/table/report-table";
+import ReportTable from "@/components/table/report-table";
 import type { ReportListItem, ReportsFilters } from "@/lib/types/report";
 
 type Props = { reports: ReportListItem[]; filters: ReportsFilters; pagination: { page: number; totalPages: number; totalItems: number; pageSize: number } };

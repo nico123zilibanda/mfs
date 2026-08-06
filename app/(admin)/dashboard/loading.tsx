@@ -1,5 +1,5 @@
-import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
-import DashboardSkeleton from "@/components/admin/dashboard/dashboard-skeleton";
+import DashboardHeader from "@/components/dashboard/dashboard-header";
+import DashboardSkeleton from "@/components/dashboard/dashboard-skeleton";
 
 export default function Loading() {
   return (

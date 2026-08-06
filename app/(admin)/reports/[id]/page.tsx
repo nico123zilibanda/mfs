@@ -1,8 +1,8 @@
-import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
-import EmptyState from "@/components/admin/dashboard/empty-state";
+import DashboardHeader from "@/components/dashboard/dashboard-header";
+import EmptyState from "@/components/dashboard/empty-state";
 
-import ReportHeader from "@/components/admin/report-details/report-header";
-import ReportDetailsLayout from "@/components/admin/report-details/report-details-layout";
+import ReportHeader from "@/components/report-details/report-header";
+import ReportDetailsLayout from "@/components/report-details/report-details-layout";
 
 import { getReport } from "@/lib/actions/get-report";
 

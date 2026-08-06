@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import Sidebar from "@/components/admin/layout/sidebar";
-import Topbar from "@/components/admin/layout/topbar";
+import Sidebar from "@/components/layout/sidebar";
+import Topbar from "@/components/layout/topbar";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;

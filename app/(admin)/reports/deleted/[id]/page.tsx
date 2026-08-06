@@ -1,15 +1,15 @@
-import DashboardPage from "@/components/admin/dashboard/dashboard-page";
-import DashboardHeader from "@/components/admin/dashboard/dashboard-header";
-import EmptyState from "@/components/admin/dashboard/empty-state";
+import DashboardPage from "@/components/dashboard/dashboard-page";
+import DashboardHeader from "@/components/dashboard/dashboard-header";
+import EmptyState from "@/components/dashboard/empty-state";
 
-import ReportHeader from "@/components/admin/report-details/report-header";
-import ReportInformation from "@/components/admin/report-details/report-information";
-import CitizenInformation from "@/components/admin/report-details/citizen-information";
-import ComplaintInformation from "@/components/admin/report-details/complaint-information";
-import TimelineCard from "@/components/admin/report-details/timeline-card";
+import ReportHeader from "@/components/report-details/report-header";
+import ReportInformation from "@/components/report-details/report-information";
+import CitizenInformation from "@/components/report-details/citizen-information";
+import ComplaintInformation from "@/components/report-details/complaint-information";
+import TimelineCard from "@/components/report-details/timeline-card";
 
-import RestoreCard from "@/components/admin/report-details/management/restore-card";
-import PermanentDeleteDangerZone from "@/components/admin/report-details/management/permanent-delete-danger-zone";
+import RestoreCard from "@/components/report-details/management/restore-card";
+import PermanentDeleteDangerZone from "@/components/report-details/management/permanent-delete-danger-zone";
 
 import { getDeletedReport } from "@/lib/actions/get-deleted-report";
 

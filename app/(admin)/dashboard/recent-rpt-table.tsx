@@ -1,4 +1,4 @@
-import ReportTable from "@/components/admin/table/report-table";
+import ReportTable from "@/components/table/report-table";
 import type { RecentFeedback } from "@/lib/types/dashboard";
 
 export default function RecentReportsTable({ reports }: { reports: RecentFeedback[] }) {

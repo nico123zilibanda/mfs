@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ShieldCheck } from "lucide-react";
 
-import LoginForm from "@/components/admin/auth/LoginForm";
+import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata = { title: "Ingia", description: "Ingia kwenye dashibodi ya usimamizi wa taarifa za Mlele." };
 
