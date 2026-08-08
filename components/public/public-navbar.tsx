@@ -62,7 +62,7 @@ export default function PublicNavbar() {
           })}
 
           <Button asChild className="bg-[#006b3c] hover:bg-[#005631]">
-            <Link href="/login">
+            <Link href="/public/login">
               <LogIn className="mr-2 h-4 w-4" />
               Ingia
             </Link>
