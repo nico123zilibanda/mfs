@@ -19,18 +19,6 @@ export default function LoginHeader() {
           className="object-contain"
         />
       </div>
-
-      {/* Council Logo */}
-      <div className="-mt-4 rounded-full border-4 border-white bg-white shadow-md">
-        <Image
-          src="/images/logo.jpeg"
-          alt="Nembo ya Halmashauri ya Wilaya ya Mlele"
-          width={46}
-          height={46}
-          className="rounded-full"
-        />
-      </div>
-
       {/* System Name */}
       <div className="mt-6 space-y-2">
 
