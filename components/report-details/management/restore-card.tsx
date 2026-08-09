@@ -123,7 +123,7 @@ export default function RestoreCard({
       <CardContent>
 
         <Button
-          className="w-full"
+          className="w-full bg-green-600 hover:bg-green-700 text-white"
           disabled={isPending}
           onClick={handleRestore}
         >
