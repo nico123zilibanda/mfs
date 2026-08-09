@@ -101,7 +101,7 @@ export default function AdminNoteForm({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="font-medium">
+        <h3 className="font-medium text-green-700">
           Admin Note
         </h3>
 
@@ -146,6 +146,7 @@ export default function AdminNoteForm({
           <Button
             type="submit"
             disabled={isPending}
+            className="bg-green-600 hover:bg-green-700 text-white"
           >
             <Save className="mr-2 h-4 w-4" />
 
