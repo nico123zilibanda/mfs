@@ -120,13 +120,13 @@ export default function PermanentDeleteDangerZone({
 
   return (
     <Card
-      className="border-destructive/30"
+      className="border-green-200/30"
     >
 
       <CardHeader>
 
         <CardTitle
-          className="text-destructive"
+          className="text-green-700"
         >
           Danger Zone
         </CardTitle>
@@ -151,8 +151,7 @@ export default function PermanentDeleteDangerZone({
           <AlertDialogTrigger asChild>
 
             <Button
-              variant="destructive"
-              className="w-full"
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
               disabled={isPending}
             >
 
