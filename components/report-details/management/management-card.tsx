@@ -21,8 +21,8 @@ export default function ManagementCard({
   report,
 }: ManagementCardProps) {
   return (
-    <Card className="border-slate-200 shadow-sm">
-      <CardHeader className="border-b border-slate-100">
+    <Card className="border-green-200 shadow-sm">
+      <CardHeader className="border-b border-green-100">
         <CardTitle>
           Usimamizi
         </CardTitle>
