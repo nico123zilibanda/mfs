@@ -1,4 +1,4 @@
-
+ 
 import {
   Card,
   CardContent,
@@ -34,9 +34,9 @@ export default function TimelineCard({
   ];
 
   return (
-    <Card className="border-slate-200 shadow-sm">
+    <Card className="border-green-200 shadow-sm">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="text-green-700">
           Mfuatano wa taarifa
         </CardTitle>
       </CardHeader>
@@ -49,11 +49,11 @@ export default function TimelineCard({
               className="flex gap-4"
             >
               <div className="flex flex-col items-center">
-                <div className="h-3 w-3 rounded-full bg-primary" />
+                <div className="h-3 w-3 rounded-full bg-green-600" />
 
                 {index <
                   timeline.length - 1 && (
-                  <div className="mt-2 h-full w-px bg-border" />
+                  <div className="mt-2 h-full w-px bg-green-100" />
                 )}
               </div>
 
