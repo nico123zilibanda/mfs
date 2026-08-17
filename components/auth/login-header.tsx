@@ -15,6 +15,7 @@ export default function LoginHeader() {
           alt="Nembo ya Taifa"
           width={72}
           height={72}
+          sizes={"20"}
           priority
           className="object-contain"
         />
