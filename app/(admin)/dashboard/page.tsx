@@ -8,31 +8,21 @@ import DataTableEmpty from "@/components/table/data-table-empty";
 
 import RecentRptTable from "./recent-rpt-table";
 
-import {
-  getDashboardStats,
-  getRecentFeedback,
-} from "@/lib/actions/dashboard";
-
+import { getDashboardStats, getRecentFeedback } from "@/lib/actions/dashboard";
 
 export default async function AdminPage() {
-  const [
-    statsResult,
-    recentResult,
-  ] = await Promise.all([
+  const [statsResult, recentResult] = await Promise.all([
     getDashboardStats(),
     getRecentFeedback(),
   ]);
 
-
   if (!statsResult.success) {
     return (
       <DashboardPage>
-
         <DashboardHeader
           title="Dashibodi"
           description="Fuatilia taarifa za wananchi na mwenendo wa mfumo."
         />
-
 
         <div
           className="
@@ -43,7 +33,6 @@ export default async function AdminPage() {
             p-6
           "
         >
-
           <h2
             className="
               text-lg
@@ -54,7 +43,6 @@ export default async function AdminPage() {
             Dashibodi haikuweza kupakiwa
           </h2>
 
-
           <p
             className="
               mt-2
@@ -64,23 +52,15 @@ export default async function AdminPage() {
           >
             {statsResult.message}
           </p>
-
         </div>
-
       </DashboardPage>
     );
   }
 
-
-  const recentFeedback =
-    recentResult.success
-      ? recentResult.data
-      : [];
-
+  const recentFeedback = recentResult.success ? recentResult.data : [];
 
   return (
     <DashboardPage>
-
       {/* Header */}
 
       <DashboardHeader
@@ -88,43 +68,26 @@ export default async function AdminPage() {
         description="Muhtasari wa taarifa za wananchi na hatua za ushughulikiaji."
       />
 
-
-
       {/* Statistics */}
 
-      <StatsGrid
-        stats={statsResult.data}
-      />
-
-
+      <StatsGrid stats={statsResult.data} />
 
       {/* Recent Reports */}
 
       <PageSection>
-
         {recentFeedback.length > 0 ? (
-
-          <RecentRptTable
-            reports={recentFeedback}
-          />
-
+          <RecentRptTable reports={recentFeedback} />
         ) : (
-
           <DataTableEmpty
             title="Hakuna taarifa za karibuni"
             description="Taarifa za wananchi zitaonekana hapa zitakapowasilishwa."
           />
-
         )}
-
       </PageSection>
-
-
 
       {/* Quick Actions */}
 
       <QuickActions />
-
     </DashboardPage>
   );
 }
