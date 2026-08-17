@@ -9,6 +9,7 @@ import DeletedTable from "./deleted-rpt-table";
 import { getDeletedReports } from "@/lib/actions/get-deleted-reports";
 
 import type { ReportsFilters } from "@/lib/types/report";
+import { FEEDBACK_STATUS } from "@/lib/constants/feedback-status";
 
 type ReportsPageProps = {
   searchParams: Promise<{
@@ -23,12 +24,12 @@ export default async function ReportsPage({
 }: ReportsPageProps) {
   const params = await searchParams;
 
+  const page = Number(params.page);
+  const status = params.status;
   const filters: ReportsFilters = {
-    page: Number(params.page) || 1,
+    page: Number.isInteger(page) && page > 0 ? page : 1,
     search: params.search ?? "",
-    status:
-      (params.status as ReportsFilters["status"]) ??
-      "all",
+    status: status && status in FEEDBACK_STATUS ? (status as ReportsFilters["status"]) : "all",
   };
 
   const result = await getDeletedReports(filters);

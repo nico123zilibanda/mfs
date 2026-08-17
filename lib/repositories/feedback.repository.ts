@@ -67,9 +67,6 @@ async function findReports(
 ): Promise<ReportsResponse> {
   const supabase = createSupabaseServerClient();
 
-  const from = (filters.page - 1) * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-
   let query = supabase
     .from(TABLE_NAME)
     .select("*", {
@@ -82,18 +79,23 @@ async function findReports(
   }
 
   if (filters.search.trim()) {
+    const search = filters.search.trim().replace(/[(),]/g, "");
     query = query.or(
       [
-        `reference_number.ilike.%${filters.search}%`,
-        `full_name.ilike.%${filters.search}%`,
-        `phone.ilike.%${filters.search}%`,
-        `village.ilike.%${filters.search}%`,
-        `ward.ilike.%${filters.search}%`,
+        `reference_number.ilike.%${search}%`,
+        `full_name.ilike.%${search}%`,
+        `phone.ilike.%${search}%`,
+        `village.ilike.%${search}%`,
+        `ward.ilike.%${search}%`,
       ].join(","),
     );
   }
 
-  const { data, error, count } = await query
+  const requestedPage = Math.max(1, filters.page);
+  const from = (requestedPage - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  let { data, error, count } = await query
     .order("created_at", {
       ascending: false,
     })
@@ -102,16 +104,32 @@ async function findReports(
 
   throwDatabaseError(error, "fetching feedback reports");
 
+  const totalPages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
+  const page = Math.min(requestedPage, totalPages);
+
+  if (page !== requestedPage) {
+    const correctedFrom = (page - 1) * PAGE_SIZE;
+    const correctedTo = correctedFrom + PAGE_SIZE - 1;
+    const corrected = await query
+      .order("created_at", { ascending: false })
+      .range(correctedFrom, correctedTo)
+      .returns<FeedbackRow[]>();
+
+    data = corrected.data;
+    error = corrected.error;
+    throwDatabaseError(error, "fetching feedback reports");
+  }
+
   return {
     reports: mapFeedbackRows(data ?? []),
 
     total: count ?? 0,
 
-    page: filters.page,
+    page,
 
     pageSize: PAGE_SIZE,
 
-    totalPages: Math.ceil((count ?? 0) / PAGE_SIZE),
+    totalPages,
   };
 }
 

@@ -10,7 +10,7 @@ import { SITE } from "@/lib/constants/site";
 
 export default function PublicHero() {
   return (
-    <section className="relative overflow-hidden bg-slate-950">
+    <section className="relative overflow-hidden bg-blue-300">
       <div className="relative h-162.5 md:h-190">
         <Image
           src="/images/mkurugenzi_banner.png"

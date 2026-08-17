@@ -28,20 +28,20 @@ export default function DataTable({
     <div
       className={cn(
         `
-        overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm
+        overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900
         `,
         className
       )}
     >
       {/* Header */}
-      <div className="space-y-5 border-b border-slate-200 p-5 sm:p-6">
+      <div className="space-y-5 border-b border-slate-200 p-5 sm:p-6 dark:border-slate-800">
         <div className="space-y-1">
-          <h2 className="text-lg font-bold tracking-tight text-slate-950">
+          <h2 className="text-lg font-bold tracking-tight text-slate-950 dark:text-slate-50">
             {title}
           </h2>
 
           {description && (
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {description}
             </p>
           )}

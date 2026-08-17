@@ -17,11 +17,21 @@ import ReviewInformationStep from "./ReviewInformationStep";
 
 export default function FeedbackForm() {
   const [step, setStep] = useState(1);
-  const [submittedFeedback, setSubmittedFeedback] = useState<{ id: string; referenceNumber: string } | null>(null);
+  const [submittedFeedback, setSubmittedFeedback] = useState<{
+    id: string;
+    referenceNumber: string;
+  } | null>(null);
   const [isPending, startTransition] = useTransition();
   const form = useForm<FeedbackInput>({
     resolver: zodResolver(feedbackSchema),
-    defaultValues: { fullName: "", village: "", ward: "", phone: "", corruptionDescription: "", hasBribeRequest: false },
+    defaultValues: {
+      fullName: "",
+      village: "",
+      ward: "",
+      phone: "",
+      corruptionDescription: "",
+      hasBribeRequest: false,
+    },
   });
   const { control, trigger, getValues, handleSubmit, reset, setError } = form;
 
@@ -37,7 +47,11 @@ export default function FeedbackForm() {
         const result = await submitFeedback(values);
         if (!result.success) {
           Object.entries(result.errors ?? {}).forEach(([field, messages]) => {
-            if (messages?.[0]) setError(field as keyof FeedbackInput, { type: "server", message: messages[0] });
+            if (messages?.[0])
+              setError(field as keyof FeedbackInput, {
+                type: "server",
+                message: messages[0],
+              });
           });
           toast.error(result.message ?? "Taarifa haikuweza kutumwa.");
           return;
@@ -50,16 +64,49 @@ export default function FeedbackForm() {
       }
     });
   }
-  if (submittedFeedback) return <FeedbackSuccessCard referenceNumber={submittedFeedback.referenceNumber} onSubmitAnother={() => { setSubmittedFeedback(null); setStep(1); reset(); }} />;
+  if (submittedFeedback)
+    return (
+      <FeedbackSuccessCard
+        referenceNumber={submittedFeedback.referenceNumber}
+        onSubmitAnother={() => {
+          setSubmittedFeedback(null);
+          setStep(1);
+          reset();
+        }}
+      />
+    );
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 py-2 sm:py-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-8 py-2 sm:py-4"
+      >
         <FeedbackStepper currentStep={step} />
         <div className="border-t border-slate-100 pt-8">
-          {step === 1 && <CitizenInformationStep control={control} isPending={isPending} onNext={advanceToCitizenDetails} />}
-          {step === 2 && <ComplaintInformationStep control={control} isPending={isPending} onBack={() => setStep(1)} onNext={advanceToReview} />}
-          {step === 3 && <ReviewInformationStep values={getValues()} isPending={isPending} onBack={() => setStep(2)} onSubmit={handleSubmit(onSubmit)} />}
+          {step === 1 && (
+            <CitizenInformationStep
+              control={control}
+              isPending={isPending}
+              onNext={advanceToCitizenDetails}
+            />
+          )}
+          {step === 2 && (
+            <ComplaintInformationStep
+              control={control}
+              isPending={isPending}
+              onBack={() => setStep(1)}
+              onNext={advanceToReview}
+            />
+          )}
+          {step === 3 && (
+            <ReviewInformationStep
+              values={getValues()}
+              isPending={isPending}
+              onBack={() => setStep(2)}
+              onSubmit={handleSubmit(onSubmit)}
+            />
+          )}
         </div>
       </form>
     </Form>

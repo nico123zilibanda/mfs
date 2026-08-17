@@ -16,7 +16,7 @@ export default function DashboardLayout({
     useState(false);
 
   return (
-    <div className="min-h-screen bg-[#f6f8f7]">
+    <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-slate-50">
       <Sidebar
         open={mobileSidebarOpen}
         onOpenChange={setMobileSidebarOpen}

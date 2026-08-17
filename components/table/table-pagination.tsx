@@ -23,7 +23,13 @@ export default function Pagination({
   page,
   totalPages,
   onPageChange,
+  totalItems = 0,
+  pageSize = 0,
 }: PaginationProps) {
+  const safeTotalPages = Math.max(1, totalPages);
+  const start = totalItems === 0 ? 0 : (page - 1) * pageSize + 1;
+  const end = Math.min(page * pageSize, totalItems);
+
   return (
     <div
       className="
@@ -33,13 +39,14 @@ export default function Pagination({
     >
       {/* PAGE INFO */}
       <div className="text-sm text-muted-foreground">
+        {totalItems > 0 && <span className="mr-3">{start}–{end} kati ya {totalItems}</span>}
         Ukurasa {" "}
         <span className="font-semibold text-foreground">
           {page}
         </span>{" "}
         kati ya {" "}
         <span className="font-semibold text-foreground">
-          {totalPages}
+          {safeTotalPages}
         </span>
       </div>
 
@@ -48,7 +55,7 @@ export default function Pagination({
         <Button
           variant="outline"
           size="sm"
-          disabled={page === 1}
+          disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
           className="gap-1"
         >
@@ -59,7 +66,7 @@ export default function Pagination({
         <Button
           variant="outline"
           size="sm"
-          disabled={page === totalPages}
+          disabled={page >= safeTotalPages}
           onClick={() => onPageChange(page + 1)}
           className="gap-1"
         >

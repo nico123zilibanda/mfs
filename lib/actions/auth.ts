@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { createSupabaseServerClient } from "@/lib/auth/server";
 
 import { loginSchema, type LoginInput } from "@/lib/schemas/auth";
@@ -47,4 +49,16 @@ export async function loginAdmin(input: LoginInput) {
       session: data.session,
     },
   };
+}
+
+export async function logoutAdmin() {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("[logoutAdmin]", error);
+    throw new Error("Imeshindikana kutoka kwenye akaunti. Tafadhali jaribu tena.");
+  }
+
+  redirect("/login");
 }
