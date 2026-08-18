@@ -8,18 +8,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "sonner";
 
-import { Save } from "lucide-react";
+import {
+  Save,
+  ClipboardCheck,
+} from "lucide-react";
 
 import {
   feedbackStatusSchema,
   type FeedbackStatusInput,
 } from "@/lib/schemas/feedback-status";
 
-import { updateFeedbackStatus } from "@/lib/actions/feedback-status";
+import {
+  updateFeedbackStatus,
+} from "@/lib/actions/feedback-status";
 
-import type { Feedback } from "@/lib/types/feedback";
+import type {
+  Feedback,
+} from "@/lib/types/feedback";
 
-import { CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import {
   Form,
@@ -38,7 +51,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+} from "@/components/ui/button";
 
 type StatusFormProps = {
   report: Feedback;
@@ -47,15 +62,15 @@ type StatusFormProps = {
 const STATUS_OPTIONS = [
   {
     value: "received",
-    label: "Received",
+    label: "Imepokelewa",
   },
   {
     value: "in_review",
-    label: "In Review",
+    label: "Inachunguzwa",
   },
   {
     value: "resolved",
-    label: "Resolved",
+    label: "Imetatuliwa",
   },
 ] as const;
 
@@ -71,7 +86,6 @@ export default function StatusForm({
     resolver: zodResolver(
       feedbackStatusSchema
     ),
-
     defaultValues: {
       id: report.id,
       status: report.status,
@@ -89,9 +103,7 @@ export default function StatusForm({
         if (result.errors) {
           Object.entries(result.errors).forEach(
             ([field, messages]) => {
-              if (!messages?.length) {
-                return;
-              }
+              if (!messages?.length) return;
 
               form.setError(
                 field as keyof FeedbackStatusInput,
@@ -105,7 +117,7 @@ export default function StatusForm({
 
         toast.error(
           result.message ??
-            "Failed to update status."
+            "Failed to update report status."
         );
 
         return;
@@ -113,7 +125,7 @@ export default function StatusForm({
 
       toast.success(
         result.message ??
-          "Status updated successfully."
+          "Report status updated successfully."
       );
 
       router.refresh();
@@ -121,82 +133,84 @@ export default function StatusForm({
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="font-medium">
-          Status
-        </h3>
+    <Card className="border-border shadow-sm">
+      <CardHeader className="border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40">
+            <ClipboardCheck className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+          </div>
 
-        <CardDescription>
-          Update the current status of
-          this report.
-        </CardDescription>
-      </div>
+          <div>
+            <CardTitle className="text-lg">
+              Hali ya Taarifa
+            </CardTitle>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(
-            onSubmit
-          )}
-          className="space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Report Status
-                </FormLabel>
+            <CardDescription>
+              Sasisha hali ya sasa ya taarifa hii.
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
 
-                <Select
-                  value={field.value}
-                  onValueChange={
-                    field.onChange
-                  }
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-
-                  <SelectContent>
-                    {STATUS_OPTIONS.map(
-                      (status) => (
-                        <SelectItem
-                          key={
-                            status.value
-                          }
-                          value={
-                            status.value
-                          }
-                        >
-                          {status.label}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            disabled={isPending}
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
           >
-            <Save className="mr-2 h-4 w-4" />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Chagua Hali
+                  </FormLabel>
 
-            {isPending
-              ? "Saving..."
-              : "Save Status"}
-          </Button>
-        </form>
-      </Form>
-    </div>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={isPending}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chagua hali..." />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {STATUS_OPTIONS.map(
+                        (status) => (
+                          <SelectItem
+                            key={status.value}
+                            value={status.value}
+                          >
+                            {status.label}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+            >
+              <Save className="mr-2 h-4 w-4" />
+
+              {isPending
+                ? "Inahifadhi..."
+                : "Hifadhi Mabadiliko"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

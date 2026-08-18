@@ -1,6 +1,6 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/lib/db/server";
+import { createSupabaseServerClient } from "@/lib/auth/server";
 
 import type { ActionResult } from "@/lib/types/action-result";
 import type { DashboardStats, RecentFeedback } from "@/lib/types/dashboard";

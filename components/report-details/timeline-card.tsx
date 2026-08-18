@@ -1,4 +1,8 @@
- 
+import {
+  CalendarClock,
+  CheckCircle2,
+} from "lucide-react";
+
 import {
   Card,
   CardContent,
@@ -24,46 +28,58 @@ export default function TimelineCard({
 }: TimelineCardProps) {
   const timeline = [
     {
-      title: "Imetumwa",
+      title: "Taarifa Imewasilishwa",
+      description: "Mwananchi aliwasilisha taarifa kupitia mfumo.",
       date: report.createdAt,
     },
     {
-      title: "Ilisasishwa",
+      title: "Taarifa Ilisasishwa",
+      description: "Taarifa ilipokea mabadiliko ya mwisho.",
       date: report.updatedAt,
     },
   ];
 
   return (
-    <Card className="border-green-200 shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-green-700">
-          Mfuatano wa taarifa
+    <Card className="border-border shadow-sm">
+      <CardHeader className="border-b border-border">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <CalendarClock className="h-5 w-5 text-emerald-700 dark:text-emerald-500" />
+          Mfuatano wa Taarifa
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <div className="space-y-6">
+      <CardContent className="pt-6">
+        <div className="relative">
           {timeline.map((event, index) => (
             <div
               key={event.title}
-              className="flex gap-4"
+              className="relative flex gap-5 pb-8 last:pb-0"
             >
-              <div className="flex flex-col items-center">
-                <div className="h-3 w-3 rounded-full bg-green-600" />
+              {/* Timeline */}
+              <div className="relative flex flex-col items-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/40">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+                </div>
 
-                {index <
-                  timeline.length - 1 && (
-                  <div className="mt-2 h-full w-px bg-green-100" />
+                {index !== timeline.length - 1 && (
+                  <div className="mt-2 h-full w-px bg-border" />
                 )}
               </div>
 
-              <div className="pb-6">
-                <p className="font-medium">
-                  {event.title}
-                </p>
+              {/* Content */}
+              <div className="flex-1 rounded-xl border border-border bg-muted/20 p-4">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="font-semibold text-foreground">
+                    {event.title}
+                  </h3>
 
-                <p className="text-sm text-muted-foreground">
-                  {formatDate(event.date)}
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {formatDate(event.date)}
+                  </span>
+                </div>
+
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {event.description}
                 </p>
               </div>
             </div>

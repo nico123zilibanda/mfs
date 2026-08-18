@@ -3,11 +3,9 @@
 import { redirect } from "next/navigation";
 
 import { createSupabaseServerClient } from "@/lib/auth/server";
-
-import { loginSchema, type LoginInput } from "@/lib/schemas/auth";
+import { loginSchema, LoginInput } from "@/lib/schemas/auth";
 
 export async function loginAdmin(input: LoginInput) {
-  // 1. Validate input
   const validated = loginSchema.safeParse(input);
 
   if (!validated.success) {
@@ -17,48 +15,32 @@ export async function loginAdmin(input: LoginInput) {
     };
   }
 
-  const { email, password } = validated.data;
-
-  // 2. Create Supabase SSR client
   const supabase = await createSupabaseServerClient();
 
-  // 3. Attempt login
-  const { data, error } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  const { error } = await supabase.auth.signInWithPassword({
+    email: validated.data.email,
+    password: validated.data.password,
+  });
 
-  // 4. Handle error
-  if (error || !data.session) {
-    console.error("[loginAdmin]", error);
+  if (error) {
+    console.error(error);
 
     return {
       success: false,
-      message:
-        "Invalid email or password. Please try again.",
+      message: "Invalid email or password.",
     };
   }
 
-  // 5. Success
   return {
     success: true,
     message: "Login successful.",
-    data: {
-      user: data.user,
-      session: data.session,
-    },
   };
 }
 
 export async function logoutAdmin() {
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signOut();
 
-  if (error) {
-    console.error("[logoutAdmin]", error);
-    throw new Error("Imeshindikana kutoka kwenye akaunti. Tafadhali jaribu tena.");
-  }
+  await supabase.auth.signOut();
 
   redirect("/login");
 }

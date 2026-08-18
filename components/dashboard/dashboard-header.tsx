@@ -12,17 +12,35 @@ export default function DashboardHeader({
   action,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#006b3c]">Usimamizi wa taarifa</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{title}</h1>
+    <div className="flex flex-col gap-6 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="space-y-3">
+        {/* Government Section Label */}
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-1 rounded-full bg-emerald-700" />
 
-        {description ? (
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">{description}</p>
-        ) : null}
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-500">
+            Mfumo wa Usimamizi wa Taarifa
+          </p>
+        </div>
+
+        {/* Page Title */}
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          {title}
+        </h1>
+
+        {/* Page Description */}
+        {description && (
+          <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
+            {description}
+          </p>
+        )}
       </div>
 
-      {action ? <div className="flex items-center gap-2">{action}</div> : null}
+      {action && (
+        <div className="flex shrink-0 items-center gap-2">
+          {action}
+        </div>
+      )}
     </div>
   );
 }

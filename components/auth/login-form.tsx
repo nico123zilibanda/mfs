@@ -52,7 +52,8 @@ export default function LoginForm() {
 
       toast.success(result.message);
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
+      router.refresh();
     } catch {
       toast.error("Something went wrong. Please try again.");
     }

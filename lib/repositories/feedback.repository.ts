@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/lib/db/server";
+import { createSupabaseServerClient } from "@/lib/auth/server";
 import { mapFeedbackRow, mapFeedbackRows } from "@/lib/db/mappers";
 
 import type { FeedbackRow } from "@/lib/db/types";
@@ -18,7 +18,7 @@ async function findFeedbackById(
   isDeleted: boolean
 ): Promise<Feedback | null> {
   const supabase =
-    createSupabaseServerClient();
+    await createSupabaseServerClient();
 
   const { data, error } =
     await supabase
@@ -65,7 +65,7 @@ async function findReports(
   filters: ReportsFilters,
   isDeleted: boolean,
 ): Promise<ReportsResponse> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   let query = supabase
     .from(TABLE_NAME)
@@ -146,7 +146,7 @@ async function findDeleted(
 }
 
 async function create(input: FeedbackInput): Promise<Feedback> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from(TABLE_NAME)
@@ -172,7 +172,7 @@ async function create(input: FeedbackInput): Promise<Feedback> {
 }
 
 async function updateStatus(input: FeedbackStatusInput): Promise<Feedback> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from(TABLE_NAME)
@@ -190,7 +190,7 @@ async function updateStatus(input: FeedbackStatusInput): Promise<Feedback> {
 }
 
 async function updateAdminNote(input: FeedbackNoteInput): Promise<Feedback> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from(TABLE_NAME)
@@ -208,7 +208,7 @@ async function updateAdminNote(input: FeedbackNoteInput): Promise<Feedback> {
 }
 
 async function softDelete(input: FeedbackDeleteInput): Promise<void> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase
     .from(TABLE_NAME)
@@ -222,7 +222,7 @@ async function softDelete(input: FeedbackDeleteInput): Promise<void> {
 }
 
 async function restore(input: FeedbackDeleteInput): Promise<void> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase
     .from(TABLE_NAME)
@@ -238,7 +238,7 @@ async function restore(input: FeedbackDeleteInput): Promise<void> {
 async function permanentlyDelete(
   input: FeedbackDeleteInput
 ): Promise<void> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase
     .from(TABLE_NAME)
@@ -255,7 +255,7 @@ async function permanentlyDelete(
 async function findByReferenceNumber(
   referenceNumber: string
 ): Promise<Feedback | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from(TABLE_NAME)

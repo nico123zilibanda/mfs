@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-
 import { cn } from "@/lib/utils";
 
 type StatsCardProps = {
@@ -24,28 +23,87 @@ export default function StatsCard({
   return (
     <Card
       className={cn(
-        "border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
-        className,
+        `
+        group
+        relative
+        overflow-hidden
+        rounded-3xl
+        border
+        border-border
+        bg-card
+        shadow-sm
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:border-emerald-500/40
+        hover:shadow-xl
+        `,
+        className
       )}
     >
-      <CardContent className="p-5 sm:p-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-slate-500">{title}</p>
+      {/* Government Green Accent */}
+      <div
+        className="
+          absolute
+          left-0
+          top-0
+          h-full
+          w-1
+          origin-top
+          scale-y-0
+          bg-emerald-700
+          transition-transform
+          duration-300
+          group-hover:scale-y-100
+        "
+      />
 
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950">{value}</h2>
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">
+              {title}
+            </p>
+
+            <h2 className="mt-2 text-4xl font-bold tracking-tight text-card-foreground">
+              {value}
+            </h2>
           </div>
 
-          <div className="rounded-xl bg-emerald-50 p-3">
+          <div
+            className="
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-2xl
+              bg-linear-to-br
+              from-emerald-600
+              via-emerald-700
+              to-green-800
+              shadow-lg
+              transition-transform
+              duration-300
+              group-hover:scale-110
+            "
+          >
             <Icon
-              className={cn("h-6 w-6 text-[#006b3c]", iconClassName)}
+              className={cn(
+                "h-7 w-7 text-white",
+                iconClassName
+              )}
             />
           </div>
         </div>
 
-        {description ? (
-          <p className="mt-4 text-sm text-slate-500">{description}</p>
-        ) : null}
+        {description && (
+          <div className="mt-6 border-t border-border pt-4">
+            <p className="text-sm leading-6 text-muted-foreground">
+              {description}
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

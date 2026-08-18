@@ -8,18 +8,32 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "sonner";
 
-import { Save } from "lucide-react";
+import {
+  Lock,
+  Save,
+  StickyNote,
+} from "lucide-react";
 
 import {
   feedbackNoteSchema,
   type FeedbackNoteInput,
 } from "@/lib/schemas/feedback-note";
 
-import { updateFeedbackNote } from "@/lib/actions/feedback-note";
+import {
+  updateFeedbackNote,
+} from "@/lib/actions/feedback-note";
 
-import type { Feedback } from "@/lib/types/feedback";
+import type {
+  Feedback,
+} from "@/lib/types/feedback";
 
-import { CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import {
   Form,
@@ -30,8 +44,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import {
+  Textarea,
+} from "@/components/ui/textarea";
+
+import {
+  Button,
+} from "@/components/ui/button";
 
 type AdminNoteFormProps = {
   report: Feedback;
@@ -40,6 +59,7 @@ type AdminNoteFormProps = {
 export default function AdminNoteForm({
   report,
 }: AdminNoteFormProps) {
+
   const router = useRouter();
 
   const [isPending, startTransition] =
@@ -60,16 +80,18 @@ export default function AdminNoteForm({
     values: FeedbackNoteInput
   ) {
     startTransition(async () => {
+
       const result =
         await updateFeedbackNote(values);
 
       if (!result.success) {
+
         if (result.errors) {
+
           Object.entries(result.errors).forEach(
             ([field, messages]) => {
-              if (!messages?.length) {
-                return;
-              }
+
+              if (!messages?.length) return;
 
               form.setError(
                 field as keyof FeedbackNoteInput,
@@ -77,8 +99,10 @@ export default function AdminNoteForm({
                   message: messages[0],
                 }
               );
+
             }
           );
+
         }
 
         toast.error(
@@ -95,67 +119,128 @@ export default function AdminNoteForm({
       );
 
       router.refresh();
+
     });
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="font-medium text-green-700">
-          Admin Note
-        </h3>
+    <Card className="border-border shadow-sm">
 
-        <CardDescription>
-          Add internal notes for this
-          report. These notes are only
-          visible to administrators.
-        </CardDescription>
-      </div>
+      <CardHeader className="border-b border-border">
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(
-            onSubmit
-          )}
-          className="space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="adminNote"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Internal Note
-                </FormLabel>
+        <div className="flex items-center gap-3">
 
-                <FormControl>
-                  <Textarea
-                    placeholder="Write an internal note..."
-                    rows={5}
-                    disabled={isPending}
-                    {...field}
-                    value={field.value ?? ""}
-                  />
-                </FormControl>
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40">
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <StickyNote className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
 
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="bg-green-600 hover:bg-green-700 text-white"
+          </div>
+
+          <div>
+
+            <CardTitle className="text-lg">
+              Maelezo ya Afisa
+            </CardTitle>
+
+            <CardDescription>
+              Ongeza maelezo ya ndani kuhusu taarifa hii.
+            </CardDescription>
+
+          </div>
+
+        </div>
+
+      </CardHeader>
+
+      <CardContent className="space-y-6 pt-6">
+
+        {/* Confidential Notice */}
+
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/40 dark:bg-amber-950/20">
+
+          <Lock className="mt-0.5 h-5 w-5 text-amber-600 dark:text-amber-400" />
+
+          <div>
+
+            <p className="font-medium text-foreground">
+              Maelezo ya Ndani
+            </p>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              Maelezo haya yanaonekana kwa wasimamizi wa mfumo pekee
+              na hayataonekana kwa mwananchi aliyewasilisha taarifa.
+            </p>
+
+          </div>
+
+        </div>
+
+        <Form {...form}>
+
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
           >
-            <Save className="mr-2 h-4 w-4" />
 
-            {isPending
-              ? "Saving..."
-              : "Save Note"}
-          </Button>
-        </form>
-      </Form>
-    </div>
+            <FormField
+              control={form.control}
+              name="adminNote"
+              render={({ field }) => (
+
+                <FormItem>
+
+                  <FormLabel>
+                    Maelezo ya Afisa
+                  </FormLabel>
+
+                  <FormControl>
+
+                    <Textarea
+                      rows={6}
+                      disabled={isPending}
+                      placeholder="Andika maelezo ya ndani kuhusu taarifa hii..."
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+
+                  </FormControl>
+
+                  <FormMessage />
+
+                </FormItem>
+
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={
+                isPending ||
+                !form.formState.isDirty
+              }
+              className="
+                w-full
+                bg-emerald-700
+                hover:bg-emerald-800
+                dark:bg-emerald-600
+                dark:hover:bg-emerald-700
+              "
+            >
+
+              <Save className="mr-2 h-4 w-4" />
+
+              {isPending
+                ? "Inahifadhi..."
+                : "Hifadhi Maelezo"}
+
+            </Button>
+
+          </form>
+
+        </Form>
+
+      </CardContent>
+
+    </Card>
   );
 }

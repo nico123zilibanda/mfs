@@ -14,19 +14,9 @@ import {
 } from "sonner";
 
 import {
+  AlertTriangle,
   Trash2,
 } from "lucide-react";
-
-
-import {
-  permanentlyDeleteFeedback,
-} from "@/lib/actions/feedback-permanent-delete";
-
-
-import type {
-  Feedback,
-} from "@/lib/types/feedback";
-
 
 import {
   AlertDialog,
@@ -40,11 +30,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-
 import {
   Button,
 } from "@/components/ui/button";
-
 
 import {
   Card,
@@ -53,6 +41,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import {
+  permanentlyDeleteFeedback,
+} from "@/lib/actions/feedback-permanent-delete";
+
+import type {
+  Feedback,
+} from "@/lib/types/feedback";
 
 
 type PermanentDeleteDangerZoneProps = {
@@ -65,7 +61,6 @@ export default function PermanentDeleteDangerZone({
 }: PermanentDeleteDangerZoneProps) {
 
   const router = useRouter();
-
 
   const [
     open,
@@ -107,11 +102,9 @@ export default function PermanentDeleteDangerZone({
 
     setOpen(false);
 
-
     router.replace(
       "/reports/deleted"
     );
-
 
     router.refresh();
   }
@@ -119,23 +112,59 @@ export default function PermanentDeleteDangerZone({
 
 
   return (
-    <Card
-      className="border-green-200/30"
-    >
+    <Card className="overflow-hidden border-red-200 shadow-sm dark:border-red-900/50">
 
-      <CardHeader>
-
-        <CardTitle
-          className="text-green-700"
-        >
-          Danger Zone
-        </CardTitle>
+      {/* Danger Accent */}
+      <div className="h-1 w-full bg-red-600" />
 
 
-        <CardDescription>
-          Permanently delete this report.
-          This action cannot be undone.
-        </CardDescription>
+      <CardHeader className="space-y-3">
+
+        <div className="flex items-center gap-3">
+
+          <div
+            className="
+              flex
+              h-11
+              w-11
+              items-center
+              justify-center
+              rounded-xl
+              bg-red-100
+              dark:bg-red-950/40
+            "
+          >
+            <AlertTriangle
+              className="
+                h-5
+                w-5
+                text-red-700
+                dark:text-red-400
+              "
+            />
+          </div>
+
+
+          <div>
+
+            <CardTitle className="text-lg text-red-700 dark:text-red-400">
+              Danger Zone
+            </CardTitle>
+
+
+            <CardDescription>
+              Permanent deletion action
+            </CardDescription>
+
+          </div>
+
+        </div>
+
+
+        <p className="text-sm leading-6 text-muted-foreground">
+          Permanently remove this report from the system.
+          This action cannot be reversed after confirmation.
+        </p>
 
       </CardHeader>
 
@@ -151,14 +180,12 @@ export default function PermanentDeleteDangerZone({
           <AlertDialogTrigger asChild>
 
             <Button
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              variant="destructive"
+              className="w-full"
               disabled={isPending}
             >
 
-              <Trash2
-                className="mr-2 h-4 w-4"
-              />
-
+              <Trash2 className="mr-2 h-4 w-4" />
 
               Delete Forever
 
@@ -178,10 +205,9 @@ export default function PermanentDeleteDangerZone({
 
 
               <AlertDialogDescription>
-                This action will permanently
-                remove this report from the
-                database. You will not be able
-                to restore it afterwards.
+                This action will permanently remove this
+                report from the database. Once deleted,
+                this record cannot be restored.
               </AlertDialogDescription>
 
             </AlertDialogHeader>
@@ -200,10 +226,10 @@ export default function PermanentDeleteDangerZone({
 
               <AlertDialogAction
                 disabled={isPending}
+                className="bg-red-600 hover:bg-red-700"
                 onClick={(event) => {
 
                   event.preventDefault();
-
 
                   startTransition(
                     handleDelete
@@ -223,7 +249,6 @@ export default function PermanentDeleteDangerZone({
 
 
           </AlertDialogContent>
-
 
         </AlertDialog>
 

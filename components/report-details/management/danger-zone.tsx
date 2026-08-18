@@ -5,15 +5,26 @@ import {
   useTransition,
 } from "react";
 
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+} from "next/navigation";
 
-import { toast } from "sonner";
+import {
+  toast,
+} from "sonner";
 
-import { Trash2 } from "lucide-react";
+import {
+  Archive,
+  AlertTriangle,
+} from "lucide-react";
 
-import { deleteFeedback } from "@/lib/actions/feedback-delete";
+import {
+  deleteFeedback,
+} from "@/lib/actions/feedback-delete";
 
-import type { Feedback } from "@/lib/types/feedback";
+import type {
+  Feedback,
+} from "@/lib/types/feedback";
 
 import {
   AlertDialog,
@@ -27,9 +38,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+} from "@/components/ui/button";
 
-import { CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type DangerZoneProps = {
   report: Feedback;
@@ -38,24 +57,31 @@ type DangerZoneProps = {
 export default function DangerZone({
   report,
 }: DangerZoneProps) {
+
   const router = useRouter();
 
-  const [open, setOpen] =
-    useState(false);
+  const [
+    open,
+    setOpen,
+  ] = useState(false);
 
-  const [isPending, startTransition] =
-    useTransition();
+  const [
+    isPending,
+    startTransition,
+  ] = useTransition();
 
   async function handleDelete() {
+
     const result =
       await deleteFeedback({
         id: report.id,
       });
 
     if (!result.success) {
+
       toast.error(
         result.message ??
-          "Failed to delete report."
+          "Failed to archive report."
       );
 
       return;
@@ -63,7 +89,7 @@ export default function DangerZone({
 
     toast.success(
       result.message ??
-        "Report deleted successfully."
+        "Report archived successfully."
     );
 
     setOpen(false);
@@ -74,74 +100,126 @@ export default function DangerZone({
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h3 className="font-medium text-green-700">
-          Danger Zone
-        </h3>
+    <Card className="overflow-hidden border-amber-200 shadow-sm dark:border-amber-900/40">
 
-        <CardDescription>
-          Soft delete this report. It
-          will be removed from active
-          reports but can be restored
-          later if needed.
-        </CardDescription>
-      </div>
+      {/* Warning Accent */}
 
-      <AlertDialog
-        open={open}
-        onOpenChange={setOpen}
-      >
-        <AlertDialogTrigger asChild>
-          <Button
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-            disabled={isPending}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
+      <div className="h-1 w-full bg-amber-500" />
 
-            Delete Report
-          </Button>
-        </AlertDialogTrigger>
+      <CardHeader className="space-y-3">
 
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Delete this report?
-            </AlertDialogTitle>
+        <div className="flex items-center gap-3">
 
-            <AlertDialogDescription>
-              This action will not
-              permanently remove the
-              report. It will be hidden
-              from active reports and
-              can be restored later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-950/40">
 
-          <AlertDialogFooter>
-            <AlertDialogCancel
+            <AlertTriangle className="h-5 w-5 text-amber-700 dark:text-amber-400" />
+
+          </div>
+
+          <div>
+
+            <CardTitle className="text-lg text-amber-700 dark:text-amber-400">
+              Archive Report
+            </CardTitle>
+
+            <CardDescription>
+              Reversible administrative action
+            </CardDescription>
+
+          </div>
+
+        </div>
+
+        <p className="text-sm leading-6 text-muted-foreground">
+          This report will be removed from active reports and moved to
+          the archive. It can be restored at any time.
+        </p>
+
+      </CardHeader>
+
+      <CardContent>
+
+        <AlertDialog
+          open={open}
+          onOpenChange={setOpen}
+        >
+
+          <AlertDialogTrigger asChild>
+
+            <Button
+              variant="outline"
               disabled={isPending}
+              className="
+                w-full
+                border-amber-300
+                text-amber-700
+                hover:bg-amber-50
+                hover:text-amber-800
+                dark:border-amber-800
+                dark:text-amber-400
+                dark:hover:bg-amber-950/20
+              "
             >
-              Cancel
-            </AlertDialogCancel>
 
-            <AlertDialogAction
-              disabled={isPending}
-              onClick={(event) => {
-                event.preventDefault();
+              <Archive className="mr-2 h-4 w-4" />
 
-                startTransition(
-                  handleDelete
-                );
-              }}
-            >
-              {isPending
-                ? "Deleting..."
-                : "Delete Report"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+              Archive Report
+
+            </Button>
+
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+
+            <AlertDialogHeader>
+
+              <AlertDialogTitle>
+                Archive this report?
+              </AlertDialogTitle>
+
+              <AlertDialogDescription>
+                This report will be removed from active records and moved
+                to the archive. You can restore it later if necessary.
+              </AlertDialogDescription>
+
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+
+              <AlertDialogCancel
+                disabled={isPending}
+              >
+                Cancel
+              </AlertDialogCancel>
+
+              <AlertDialogAction
+                disabled={isPending}
+                className="bg-amber-600 hover:bg-amber-700"
+                onClick={(event) => {
+
+                  event.preventDefault();
+
+                  startTransition(
+                    handleDelete
+                  );
+
+                }}
+              >
+
+                {isPending
+                  ? "Archiving..."
+                  : "Archive Report"}
+
+              </AlertDialogAction>
+
+            </AlertDialogFooter>
+
+          </AlertDialogContent>
+
+        </AlertDialog>
+
+      </CardContent>
+
+    </Card>
   );
 }

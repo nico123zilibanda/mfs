@@ -41,13 +41,13 @@ export default async function DeletedReportDetailsPage({
       <DashboardPage>
 
         <DashboardHeader
-          title="Deleted Report"
-          description="View and restore deleted citizen feedback reports."
+          title="Taarifa Zilizofutwa"
+          description="Tazama na urejeshe ripoti za maoni ya raia zilizofutwa."
         />
 
 
         <EmptyState
-          title="Deleted report not found"
+          title="Taarifa zilizofutwa hazipo!"
           description={result.message}
         />
 
@@ -61,8 +61,8 @@ export default async function DeletedReportDetailsPage({
     <DashboardPage>
 
       <DashboardHeader
-        title="Deleted Report"
-        description="View and restore deleted citizen feedback reports."
+        title="Taarifa Zilizofutwa."
+        description="Tazama na urejeshe ripoti za maoni ya raia zilizofutwa."
       />
 
 

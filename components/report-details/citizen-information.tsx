@@ -1,5 +1,9 @@
+import {
+  MapPin,
+  Phone,
+  UserRound,
+} from "lucide-react";
 
-import { UserRound } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -13,55 +17,70 @@ type CitizenInformationProps = {
   report: Feedback;
 };
 
+function InfoItem({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4 rounded-xl border border-border bg-muted/30 p-4">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-950/40">
+        <Icon className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {label}
+        </p>
+
+        <p className="mt-1 wrap-break-word font-medium text-foreground">
+          {value}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function CitizenInformation({
   report,
 }: CitizenInformationProps) {
   return (
-    <Card className="border-slate-200 shadow-sm">
-      <CardHeader className="border-b border-slate-100 pb-5">
-        <CardTitle className="flex items-center gap-2 text-lg"><UserRound className="h-5 w-5 text-[#006b3c]" /> Taarifa za mwananchi</CardTitle>
+    <Card className="border-border shadow-sm">
+      <CardHeader className="border-b border-border">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <UserRound className="h-5 w-5 text-emerald-700 dark:text-emerald-500" />
+          Taarifa za Mwananchi
+        </CardTitle>
       </CardHeader>
 
-      <CardContent className="grid gap-6 pt-6 sm:grid-cols-2">
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Jina kamili
-          </p>
+      <CardContent className="grid gap-4 pt-6 sm:grid-cols-2">
+        <InfoItem
+          icon={UserRound}
+          label="Jina Kamili"
+          value={report.fullName || "Bila jina"}
+        />
 
-          <p className="font-medium">
-            {report.fullName || "Bila jina"}
-          </p>
-        </div>
+        <InfoItem
+          icon={Phone}
+          label="Namba ya Simu"
+          value={report.phone}
+        />
 
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Namba ya simu
-          </p>
+        <InfoItem
+          icon={MapPin}
+          label="Kijiji"
+          value={report.village}
+        />
 
-          <p className="font-medium">
-            {report.phone}
-          </p>
-        </div>
-
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Kijiji
-          </p>
-
-          <p className="font-medium">
-            {report.village}
-          </p>
-        </div>
-
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Kata
-          </p>
-
-          <p className="font-medium">
-            {report.ward}
-          </p>
-        </div>
+        <InfoItem
+          icon={MapPin}
+          label="Kata"
+          value={report.ward}
+        />
       </CardContent>
     </Card>
   );
