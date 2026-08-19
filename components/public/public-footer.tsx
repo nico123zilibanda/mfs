@@ -1,28 +1,255 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone } from "lucide-react";
+import { MapPin, Phone, ShieldCheck } from "lucide-react";
 
 import { SITE } from "@/lib/constants/site";
 
-
 export default function PublicFooter() {
   return (
-    <footer className="mt-18 bg-slate-950 text-slate-200 sm:mt-24">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr] lg:px-8">
+    <footer
+      className="
+        mt-18
+        border-t
+        border-slate-800
+        bg-slate-950
+        text-slate-200
+
+        dark:bg-black
+
+        sm:mt-24
+      "
+    >
+
+      <div
+        className="
+          mx-auto
+          grid
+          max-w-7xl
+          gap-10
+          px-4
+          py-14
+
+          sm:px-6
+          lg:grid-cols-[1.4fr_1fr]
+          lg:px-8
+        "
+      >
+
+        {/* Brand */}
+
         <div className="flex items-start gap-4">
-          <Image src="/images/mlele-logos.jpeg" alt="Nembo ya Halmashauri ya Wilaya ya Mlele" width={56} height={56} className="rounded-full" />
-          <div>
-            <p className="font-semibold text-white">{SITE.council}</p>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">Njia salama ya kuwasilisha maoni, malalamiko na taarifa kwa urahisi.</p>
+
+          <div
+            className="
+              flex
+              h-14
+              w-14
+              shrink-0
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-emerald-500/20
+              bg-white
+              p-1
+            "
+          >
+            <Image
+              src="/images/mlele-logos.jpeg"
+              alt="Nembo ya Halmashauri ya Wilaya ya Mlele"
+              width={56}
+              height={56}
+              sizes="20"
+              priority
+              className="
+                h-full
+                w-full
+                rounded-full
+                object-contain
+              "
+            />
           </div>
+
+
+          <div>
+
+            <p
+              className="
+                font-bold
+                text-white
+                tracking-tight
+              "
+            >
+              {SITE.council}
+            </p>
+
+
+            <p
+              className="
+                mt-2
+                max-w-md
+                text-sm
+                leading-6
+                text-slate-400
+              "
+            >
+              Njia salama ya kuwasilisha maoni,
+              malalamiko na taarifa kwa urahisi.
+            </p>
+
+
+            <div
+              className="
+                mt-4
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-emerald-500/20
+                bg-emerald-500/10
+                px-3
+                py-1.5
+                text-xs
+                font-medium
+                text-emerald-300
+              "
+            >
+
+              <ShieldCheck className="h-3.5 w-3.5" />
+
+              Mfumo Rasmi wa Serikali
+
+            </div>
+
+          </div>
+
         </div>
-        <div className="grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-1">
-          <Link href="/public/tracking" className="transition-colors hover:text-[#f5cc53]">Fuatilia taarifa yako</Link>
-          <p className="flex items-center gap-2 text-slate-400"><Phone className="h-4 w-4 text-[#f5cc53]" /> {SITE.phone}</p>
-          <p className="flex items-center gap-2 text-slate-400"><MapPin className="h-4 w-4 text-[#f5cc53]" /> {SITE.location}</p>
+
+
+        {/* Contact */}
+
+        <div
+          className="
+            grid
+            gap-5
+            text-sm
+
+            sm:grid-cols-2
+
+            lg:grid-cols-1
+          "
+        >
+
+          <Link
+            href="/public/tracking"
+            className="
+              font-medium
+              text-slate-300
+              transition-colors
+
+              hover:text-[#f5cc53]
+
+              dark:text-slate-300
+            "
+          >
+            Fuatilia taarifa yako
+          </Link>
+
+
+          <p
+            className="
+              flex
+              items-center
+              gap-3
+              text-slate-400
+            "
+          >
+
+            <span
+              className="
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-lg
+                bg-emerald-500/10
+              "
+            >
+              <Phone
+                className="
+                  h-4
+                  w-4
+                  text-[#f5cc53]
+                "
+              />
+            </span>
+
+            {SITE.phone}
+
+          </p>
+
+
+          <p
+            className="
+              flex
+              items-center
+              gap-3
+              text-slate-400
+            "
+          >
+
+            <span
+              className="
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-lg
+                bg-emerald-500/10
+              "
+            >
+              <MapPin
+                className="
+                  h-4
+                  w-4
+                  text-[#f5cc53]
+                "
+              />
+            </span>
+
+            {SITE.location}
+
+          </p>
+
+
         </div>
+
       </div>
-      <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-slate-500">© {new Date().getFullYear()} {SITE.council}. Haki zote zimehifadhiwa.</div>
+
+
+      {/* Copyright */}
+
+      <div
+        className="
+          border-t
+          border-white/10
+          px-4
+          py-5
+          text-center
+          text-xs
+          text-slate-500
+
+          dark:border-white/5
+        "
+      >
+        © {new Date().getFullYear()} {SITE.council}.
+        Haki zote zimehifadhiwa.
+      </div>
+
+
     </footer>
   );
 }

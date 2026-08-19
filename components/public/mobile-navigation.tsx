@@ -9,6 +9,7 @@ import {
   LogIn,
   Menu,
   Search,
+  ShieldCheck,
 } from "lucide-react";
 
 import {
@@ -37,75 +38,259 @@ const navigation = [
   },
 ] as const;
 
+
 export default function MobileNavigation() {
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
+
 
   return (
     <Sheet
       open={open}
       onOpenChange={setOpen}
     >
+
       <SheetTrigger asChild>
+
         <Button
           size="icon"
           variant="ghost"
           aria-label="Fungua menyu"
+          className="
+            rounded-xl
+
+            hover:bg-emerald-50
+
+            dark:hover:bg-emerald-950/40
+          "
         >
-          <Menu className="h-6 w-6" />
+
+          <Menu
+            className="
+              h-6
+              w-6
+
+              text-slate-700
+
+              dark:text-slate-200
+            "
+          />
+
         </Button>
+
       </SheetTrigger>
+
 
       <SheetContent
         side="right"
-        className="flex w-[min(22rem,calc(100vw-2rem))] flex-col p-0"
+        className="
+          flex
+          w-[min(22rem,calc(100vw-2rem))]
+          flex-col
+          border-l
+          border-slate-200
+          bg-white
+          p-0
+
+          dark:border-slate-800
+          dark:bg-slate-950
+        "
       >
-        <SheetHeader className="border-b px-6 py-6">
+
+        {/* Header */}
+
+        <SheetHeader
+          className="
+            border-b
+            border-slate-200
+            px-6
+            py-6
+
+            dark:border-slate-800
+          "
+        >
+
           <PublicBrand />
+
         </SheetHeader>
 
-        <nav className="flex-1 space-y-2 p-4">
+
+        {/* Navigation */}
+
+        <nav
+          className="
+            flex-1
+            space-y-2
+            p-5
+          "
+        >
+
+          <div
+            className="
+              mb-4
+              flex
+              items-center
+              gap-2
+              px-2
+              text-xs
+              font-semibold
+              uppercase
+              tracking-wider
+              text-slate-400
+            "
+          >
+
+            <ShieldCheck className="h-3.5 w-3.5" />
+
+            Huduma za Wananchi
+
+          </div>
+
+
           {navigation.map((item) => {
+
             const Icon = item.icon;
 
-            const active = pathname === item.href;
+            const active =
+              pathname === item.href;
+
 
             return (
+
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setOpen(false)
+                }
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
+                  `
+                  group
+                  flex
+                  items-center
+                  gap-3
+                  rounded-xl
+                  px-4
+                  py-3.5
+                  text-sm
+                  font-semibold
+                  transition-all
+                  `,
                   active
-                    ? "bg-[#006b3c] text-white shadow-sm"
-                    : "hover:bg-emerald-50",
+                    ? `
+                      bg-[#006b3c]
+                      text-white
+                      shadow-lg
+                      shadow-emerald-900/20
+                    `
+                    : `
+                      text-slate-600
+                      hover:bg-emerald-50
+                      hover:text-[#006b3c]
+
+                      dark:text-slate-300
+                      dark:hover:bg-emerald-950/40
+                      dark:hover:text-emerald-400
+                    `
                 )}
               >
-                <Icon className="h-5 w-5" />
+
+                <Icon
+                  className={cn(
+                    `
+                    h-5
+                    w-5
+                    transition-colors
+                    `,
+                    active
+                      ? "text-white"
+                      : `
+                        text-slate-400
+                        group-hover:text-[#006b3c]
+
+                        dark:group-hover:text-emerald-400
+                      `
+                  )}
+                />
 
                 {item.title}
+
               </Link>
+
             );
+
           })}
+
         </nav>
 
-        <div className="border-t p-4">
+
+        {/* Login */}
+
+        <div
+          className="
+            border-t
+            border-slate-200
+            p-5
+
+            dark:border-slate-800
+          "
+        >
+
           <Button
             asChild
-            className="w-full bg-[#006b3c] hover:bg-[#005631]"
+            className="
+              h-12
+              w-full
+              rounded-xl
+
+              bg-[#006b3c]
+              text-white
+              hover:bg-[#005631]
+
+              dark:bg-emerald-600
+              dark:hover:bg-emerald-700
+            "
           >
+
             <Link
               href="/login"
-              onClick={() => setOpen(false)}
+              onClick={() =>
+                setOpen(false)
+              }
             >
-              <LogIn className="mr-2 h-4 w-4" />
+
+              <LogIn
+                className="
+                  mr-2
+                  h-4
+                  w-4
+                "
+              />
+
               Ingia kama Msimamizi
+
             </Link>
+
           </Button>
+
+
+          <p
+            className="
+              mt-4
+              text-center
+              text-xs
+              text-slate-400
+            "
+          >
+            Mfumo wa Maoni na Malalamiko
+          </p>
+
         </div>
+
+
       </SheetContent>
+
     </Sheet>
   );
 }

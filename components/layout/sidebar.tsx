@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
-  BarChart3,
   ClipboardList,
   FileText,
   LayoutDashboard,
@@ -117,7 +117,7 @@ function SidebarContent({
   return (
     <div className="flex h-full flex-col">
 
-      {/* Logo */}
+      {/* Branding */}
 
       <div className="border-b border-white/10 p-6">
 
@@ -130,27 +130,44 @@ function SidebarContent({
           <div
             className="
               flex
-              h-12
-              w-12
+              h-14
+              w-14
               items-center
               justify-center
               rounded-2xl
-              bg-emerald-600
+              bg-white
+              p-2
               shadow-lg
-              shadow-emerald-900/40
+              shadow-emerald-950/30
+              ring-1
+              ring-emerald-500/20
             "
           >
-            <BarChart3 className="h-6 w-6 text-white" />
+
+            <Image
+              src="/images/logo.jpeg"
+              alt="Nembo ya Halmashauri ya Mlele"
+              width={42}
+              height={42}
+              sizes="20"
+              priority
+              className="object-contain"
+            />
+
           </div>
 
           <div>
 
-            <h2 className="font-bold tracking-tight text-white">
+            <h2 className="text-lg font-bold tracking-tight text-white">
               Ongea na DED
             </h2>
 
-            <p className="text-xs text-slate-400">
+            <p className="mt-1 text-xs text-slate-400">
               Halmashauri ya Wilaya ya Mlele
+            </p>
+
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-emerald-400">
+              Mfumo wa Serikali
             </p>
 
           </div>
@@ -180,6 +197,7 @@ function SidebarContent({
             text-slate-500
           "
         >
+
           <ShieldCheck className="h-3.5 w-3.5" />
 
           Usimamizi
@@ -199,12 +217,8 @@ function SidebarContent({
                 pathname === href ||
                 (
                   href === "/reports" &&
-                  pathname.startsWith(
-                    "/reports/"
-                  ) &&
-                  !pathname.startsWith(
-                    "/reports/deleted"
-                  )
+                  pathname.startsWith("/reports/") &&
+                  !pathname.startsWith("/reports/deleted")
                 );
 
               return (
@@ -290,13 +304,19 @@ function SidebarContent({
 
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 rounded-xl border border-white/5 bg-slate-900/50 p-3 text-center">
 
-          <p className="text-xs font-medium text-emerald-500">
+          <p className="text-sm font-semibold text-emerald-400">
             Mfumo wa Mlele
           </p>
 
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-1 text-xs text-slate-500">
+            Halmashauri ya Wilaya ya Mlele
+          </p>
+
+          <div className="mt-3 h-px bg-white/10" />
+
+          <p className="mt-3 text-[11px] uppercase tracking-wider text-slate-600">
             Version 1.0
           </p>
 

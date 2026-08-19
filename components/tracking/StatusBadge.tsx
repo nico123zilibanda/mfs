@@ -18,11 +18,32 @@ export default function StatusBadge({
   return (
     <Badge
       variant="outline"
-      className={`inline-flex items-center gap-1.5 px-3 py-1 ${config.className}`}
+      className={`
+        inline-flex
+        items-center
+        gap-1.5
+        rounded-full
+        border
+        px-3.5
+        py-1.5
+        text-xs
+        font-semibold
+        transition-colors
+        ${config.className}
+        dark:bg-slate-900/40
+      `}
     >
-      <Icon className="h-3.5 w-3.5" />
+      <Icon
+        className="
+          h-3.5
+          w-3.5
+          shrink-0
+        "
+      />
 
-      {config.label}
+      <span>
+        {config.label}
+      </span>
     </Badge>
   );
 }

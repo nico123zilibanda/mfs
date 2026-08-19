@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,7 +24,13 @@ export const metadata: Metadata = {
   description:
     "Mfumo wa kupokea maoni na taarifa kutoka kwa wananchi wa Halmashauri ya Wilaya ya Mlele.",
   applicationName: "Ongea na DED Mlele",
-  keywords: ["Mlele", "Katavi", "maoni", "malalamiko", "taarifa za wananchi"],
+  keywords: [
+    "Mlele",
+    "Katavi",
+    "maoni",
+    "malalamiko",
+    "taarifa za wananchi",
+  ],
 };
 
 export default function RootLayout({
@@ -31,13 +39,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sw" suppressHydrationWarning>
+    <html
+      lang="sw"
+      suppressHydrationWarning
+    >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`
+          ${geistSans.variable}
+          ${geistMono.variable}
+          min-h-screen
+          bg-slate-50
+          text-slate-900
+          antialiased
+          transition-colors
+          duration-300
+          dark:bg-slate-950
+          dark:text-slate-100
+        `}
       >
         <ThemeProvider>
           {children}
-          <Toaster position="top-right" richColors closeButton expand={false} />
+
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            expand={false}
+          />
         </ThemeProvider>
       </body>
     </html>

@@ -7,6 +7,7 @@ import {
 
 import Container from "@/components/layout/Container";
 
+
 const items = [
   {
     title: "Mfumo Rasmi",
@@ -34,50 +35,213 @@ const items = [
   },
 ];
 
+
 export default function PublicTrust() {
   return (
-    <section className="py-18 sm:py-24">
+    <section
+      className="
+        bg-white
+        py-18
+
+        dark:bg-slate-950
+
+        sm:py-24
+      "
+    >
+
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-emerald-900/10 px-4 py-1.5 text-sm font-semibold text-[#006b3c]">
+
+
+        {/* Heading */}
+
+        <div
+          className="
+            mx-auto
+            max-w-3xl
+            text-center
+          "
+        >
+
+          <span
+            className="
+              inline-flex
+              rounded-full
+              bg-emerald-600/10
+              px-4
+              py-1.5
+              text-sm
+              font-semibold
+              text-emerald-700
+
+              dark:bg-emerald-400/10
+              dark:text-emerald-400
+            "
+          >
             Kwa Nini Utumie Mfumo Huu
           </span>
 
-          <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
+
+
+          <h2
+            className="
+              mt-5
+              text-3xl
+              font-bold
+              tracking-tight
+              text-slate-950
+
+              dark:text-white
+
+              md:text-4xl
+            "
+          >
             Mfumo Unaolenga Uwazi, Usalama na Uwajibikaji
           </h2>
 
-          <p className="mt-5 text-lg leading-8 text-muted-foreground">
+
+
+          <p
+            className="
+              mt-5
+              text-lg
+              leading-8
+              text-muted-foreground
+
+              dark:text-slate-400
+            "
+          >
             Tumekuwekea mazingira salama na rahisi ya kuwasilisha maoni,
             malalamiko na taarifa zako kwa Halmashauri ya Wilaya ya Mlele.
           </p>
+
+
         </div>
 
-        <div className="mt-12 grid gap-5 sm:mt-16 sm:grid-cols-2 xl:grid-cols-4">
+
+
+        {/* Trust Cards */}
+
+        <div
+          className="
+            mt-12
+            grid
+            gap-5
+
+            sm:mt-16
+            sm:grid-cols-2
+
+            xl:grid-cols-4
+          "
+        >
+
           {items.map((item) => {
+
             const Icon = item.icon;
 
+
             return (
+
               <div
                 key={item.title}
-                className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-800/35 hover:shadow-lg"
+                className="
+                  group
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  bg-white
+                  p-7
+                  shadow-sm
+                  transition-all
+                  duration-300
+
+                  hover:-translate-y-1
+                  hover:border-emerald-600/40
+                  hover:shadow-lg
+
+
+                  dark:border-slate-800
+                  dark:bg-slate-900
+
+                  dark:hover:border-emerald-500/40
+                "
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-900/10 text-[#006b3c]">
+
+
+                {/* Icon */}
+
+                <div
+                  className="
+                    flex
+                    h-14
+                    w-14
+                    items-center
+                    justify-center
+                    rounded-xl
+                    bg-emerald-600/10
+                    text-emerald-700
+
+                    transition-all
+                    duration-300
+
+                    group-hover:bg-emerald-600
+                    group-hover:text-white
+
+
+                    dark:bg-emerald-400/10
+                    dark:text-emerald-400
+
+                    dark:group-hover:bg-emerald-600
+                    dark:group-hover:text-white
+                  "
+                >
+
                   <Icon className="h-7 w-7" />
+
                 </div>
 
-                <h3 className="mt-6 text-xl font-semibold text-slate-950">
+
+
+                <h3
+                  className="
+                    mt-6
+                    text-xl
+                    font-semibold
+                    text-slate-950
+
+                    dark:text-white
+                  "
+                >
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-muted-foreground">
+
+
+                <p
+                  className="
+                    mt-3
+                    text-sm
+                    leading-7
+                    text-muted-foreground
+
+                    dark:text-slate-400
+                  "
+                >
                   {item.description}
                 </p>
+
+
               </div>
+
             );
+
           })}
+
+
         </div>
+
+
       </Container>
+
     </section>
   );
 }
