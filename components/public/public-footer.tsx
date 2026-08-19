@@ -55,7 +55,7 @@ export default function PublicFooter() {
             "
           >
             <Image
-              src="/images/mlele-logos.jpeg"
+              src="/images/logo.jpeg"
               alt="Nembo ya Halmashauri ya Wilaya ya Mlele"
               width={56}
               height={56}

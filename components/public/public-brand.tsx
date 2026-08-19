@@ -26,10 +26,10 @@ export default function PublicBrand() {
         "
       >
         <Image
-          src="/images/mlele-logos.jpeg"
+          src="/images/logo.jpeg"
           alt="Halmashauri ya Wilaya ya Mlele"
-          width={48}
-          height={48}
+          width={56}
+          height={56}
           sizes="20"
           priority
           className="rounded-full object-contain"
