@@ -40,7 +40,6 @@ export default function PublicHome() {
 
           sm:py-24
 
-
           dark:bg-slate-950
         "
       >
@@ -49,16 +48,13 @@ export default function PublicHome() {
 
           <FeedbackHero />
 
-
           <FeedbackCard>
 
-            <FeedbackForm />
+          <FeedbackForm />
 
           </FeedbackCard>
 
-
           <FeedbackFooter />
-
 
         </Container>
 

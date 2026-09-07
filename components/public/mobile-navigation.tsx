@@ -33,7 +33,7 @@ const navigation = [
   },
   {
     title: "Fuatilia Taarifa",
-    href: "/tracking",
+    href: "public/tracking",
     icon: Search,
   },
 ] as const;

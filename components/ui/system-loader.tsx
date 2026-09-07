@@ -15,7 +15,7 @@ export default function SystemLoader({
       {/* Tanzania Flag Watermark */}
       <div className="absolute inset-0">
         <Image
-          src="/images/tz-flag.jpg"
+          src="/tz-flag.jpg"
           alt="Tanzania Flag"
           fill
           priority
