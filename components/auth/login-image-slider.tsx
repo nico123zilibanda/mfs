@@ -81,10 +81,10 @@ export default function LoginImageSlider() {
           bg-linear-to-t
           from-[#001b10]
           via-[#00351f]/75
-          to-[#004b2a]/30
+          to-[#5b21b6]/30
 
           dark:from-black/90
-          dark:via-emerald-950/80
+          dark:via-purple-950/80
           dark:to-black/40
         "
       />
@@ -94,9 +94,9 @@ export default function LoginImageSlider() {
         className="
           absolute inset-0
 
-          bg-emerald-950/10
+          bg-purple-950/10
 
-          dark:bg-emerald-900/20
+          dark:bg-purple-900/20
         "
       />
 
@@ -129,7 +129,7 @@ export default function LoginImageSlider() {
 
           rounded-full
 
-          bg-emerald-300/10
+          bg-purple-300/10
 
           blur-3xl
         "
@@ -196,7 +196,7 @@ export default function LoginImageSlider() {
             <p
               className="
                 text-xs
-                text-emerald-100/80
+                text-purple-100/80
               "
             >
               Mkoa wa Katavi
@@ -275,7 +275,7 @@ export default function LoginImageSlider() {
               text-sm
               leading-7
 
-              text-emerald-50/90
+              text-purple-50/90
 
               sm:text-base
             "
@@ -317,7 +317,7 @@ export default function LoginImageSlider() {
             pt-5
 
             text-xs
-            text-emerald-50/70
+            text-purple-50/70
 
             sm:flex-row
             sm:items-center

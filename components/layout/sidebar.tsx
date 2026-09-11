@@ -70,7 +70,7 @@ export default function Sidebar({
           hidden
           w-72
           border-r
-          border-emerald-900/30
+          border-purple-900/30
           bg-slate-950
           lg:block
         "
@@ -138,9 +138,9 @@ function SidebarContent({
               bg-white
               p-2
               shadow-lg
-              shadow-emerald-950/30
+              shadow-purple-950/30
               ring-1
-              ring-emerald-500/20
+              ring-purple-500/20
             "
           >
 
@@ -166,7 +166,7 @@ function SidebarContent({
               Halmashauri ya Wilaya ya Mlele
             </p>
 
-            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-emerald-400">
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-purple-400">
               Mfumo wa Serikali
             </p>
 
@@ -242,10 +242,10 @@ function SidebarContent({
                     `,
                     active
                       ? `
-                          bg-emerald-600
+                          bg-purple-600
                           text-white
                           shadow-lg
-                          shadow-emerald-900/30
+                          shadow-purple-900/30
                         `
                       : `
                           text-slate-400
@@ -260,7 +260,7 @@ function SidebarContent({
                       "h-5 w-5 transition-colors",
                       active
                         ? "text-white"
-                        : "text-slate-500 group-hover:text-emerald-400"
+                        : "text-slate-500 group-hover:text-purple-400"
                     )}
                   />
 
@@ -306,7 +306,7 @@ function SidebarContent({
 
         <div className="mt-6 rounded-xl border border-white/5 bg-slate-900/50 p-3 text-center">
 
-          <p className="text-sm font-semibold text-emerald-400">
+          <p className="text-sm font-semibold text-purple-400">
             Mfumo wa Mlele
           </p>
 

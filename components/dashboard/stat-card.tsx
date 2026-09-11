@@ -35,7 +35,7 @@ export default function StatsCard({
         transition-all
         duration-300
         hover:-translate-y-1
-        hover:border-emerald-500/40
+        hover:border-purple-500/40
         hover:shadow-xl
         `,
         className
@@ -51,7 +51,7 @@ export default function StatsCard({
           w-1
           origin-top
           scale-y-0
-          bg-emerald-700
+          bg-purple-700
           transition-transform
           duration-300
           group-hover:scale-y-100
@@ -79,9 +79,9 @@ export default function StatsCard({
               justify-center
               rounded-2xl
               bg-linear-to-br
-              from-emerald-600
-              via-emerald-700
-              to-green-800
+              from-purple-600
+              via-purple-700
+              to-purple-800
               shadow-lg
               transition-transform
               duration-300

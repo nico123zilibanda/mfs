@@ -45,12 +45,12 @@ export default function ComplaintInformationStep({
             justify-center
             rounded-xl
             border
-            border-emerald-900/10
-            bg-emerald-50
-            text-[#006b3c]
-            dark:border-emerald-400/20
-            dark:bg-emerald-950/40
-            dark:text-emerald-400
+            border-purple-900/10
+            bg-purple-50
+            text-[#6d28d9]
+            dark:border-purple-400/20
+            dark:bg-purple-950/40
+            dark:text-purple-400
           "
         >
           <FileText className="h-6 w-6" />
@@ -113,7 +113,7 @@ export default function ComplaintInformationStep({
                   leading-7
                   transition-colors
                   placeholder:text-slate-400
-                  focus-visible:ring-[#006b3c]
+                  focus-visible:ring-[#6d28d9]
                   dark:border-slate-700
                   dark:bg-slate-900
                   dark:text-slate-100
@@ -211,10 +211,10 @@ export default function ComplaintInformationStep({
           type="button"
           size="lg"
           className="
-            bg-[#006b3c]
+            bg-[#6d28d9]
             px-6
             text-white
-            hover:bg-[#005631]
+            hover:bg-[#4c1d95]
           "
           disabled={isPending}
           onClick={onNext}
@@ -255,19 +255,19 @@ function Choice({
         `,
         selected
           ? `
-              border-[#006b3c]
-              bg-emerald-50
+              border-[#6d28d9]
+              bg-purple-50
               ring-1
-              ring-[#006b3c]
-              dark:bg-emerald-950/40
+              ring-[#6d28d9]
+              dark:bg-purple-950/40
             `
           : `
               border-slate-200
               bg-white
-              hover:border-emerald-800/40
+              hover:border-purple-800/40
               dark:border-slate-700
               dark:bg-slate-900
-              dark:hover:border-emerald-500/50
+              dark:hover:border-purple-500/50
             `,
       )}
     >

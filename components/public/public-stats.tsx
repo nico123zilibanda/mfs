@@ -28,11 +28,11 @@ export default function PublicStats() {
         relative
         overflow-hidden
 
-        bg-[#004b2a]
+        bg-[#5b21b6]
 
         py-18
 
-        dark:bg-emerald-950
+        dark:bg-purple-950
 
         sm:py-22
       "
@@ -81,9 +81,9 @@ export default function PublicStats() {
           <p
             className="
               mt-4
-              text-emerald-50/80
+              text-purple-50/80
 
-              dark:text-emerald-100/70
+              dark:text-purple-100/70
             "
           >
             Mfumo umeundwa kurahisisha mawasiliano kati ya wananchi na
@@ -154,9 +154,9 @@ export default function PublicStats() {
                 className="
                   mt-3
                   text-sm
-                  text-emerald-50/80
+                  text-purple-50/80
 
-                  dark:text-emerald-100/70
+                  dark:text-purple-100/70
                 "
               >
                 {item.label}

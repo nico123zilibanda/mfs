@@ -34,14 +34,14 @@ export default function TrackingPage() {
                 justify-center
                 rounded-full
                 border
-                border-emerald-900/10
+                border-purple-900/10
                 bg-white
                 shadow-xl
                 ring-4
-                ring-emerald-100
-                dark:border-emerald-400/20
+                ring-purple-100
+                dark:border-purple-400/20
                 dark:bg-slate-900
-                dark:ring-emerald-900/40
+                dark:ring-purple-900/40
               "
             >
               <Image
@@ -66,16 +66,16 @@ export default function TrackingPage() {
                 gap-2
                 rounded-full
                 border
-                border-emerald-900/10
-                bg-emerald-50
+                border-purple-900/10
+                bg-purple-50
                 px-4
                 py-1.5
                 text-sm
                 font-semibold
-                text-[#006b3c]
-                dark:border-emerald-400/20
-                dark:bg-emerald-950/40
-                dark:text-emerald-400
+                text-[#6d28d9]
+                dark:border-purple-400/20
+                dark:bg-purple-950/40
+                dark:text-purple-400
               "
             >
               <ClipboardCheck className="h-4 w-4" />
@@ -111,7 +111,7 @@ export default function TrackingPage() {
               bg-white
               p-2
               shadow-xl
-              shadow-emerald-950/5
+              shadow-purple-950/5
               sm:p-6
               dark:border-slate-800
               dark:bg-slate-900

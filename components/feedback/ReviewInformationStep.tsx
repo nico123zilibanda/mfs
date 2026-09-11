@@ -66,11 +66,11 @@ export default function ReviewInformationStep({
 
             rounded-2xl
 
-            bg-emerald-900/10
+            bg-purple-900/10
 
-            text-[#006b3c]
+            text-[#6d28d9]
 
-            dark:bg-emerald-950/40
+            dark:bg-purple-950/40
           "
         >
 
@@ -287,7 +287,7 @@ export default function ReviewInformationStep({
           className="
             rounded-xl
 
-            bg-[#006b3c]
+            bg-[#6d28d9]
 
             px-8
 
@@ -297,9 +297,9 @@ export default function ReviewInformationStep({
 
             shadow-lg
 
-            shadow-emerald-900/20
+            shadow-purple-900/20
 
-            hover:bg-[#005631]
+            hover:bg-[#4c1d95]
           "
 
           disabled={isPending}
@@ -399,12 +399,12 @@ function ReviewSection({
 
             rounded-lg
 
-            bg-emerald-900/10
+            bg-purple-900/10
 
-            text-[#006b3c]
+            text-[#6d28d9]
 
 
-            dark:bg-emerald-950/40
+            dark:bg-purple-950/40
           "
         >
 

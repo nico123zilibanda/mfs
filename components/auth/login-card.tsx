@@ -12,12 +12,12 @@ export default function LoginCard() {
         className="
           absolute -inset-1 rounded-[2rem]
           bg-linear-to-br
-          from-emerald-300/40
+          from-purple-300/40
           via-transparent
           to-yellow-300/30
           blur-2xl
           opacity-80
-          dark:from-emerald-500/20
+          dark:from-purple-500/20
           dark:to-yellow-500/10
         "
       />
@@ -32,7 +32,7 @@ export default function LoginCard() {
           bg-white/90
           p-8
           shadow-2xl
-          shadow-emerald-950/10
+          shadow-purple-950/10
           backdrop-blur-xl
 
           dark:border-white/10

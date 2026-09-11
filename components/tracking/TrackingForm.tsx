@@ -134,7 +134,7 @@ export default function TrackingForm() {
             border-slate-200
             bg-white
             shadow-lg
-            shadow-emerald-950/5
+            shadow-purple-950/5
 
             dark:border-slate-800
             dark:bg-slate-950
@@ -145,12 +145,12 @@ export default function TrackingForm() {
             className="
               border-b
               border-slate-100
-              bg-emerald-50/60
+              bg-purple-50/60
               px-5
               py-4
 
               dark:border-slate-800
-              dark:bg-emerald-950/20
+              dark:bg-purple-950/20
             "
           >
 
@@ -170,7 +170,7 @@ export default function TrackingForm() {
                   items-center
                   justify-center
                   rounded-xl
-                  bg-[#006b3c]
+                  bg-[#6d28d9]
                   text-white
                 "
               >
@@ -269,7 +269,7 @@ export default function TrackingForm() {
 
                         placeholder:text-slate-400
 
-                        focus-visible:ring-[#006b3c]
+                        focus-visible:ring-[#6d28d9]
 
                         dark:border-slate-700
                         dark:bg-slate-900
@@ -302,15 +302,15 @@ export default function TrackingForm() {
                 h-12
                 w-full
                 rounded-xl
-                bg-[#006b3c]
+                bg-[#6d28d9]
                 text-base
                 font-semibold
                 text-white
 
-                hover:bg-[#005631]
+                hover:bg-[#4c1d95]
 
-                dark:bg-emerald-600
-                dark:hover:bg-emerald-700
+                dark:bg-purple-600
+                dark:hover:bg-purple-700
               "
             >
 
@@ -348,7 +348,7 @@ export default function TrackingForm() {
                 className="
                   h-4
                   w-4
-                  text-[#006b3c]
+                  text-[#6d28d9]
                 "
               />
 

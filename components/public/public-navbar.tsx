@@ -84,7 +84,7 @@ export default function PublicNavbar() {
                       transition-colors
                     `,
                     active
-                      ? "text-emerald-600 dark:text-emerald-400"
+                      ? "text-purple-600 dark:text-purple-400"
                       : `
                           text-slate-600
                           hover:text-slate-900
@@ -117,11 +117,11 @@ export default function PublicNavbar() {
             <Button
               asChild
               className="
-                bg-emerald-600
+                bg-purple-600
                 text-white
-                hover:bg-emerald-700
-                dark:bg-emerald-600
-                dark:hover:bg-emerald-500
+                hover:bg-purple-700
+                dark:bg-purple-600
+                dark:hover:bg-purple-500
               "
             >
               <Link href="/login">

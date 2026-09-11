@@ -24,15 +24,15 @@ export default function FeedbackHero() {
           justify-center
           rounded-2xl
 
-          bg-emerald-600/10
-          text-emerald-700
+          bg-purple-600/10
+          text-purple-700
 
           transition-colors
           duration-300
 
 
-          dark:bg-emerald-400/10
-          dark:text-emerald-400
+          dark:bg-purple-400/10
+          dark:text-purple-400
         "
       >
         <FilePenLine className="h-7 w-7" />
@@ -46,7 +46,7 @@ export default function FeedbackHero() {
           inline-flex
           rounded-full
 
-          bg-emerald-600/10
+          bg-purple-600/10
 
           px-4
           py-1.5
@@ -54,11 +54,11 @@ export default function FeedbackHero() {
           text-sm
           font-semibold
 
-          text-emerald-700
+          text-purple-700
 
 
-          dark:bg-emerald-400/10
-          dark:text-emerald-400
+          dark:bg-purple-400/10
+          dark:text-purple-400
         "
       >
         Wasilisha Taarifa

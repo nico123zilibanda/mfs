@@ -19,7 +19,7 @@ export default function PublicHero() {
       className="
         relative
         overflow-hidden
-        bg-emerald-950
+        bg-purple-950
       "
     >
 
@@ -60,15 +60,15 @@ export default function PublicHero() {
         {/* Government gradient */}
 
         <div
-          className="
-            absolute
-            inset-0
-            bg-linear-to-r
-            from-emerald-950
-            via-emerald-900/80
-            to-emerald-950/30
-          "
-        />
+        className="
+          absolute
+          inset-0
+          bg-linear-to-r
+          from-purple-950
+          via-purple-900/80
+          to-purple-950/30
+        "
+      />
 
 
         {/* Gold accent */}
@@ -229,7 +229,7 @@ export default function PublicHero() {
 
                   hover:border-white
                   hover:bg-white
-                  hover:text-emerald-900
+                  hover:text-purple-900
                 "
               >
 
@@ -263,7 +263,7 @@ export default function PublicHero() {
                 gap-x-5
                 gap-y-3
                 text-sm
-                text-emerald-50
+                text-purple-50
               "
             >
 

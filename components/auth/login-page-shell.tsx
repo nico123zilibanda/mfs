@@ -12,11 +12,11 @@ export default function LoginPageShell() {
         bg-linear-to-br
         from-slate-50
         via-white
-        to-emerald-50
+        to-purple-50
 
         dark:from-slate-950
         dark:via-slate-900
-        dark:to-emerald-950
+        dark:to-purple-950
 
         transition-colors
         duration-500
@@ -95,12 +95,12 @@ export default function LoginPageShell() {
 
                 rounded-full
 
-                bg-emerald-100/70
+                bg-purple-100/70
 
                 blur-3xl
 
 
-                dark:bg-emerald-500/10
+                dark:bg-purple-500/10
               "
             />
 

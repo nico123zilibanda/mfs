@@ -69,15 +69,15 @@ export default function PublicServices() {
             className="
               inline-flex
               rounded-full
-              bg-emerald-600/10
+              bg-purple-600/10
               px-4
               py-1.5
               text-sm
               font-semibold
-              text-emerald-700
+              text-purple-700
 
-              dark:bg-emerald-400/10
-              dark:text-emerald-400
+              dark:bg-purple-400/10
+              dark:text-purple-400
             "
           >
             Huduma kwa Wananchi
@@ -142,7 +142,7 @@ export default function PublicServices() {
                   duration-300
 
                   hover:-translate-y-1
-                  hover:border-emerald-600/40
+                  hover:border-purple-600/40
                   hover:shadow-xl
 
                   dark:border-slate-800
@@ -171,19 +171,19 @@ export default function PublicServices() {
                       items-center
                       justify-center
                       rounded-2xl
-                      bg-emerald-600/10
-                      text-emerald-700
+                      bg-purple-600/10
+                      text-purple-700
 
                       transition-colors
                       duration-300
 
-                      group-hover:bg-emerald-600
+                      group-hover:bg-purple-600
                       group-hover:text-white
 
-                      dark:bg-emerald-400/10
-                      dark:text-emerald-400
+                      dark:bg-purple-400/10
+                      dark:text-purple-400
 
-                      dark:group-hover:bg-emerald-600
+                      dark:group-hover:bg-purple-600
                       dark:group-hover:text-white
                     "
                   >
@@ -228,11 +228,11 @@ export default function PublicServices() {
                     className="
                       mt-8
                       w-fit
-                      bg-emerald-600
+                      bg-purple-600
                       text-white
-                      hover:bg-emerald-700
+                      hover:bg-purple-700
 
-                      dark:hover:bg-emerald-500
+                      dark:hover:bg-purple-500
                     "
                   >
 

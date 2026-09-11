@@ -15,15 +15,15 @@ export default function LoginHeader() {
           className="
             absolute -inset-3
             rounded-full
-            bg-emerald-200/40
+            bg-purple-200/40
             blur-xl
             transition-all
             duration-300
 
-            group-hover:bg-emerald-300/60
+            group-hover:bg-purple-300/60
 
-            dark:bg-emerald-500/20
-            dark:group-hover:bg-emerald-400/30
+            dark:bg-purple-500/20
+            dark:group-hover:bg-purple-400/30
           "
         />
 
@@ -39,15 +39,15 @@ export default function LoginHeader() {
             rounded-full
 
             border
-            border-emerald-100
+            border-purple-100
             bg-white
             shadow-xl
             ring-8
-            ring-emerald-50
+            ring-purple-50
 
-            dark:border-emerald-500/20
+            dark:border-purple-500/20
             dark:bg-slate-800
-            dark:ring-emerald-500/10
+            dark:ring-purple-500/10
             dark:shadow-black/40
           "
         >
@@ -92,10 +92,10 @@ export default function LoginHeader() {
             h-1
             w-16
             rounded-full
-            bg-[#006b3c]
+            bg-[#6d28d9]
 
             shadow-sm
-            shadow-emerald-500/30
+            shadow-purple-500/30
           "
         />
 
@@ -126,8 +126,8 @@ export default function LoginHeader() {
           rounded-full
 
           border
-          border-emerald-200
-          bg-emerald-50
+          border-purple-200
+          bg-purple-50
 
           px-5
           py-2.5
@@ -135,8 +135,8 @@ export default function LoginHeader() {
           shadow-sm
 
 
-          dark:border-emerald-500/20
-          dark:bg-emerald-500/10
+          dark:border-purple-500/20
+          dark:bg-purple-500/10
         "
       >
 
@@ -149,9 +149,9 @@ export default function LoginHeader() {
             justify-center
             rounded-full
 
-            bg-emerald-100
+            bg-purple-100
 
-            dark:bg-emerald-500/20
+            dark:bg-purple-500/20
           "
         >
           <ShieldCheck
@@ -159,9 +159,9 @@ export default function LoginHeader() {
               h-4
               w-4
 
-              text-[#006b3c]
+              text-[#6d28d9]
 
-              dark:text-emerald-400
+              dark:text-purple-400
             "
           />
         </div>
@@ -174,9 +174,9 @@ export default function LoginHeader() {
             uppercase
             tracking-widest
 
-            text-[#006b3c]
+            text-[#6d28d9]
 
-            dark:text-emerald-400
+            dark:text-purple-400
           "
         >
           Msimamizi Salama

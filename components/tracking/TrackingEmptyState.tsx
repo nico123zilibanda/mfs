@@ -51,19 +51,19 @@ export default function TrackingEmptyState({
             justify-center
             rounded-full
             border
-            border-emerald-900/10
-            bg-emerald-50
+            border-purple-900/10
+            bg-purple-50
             shadow-sm
-            dark:border-emerald-400/20
-            dark:bg-emerald-950/40
+            dark:border-purple-400/20
+            dark:bg-purple-950/40
           "
         >
           <SearchX
             className="
               h-10
               w-10
-              text-[#006b3c]
-              dark:text-emerald-400
+              text-[#6d28d9]
+              dark:text-purple-400
             "
           />
         </div>
@@ -104,11 +104,11 @@ export default function TrackingEmptyState({
           className="
             rounded-xl
             border
-            border-emerald-900/10
-            bg-emerald-50/50
+            border-purple-900/10
+            bg-purple-50/50
             p-5
-            dark:border-emerald-400/10
-            dark:bg-emerald-950/20
+            dark:border-purple-400/10
+            dark:bg-purple-950/20
           "
         >
           <p

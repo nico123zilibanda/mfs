@@ -130,9 +130,9 @@ export default function AdminNoteForm({
 
         <div className="flex items-center gap-3">
 
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/40">
 
-            <StickyNote className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+            <StickyNote className="h-5 w-5 text-purple-700 dark:text-purple-400" />
 
           </div>
 
@@ -220,10 +220,10 @@ export default function AdminNoteForm({
               }
               className="
                 w-full
-                bg-emerald-700
-                hover:bg-emerald-800
-                dark:bg-emerald-600
-                dark:hover:bg-emerald-700
+                bg-purple-700
+                hover:bg-purple-800
+                dark:bg-purple-600
+                dark:hover:bg-purple-700
               "
             >
 

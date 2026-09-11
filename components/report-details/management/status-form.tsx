@@ -136,8 +136,8 @@ export default function StatusForm({
     <Card className="border-border shadow-sm">
       <CardHeader className="border-b border-border">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40">
-            <ClipboardCheck className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/40">
+            <ClipboardCheck className="h-5 w-5 text-purple-700 dark:text-purple-400" />
           </div>
 
           <div>
@@ -200,7 +200,7 @@ export default function StatusForm({
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+              className="w-full bg-purple-700 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700"
             >
               <Save className="mr-2 h-4 w-4" />
 

@@ -139,8 +139,8 @@ export default function CitizenInformationStep({
 
                         transition-all
 
-                        focus-visible:border-[#006b3c]
-                        focus-visible:ring-[#006b3c]
+                        focus-visible:border-[#6d28d9]
+                        focus-visible:ring-[#6d28d9]
 
 
                         dark:border-slate-700
@@ -150,8 +150,8 @@ export default function CitizenInformationStep({
 
                         dark:placeholder:text-slate-500
 
-                        dark:focus-visible:border-emerald-500
-                        dark:focus-visible:ring-emerald-500
+                        dark:focus-visible:border-purple-500
+                        dark:focus-visible:ring-purple-500
                       "
                     />
 
@@ -208,17 +208,17 @@ export default function CitizenInformationStep({
 
             rounded-xl
 
-            bg-[#006b3c]
+            bg-[#6d28d9]
 
             px-6
 
             text-white
 
-            hover:bg-[#005631]
+            hover:bg-[#4c1d95]
 
-            dark:bg-emerald-600
+            dark:bg-purple-600
 
-            dark:hover:bg-emerald-700
+            dark:hover:bg-purple-700
           "
           disabled={isPending}
           onClick={onNext}
@@ -278,14 +278,14 @@ function StepHeading({
 
           rounded-xl
 
-          bg-emerald-900/10
+          bg-purple-900/10
 
-          text-[#006b3c]
+          text-[#6d28d9]
 
 
-          dark:bg-emerald-500/15
+          dark:bg-purple-500/15
 
-          dark:text-emerald-400
+          dark:text-purple-400
         "
       >
 

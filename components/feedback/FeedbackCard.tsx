@@ -24,7 +24,7 @@ export default function FeedbackCard({
         bg-white
 
         shadow-xl
-        shadow-emerald-950/5
+        shadow-purple-950/5
 
 
         dark:border-slate-800
@@ -51,18 +51,18 @@ export default function FeedbackCard({
         <Alert
           className="
             border
-            border-emerald-600/20
+            border-purple-600/20
 
-            bg-emerald-50/70
+            bg-purple-50/70
 
-            text-emerald-950
+            text-purple-950
 
 
-            dark:border-emerald-400/20
+            dark:border-purple-400/20
 
-            dark:bg-emerald-950/40
+            dark:bg-purple-950/40
 
-            dark:text-emerald-100
+            dark:text-purple-100
           "
         >
 
@@ -71,20 +71,20 @@ export default function FeedbackCard({
               h-4
               w-4
 
-              text-emerald-700
+              text-purple-700
 
 
-              dark:text-emerald-400
+              dark:text-purple-400
             "
           />
 
 
           <AlertDescription
             className="
-              text-emerald-900
+              text-purple-900
 
 
-              dark:text-emerald-100
+              dark:text-purple-100
             "
           >
             Tafadhali jaza taarifa zote kwa usahihi.

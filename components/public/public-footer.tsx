@@ -49,7 +49,7 @@ export default function PublicFooter() {
               justify-center
               rounded-full
               border
-              border-emerald-500/20
+              border-purple-500/20
               bg-white
               p-1
             "
@@ -106,13 +106,13 @@ export default function PublicFooter() {
                 gap-2
                 rounded-full
                 border
-                border-emerald-500/20
-                bg-emerald-500/10
+                border-purple-500/20
+                bg-purple-500/10
                 px-3
                 py-1.5
                 text-xs
                 font-medium
-                text-emerald-300
+                text-purple-300
               "
             >
 
@@ -174,7 +174,7 @@ export default function PublicFooter() {
                 items-center
                 justify-center
                 rounded-lg
-                bg-emerald-500/10
+                bg-purple-500/10
               "
             >
               <Phone
@@ -208,7 +208,7 @@ export default function PublicFooter() {
                 items-center
                 justify-center
                 rounded-lg
-                bg-emerald-500/10
+                bg-purple-500/10
               "
             >
               <MapPin

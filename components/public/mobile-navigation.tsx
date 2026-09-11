@@ -60,9 +60,9 @@ export default function MobileNavigation() {
           className="
             rounded-xl
 
-            hover:bg-emerald-50
+            hover:bg-purple-50
 
-            dark:hover:bg-emerald-950/40
+            dark:hover:bg-purple-950/40
           "
         >
 
@@ -179,19 +179,19 @@ export default function MobileNavigation() {
                   `,
                   active
                     ? `
-                      bg-[#006b3c]
+                      bg-[#6d28d9]
                       text-white
                       shadow-lg
-                      shadow-emerald-900/20
+                      shadow-purple-900/20
                     `
                     : `
                       text-slate-600
-                      hover:bg-emerald-50
-                      hover:text-[#006b3c]
+                      hover:bg-purple-50
+                      hover:text-[#6d28d9]
 
                       dark:text-slate-300
-                      dark:hover:bg-emerald-950/40
-                      dark:hover:text-emerald-400
+                      dark:hover:bg-purple-950/40
+                      dark:hover:text-purple-400
                     `
                 )}
               >
@@ -207,9 +207,9 @@ export default function MobileNavigation() {
                       ? "text-white"
                       : `
                         text-slate-400
-                        group-hover:text-[#006b3c]
+                        group-hover:text-[#6d28d9]
 
-                        dark:group-hover:text-emerald-400
+                        dark:group-hover:text-purple-400
                       `
                   )}
                 />
@@ -244,12 +244,12 @@ export default function MobileNavigation() {
               w-full
               rounded-xl
 
-              bg-[#006b3c]
+              bg-[#6d28d9]
               text-white
-              hover:bg-[#005631]
+              hover:bg-[#4c1d95]
 
-              dark:bg-emerald-600
-              dark:hover:bg-emerald-700
+              dark:bg-purple-600
+              dark:hover:bg-purple-700
             "
           >
 

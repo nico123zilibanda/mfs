@@ -38,8 +38,8 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start gap-4 rounded-xl border border-border bg-muted/30 p-4">
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-950/40">
-        <Icon className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-950/40">
+        <Icon className="h-5 w-5 text-purple-700 dark:text-purple-400" />
       </div>
 
       <div className="min-w-0 flex-1">
@@ -62,7 +62,7 @@ export default function ReportInformation({
     <Card className="border-border shadow-sm">
       <CardHeader className="border-b border-border">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <FileBadge className="h-5 w-5 text-emerald-700 dark:text-emerald-500" />
+          <FileBadge className="h-5 w-5 text-purple-700 dark:text-purple-500" />
           Muhtasari wa Taarifa
         </CardTitle>
       </CardHeader>

@@ -16,9 +16,9 @@ export default function DashboardHeader({
       <div className="space-y-3">
         {/* Government Section Label */}
         <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-emerald-700" />
+          <div className="h-8 w-1 rounded-full bg-purple-700" />
 
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-700 dark:text-purple-500">
             Mfumo wa Usimamizi wa Taarifa
           </p>
         </div>

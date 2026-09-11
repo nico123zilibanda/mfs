@@ -57,12 +57,12 @@ export default function RestoreCard({
   return (
     <Card className="overflow-hidden border-border shadow-sm">
       {/* Government Accent */}
-      <div className="h-1 w-full bg-emerald-700" />
+      <div className="h-1 w-full bg-purple-700" />
 
       <CardHeader className="space-y-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40">
-            <ShieldCheck className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/40">
+            <ShieldCheck className="h-5 w-5 text-purple-700 dark:text-purple-400" />
           </div>
 
           <div>
@@ -86,11 +86,11 @@ export default function RestoreCard({
         <Button
           className="
             w-full
-            bg-emerald-700
+            bg-purple-700
             text-white
-            hover:bg-emerald-800
-            dark:bg-emerald-600
-            dark:hover:bg-emerald-700
+            hover:bg-purple-800
+            dark:bg-purple-600
+            dark:hover:bg-purple-700
           "
           disabled={isPending}
           onClick={handleRestore}

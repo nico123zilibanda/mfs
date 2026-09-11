@@ -26,7 +26,7 @@ export default function ComplaintInformation({
     <Card className="border-border shadow-sm">
       <CardHeader className="border-b border-border">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <FileWarning className="h-5 w-5 text-emerald-700 dark:text-emerald-500" />
+          <FileWarning className="h-5 w-5 text-purple-700 dark:text-purple-500" />
           Maelezo ya Tukio
         </CardTitle>
       </CardHeader>
@@ -35,7 +35,7 @@ export default function ComplaintInformation({
         {/* Complaint Description */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <MessageSquareText className="h-4 w-4 text-emerald-700 dark:text-emerald-500" />
+            <MessageSquareText className="h-4 w-4 text-purple-700 dark:text-purple-500" />
 
             <p className="text-sm font-semibold text-foreground">
               Maelezo ya Maoni au Malalamiko
@@ -59,7 +59,7 @@ export default function ComplaintInformation({
                   ${
                     report.hasBribeRequest
                       ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400"
-                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+                      : "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400"
                   }
                 `}
               >

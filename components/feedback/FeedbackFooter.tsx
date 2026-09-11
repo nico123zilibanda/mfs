@@ -20,7 +20,7 @@ export default function FeedbackFooter() {
         rounded-2xl
 
         border
-        border-emerald-900/10
+        border-purple-900/10
 
         bg-white/70
 
@@ -38,7 +38,7 @@ export default function FeedbackFooter() {
         sm:text-left
 
 
-        dark:border-emerald-400/20
+        dark:border-purple-400/20
         dark:bg-slate-900/70
         dark:text-slate-300
       "
@@ -55,13 +55,13 @@ export default function FeedbackFooter() {
 
           rounded-full
 
-          bg-emerald-900/10
+          bg-purple-900/10
 
-          text-[#006b3c]
+          text-[#6d28d9]
 
 
-          dark:bg-emerald-500/15
-          dark:text-emerald-400
+          dark:bg-purple-500/15
+          dark:text-purple-400
         "
       >
 
@@ -87,11 +87,11 @@ export default function FeedbackFooter() {
           href={`tel:${SITE.phone}`}
           className="
             font-semibold
-            text-[#006b3c]
+            text-[#6d28d9]
             underline-offset-4
             hover:underline
 
-            dark:text-emerald-400
+            dark:text-purple-400
           "
         >
           {SITE.phone}

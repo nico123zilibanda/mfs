@@ -26,18 +26,18 @@ export default function ReportHeader({
   return (
     <Card className="overflow-hidden border-border shadow-sm">
       {/* Top Government Accent */}
-      <div className="h-1 w-full bg-linear-to-r from-emerald-700 via-green-600 to-emerald-500" />
+      <div className="h-1 w-full bg-linear-to-r from-purple-700 via-purple-600 to-purple-500" />
 
       <CardHeader className="space-y-5">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-700 text-white shadow-sm">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-700 text-white shadow-sm">
                 <FileText className="h-5 w-5" />
               </div>
 
               <div>
-                <CardDescription className="text-xs uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-500">
+                <CardDescription className="text-xs uppercase tracking-[0.18em] text-purple-700 dark:text-purple-500">
                   Citizen Feedback Report
                 </CardDescription>
 
@@ -60,8 +60,8 @@ export default function ReportHeader({
       <CardContent className="border-t border-border bg-muted/30">
         <div className="grid gap-4 text-sm sm:grid-cols-2">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-emerald-100 p-2 dark:bg-emerald-950/40">
-              <CalendarDays className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+            <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-950/40">
+              <CalendarDays className="h-4 w-4 text-purple-700 dark:text-purple-400" />
             </div>
 
             <div>

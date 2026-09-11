@@ -66,15 +66,15 @@ export default function PublicTrust() {
             className="
               inline-flex
               rounded-full
-              bg-emerald-600/10
+              bg-purple-600/10
               px-4
               py-1.5
               text-sm
               font-semibold
-              text-emerald-700
+              text-purple-700
 
-              dark:bg-emerald-400/10
-              dark:text-emerald-400
+              dark:bg-purple-400/10
+              dark:text-purple-400
             "
           >
             Kwa Nini Utumie Mfumo Huu
@@ -155,14 +155,14 @@ export default function PublicTrust() {
                   duration-300
 
                   hover:-translate-y-1
-                  hover:border-emerald-600/40
+                  hover:border-purple-600/40
                   hover:shadow-lg
 
 
                   dark:border-slate-800
                   dark:bg-slate-900
 
-                  dark:hover:border-emerald-500/40
+                  dark:hover:border-purple-500/40
                 "
               >
 
@@ -177,20 +177,20 @@ export default function PublicTrust() {
                     items-center
                     justify-center
                     rounded-xl
-                    bg-emerald-600/10
-                    text-emerald-700
+                    bg-purple-600/10
+                    text-purple-700
 
                     transition-all
                     duration-300
 
-                    group-hover:bg-emerald-600
+                    group-hover:bg-purple-600
                     group-hover:text-white
 
 
-                    dark:bg-emerald-400/10
-                    dark:text-emerald-400
+                    dark:bg-purple-400/10
+                    dark:text-purple-400
 
-                    dark:group-hover:bg-emerald-600
+                    dark:group-hover:bg-purple-600
                     dark:group-hover:text-white
                   "
                 >

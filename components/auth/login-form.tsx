@@ -111,8 +111,8 @@ export default function LoginForm() {
 
                     transition
 
-                    focus-visible:border-[#006b3c]
-                    focus-visible:ring-[#006b3c]/30
+                    focus-visible:border-[#6d28d9]
+                    focus-visible:ring-[#6d28d9]/30
 
 
                     dark:border-slate-700
@@ -121,8 +121,8 @@ export default function LoginForm() {
 
                     dark:placeholder:text-slate-500
 
-                    dark:focus-visible:border-emerald-500
-                    dark:focus-visible:ring-emerald-500/30
+                    dark:focus-visible:border-purple-500
+                    dark:focus-visible:ring-purple-500/30
                   "
                   {...field}
                 />
@@ -179,8 +179,8 @@ export default function LoginForm() {
 
                       placeholder:text-slate-400
 
-                      focus-visible:border-[#006b3c]
-                      focus-visible:ring-[#006b3c]/30
+                      focus-visible:border-[#6d28d9]
+                      focus-visible:ring-[#6d28d9]/30
 
 
                       dark:border-slate-700
@@ -189,8 +189,8 @@ export default function LoginForm() {
 
                       dark:placeholder:text-slate-500
 
-                      dark:focus-visible:border-emerald-500
-                      dark:focus-visible:ring-emerald-500/30
+                      dark:focus-visible:border-purple-500
+                      dark:focus-visible:ring-purple-500/30
                     "
                     {...field}
                   />
@@ -219,13 +219,13 @@ export default function LoginForm() {
                       transition
 
                       hover:bg-slate-100
-                      hover:text-[#006b3c]
+                      hover:text-[#6d28d9]
 
 
                       dark:text-slate-500
 
                       dark:hover:bg-slate-800
-                      dark:hover:text-emerald-400
+                      dark:hover:text-purple-400
                     "
                   >
 
@@ -260,22 +260,22 @@ export default function LoginForm() {
             w-full
             rounded-xl
 
-            bg-[#006b3c]
+            bg-[#6d28d9]
 
             font-semibold
             text-white
 
             shadow-lg
-            shadow-emerald-900/20
+            shadow-purple-900/20
 
             transition
 
-            hover:bg-[#005631]
-            hover:shadow-emerald-900/30
+            hover:bg-[#4c1d95]
+            hover:shadow-purple-900/30
 
 
-            dark:bg-emerald-600
-            dark:hover:bg-emerald-500
+            dark:bg-purple-600
+            dark:hover:bg-purple-500
 
             disabled:cursor-not-allowed
             disabled:opacity-70

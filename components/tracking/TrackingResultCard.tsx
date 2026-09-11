@@ -39,7 +39,7 @@ export default function TrackingResultCard({
         border-slate-200
         bg-white
         shadow-lg
-        shadow-emerald-950/5
+        shadow-purple-950/5
 
         dark:border-slate-800
         dark:bg-slate-950
@@ -52,11 +52,11 @@ export default function TrackingResultCard({
         className="
           border-b
           border-slate-100
-          bg-emerald-50/50
+          bg-purple-50/50
           pb-6
 
           dark:border-slate-800
-          dark:bg-emerald-950/20
+          dark:bg-purple-950/20
         "
       >
 
@@ -77,7 +77,7 @@ export default function TrackingResultCard({
               items-center
               justify-center
               rounded-xl
-              bg-[#006b3c]
+              bg-[#6d28d9]
               text-white
             "
           >

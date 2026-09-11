@@ -24,10 +24,10 @@ export default function SystemLoader({
       </div>
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-linear-to-br from-emerald-50/95 via-white/95 to-emerald-100/95" />
+      <div className="absolute inset-0 bg-linear-to-br from-purple-50/95 via-white/95 to-purple-100/95" />
 
       {/* Decorative Glow */}
-      <div className="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl" />
       <div className="absolute -right-20 bottom-20 h-80 w-80 rounded-full bg-yellow-400/10 blur-3xl" />
 
       {/* Content */}
@@ -39,7 +39,7 @@ export default function SystemLoader({
           <div className="absolute h-48 w-48 animate-spin rounded-full border-[5px] border-transparent border-t-yellow-400" />
 
           {/* Green Ring */}
-          <div className="absolute h-40 w-40 animate-spin-reverse rounded-full border-[5px] border-transparent border-r-emerald-600" />
+          <div className="absolute h-40 w-40 animate-spin-reverse rounded-full border-[5px] border-transparent border-r-purple-600" />
 
           {/* Blue Ring */}
           <div className="absolute h-32 w-32 animate-[spin_1.6s_linear_infinite] rounded-full border-[5px] border-transparent border-b-sky-600" />
@@ -59,7 +59,7 @@ export default function SystemLoader({
 
         <div className="mt-8 text-center">
 
-          <h1 className="text-2xl font-bold tracking-wide text-emerald-800">
+          <h1 className="text-2xl font-bold tracking-wide text-purple-800">
             ONGEA NA DED MLELE
           </h1>
 
@@ -67,7 +67,7 @@ export default function SystemLoader({
             Halmashauri ya Wilaya ya Mlele
           </p>
 
-          <p className="mt-5 text-sm font-medium text-emerald-700">
+          <p className="mt-5 text-sm font-medium text-purple-700">
             {message}
           </p>
 
@@ -75,7 +75,7 @@ export default function SystemLoader({
 
         {/* Tanzania Flag Colors */}
         <div className="absolute bottom-0 left-0 flex h-2 w-full">
-          <div className="flex-1 bg-emerald-600" />
+          <div className="flex-1 bg-purple-600" />
           <div className="w-6 bg-yellow-400" />
           <div className="flex-1 bg-sky-600" />
         </div>

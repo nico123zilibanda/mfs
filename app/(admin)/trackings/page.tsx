@@ -8,7 +8,7 @@ export default function TrackingPage() {
     <div className="mx-auto max-w-2xl py-4 sm:py-8">
       <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
         <div className="flex flex-col items-center text-center">
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg ring-4 ring-emerald-100">
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg ring-4 ring-purple-100">
                   <Image
                     src="/images/tanzania-logo.png"
                     alt="Nembo ya Taifa"
@@ -18,7 +18,7 @@ export default function TrackingPage() {
                     className="object-contain"
                   />
                 </div>
-            <span className="mt-6 inline-flex rounded-full bg-emerald-900/10 px-4 py-1.5 text-sm font-semibold text-[#006b3c]">
+            <span className="mt-6 inline-flex rounded-full bg-purple-900/10 px-4 py-1.5 text-sm font-semibold text-[#6d28d9]">
               Ufuatiliaji wa Taarifa
             </span>
             <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">

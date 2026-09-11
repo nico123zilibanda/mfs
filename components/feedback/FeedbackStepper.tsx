@@ -101,26 +101,26 @@ export default function FeedbackStepper({
 
                     completed &&
                       `
-                        border-[#006b3c]
-                        bg-[#006b3c]
+                        border-[#6d28d9]
+                        bg-[#6d28d9]
                         text-white
 
                         shadow-md
-                        shadow-emerald-900/20
+                        shadow-purple-900/20
                       `,
 
 
                     active &&
                       `
-                        border-[#006b3c]
+                        border-[#6d28d9]
 
-                        bg-emerald-50
-                        text-[#006b3c]
+                        bg-purple-50
+                        text-[#6d28d9]
 
                         ring-4
-                        ring-emerald-900/10
+                        ring-purple-900/10
 
-                        dark:bg-emerald-950/40
+                        dark:bg-purple-950/40
                       `,
 
 
@@ -169,8 +169,8 @@ export default function FeedbackStepper({
                     active || completed
                       ?
                       `
-                        text-[#006b3c]
-                        dark:text-emerald-400
+                        text-[#6d28d9]
+                        dark:text-purple-400
                       `
                       :
                       `
@@ -238,7 +238,7 @@ export default function FeedbackStepper({
                     completed
                       ?
                       `
-                        bg-[#006b3c]
+                        bg-[#6d28d9]
                       `
                       :
                       `

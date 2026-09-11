@@ -10,13 +10,13 @@ export default function GovernmentTopBar() {
     <div
       className="
         border-b
-        border-emerald-900/20
-        bg-emerald-800
-        text-emerald-50
+        border-purple-900/20
+        bg-purple-800
+        text-purple-50
 
-        dark:border-emerald-700/30
+        dark:border-purple-700/30
         dark:bg-slate-950
-        dark:text-emerald-200
+        dark:text-purple-200
       "
     >
       <Container className="flex h-10 items-center justify-between py-0 text-xs sm:text-sm">
@@ -28,8 +28,8 @@ export default function GovernmentTopBar() {
               h-3.5
               w-3.5
               shrink-0
-              text-emerald-200
-              dark:text-emerald-400
+              text-purple-200
+              dark:text-purple-400
             "
           />
 
@@ -44,7 +44,7 @@ export default function GovernmentTopBar() {
             hidden
             items-center
             gap-2
-            text-emerald-100/90
+            text-purple-100/90
             sm:flex
 
             dark:text-slate-300

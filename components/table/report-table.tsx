@@ -264,9 +264,9 @@ export default function ReportTable({
           {reports.map((report) => (
             <tr
               key={report.id}
-              className="border-b border-slate-100 last:border-0 hover:bg-emerald-50/40 dark:border-slate-800 dark:hover:bg-emerald-950/30"
+              className="border-b border-slate-100 last:border-0 hover:bg-purple-50/40 dark:border-slate-800 dark:hover:bg-purple-950/30"
             >
-              <td className="px-5 py-4 font-mono text-xs font-bold text-[#006b3c]">
+              <td className="px-5 py-4 font-mono text-xs font-bold text-[#6d28d9]">
                 {report.referenceNumber}
               </td>
               <td className="px-5 py-4">
@@ -314,13 +314,13 @@ export default function ReportTable({
           {reports.map((report) => (
             <article
               key={report.id}
-              className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900"
+              className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-300 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900"
             >
               {/* Header */}
-              <div className="border-b bg-linear-to-r from-emerald-600 to-green-700 p-5 text-white">
+              <div className="border-b bg-linear-to-r from-purple-600 to-purple-800 p-5 text-white">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-wider text-emerald-100">
+                    <p className="text-xs uppercase tracking-wider text-purple-100">
                       Kumbukumbu No.
                     </p>
 
@@ -373,7 +373,7 @@ export default function ReportTable({
 
                 <Button
                   asChild
-                  className="mt-3 w-full bg-emerald-600 hover:bg-emerald-700"
+                  className="mt-3 w-full bg-purple-600 hover:bg-purple-700"
                 >
                   <Link href={`${detailBasePath}/${report.id}`}>
                     <Eye className="mr-2 h-4 w-4" />

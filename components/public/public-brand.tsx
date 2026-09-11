@@ -18,11 +18,11 @@ export default function PublicBrand() {
           bg-white
           p-1
           ring-1
-          ring-emerald-200
+          ring-purple-200
           shadow-sm
 
           dark:bg-slate-100
-          dark:ring-emerald-800/40
+          dark:ring-purple-800/40
         "
       >
         <Image

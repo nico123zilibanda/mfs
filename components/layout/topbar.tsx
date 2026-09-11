@@ -129,16 +129,16 @@ export default function Topbar({
             gap-2
             rounded-full
             border
-            border-emerald-200
-            bg-emerald-50
+            border-purple-200
+            bg-purple-50
             px-4
             py-2
             text-xs
             font-semibold
-            text-emerald-700
-            dark:border-emerald-900
-            dark:bg-emerald-950/30
-            dark:text-emerald-400
+            text-purple-700
+            dark:border-purple-900
+            dark:bg-purple-950/30
+            dark:text-purple-400
             sm:flex
           "
         >
@@ -164,11 +164,11 @@ export default function Topbar({
 
                 <AvatarFallback
                   className="
-                    bg-emerald-700
+                    bg-purple-700
                     text-sm
                     font-bold
                     text-white
-                    dark:bg-emerald-600
+                    dark:bg-purple-600
                   "
                 >
                   {initials}

@@ -43,7 +43,7 @@ export default function TimelineCard({
     <Card className="border-border shadow-sm">
       <CardHeader className="border-b border-border">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <CalendarClock className="h-5 w-5 text-emerald-700 dark:text-emerald-500" />
+          <CalendarClock className="h-5 w-5 text-purple-700 dark:text-purple-500" />
           Mfuatano wa Taarifa
         </CardTitle>
       </CardHeader>
@@ -57,8 +57,8 @@ export default function TimelineCard({
             >
               {/* Timeline */}
               <div className="relative flex flex-col items-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/40">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-950/40">
+                  <CheckCircle2 className="h-5 w-5 text-purple-700 dark:text-purple-400" />
                 </div>
 
                 {index !== timeline.length - 1 && (

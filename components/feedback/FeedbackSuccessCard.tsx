@@ -96,15 +96,15 @@ export default function FeedbackSuccessCard({
         overflow-hidden
 
         border
-        border-emerald-900/15
+        border-purple-900/15
 
         bg-white
 
         shadow-xl
-        shadow-emerald-950/5
+        shadow-purple-950/5
 
 
-        dark:border-emerald-900/40
+        dark:border-purple-900/40
         dark:bg-slate-950
       "
     >
@@ -139,12 +139,12 @@ export default function FeedbackSuccessCard({
 
             rounded-full
 
-            bg-emerald-100
+            bg-purple-100
 
             shadow-inner
 
 
-            dark:bg-emerald-950/50
+            dark:bg-purple-950/50
           "
         >
 
@@ -153,9 +153,9 @@ export default function FeedbackSuccessCard({
               h-10
               w-10
 
-              text-[#006b3c]
+              text-[#6d28d9]
 
-              dark:text-emerald-400
+              dark:text-purple-400
             "
           />
 
@@ -228,16 +228,16 @@ export default function FeedbackSuccessCard({
 
             border
 
-            border-emerald-900/15
+            border-purple-900/15
 
-            bg-emerald-50/70
+            bg-purple-50/70
 
             p-5
 
 
-            dark:border-emerald-800/40
+            dark:border-purple-800/40
 
-            dark:bg-emerald-950/30
+            dark:bg-purple-950/30
           "
         >
 
@@ -285,11 +285,11 @@ export default function FeedbackSuccessCard({
 
                 tracking-[0.15em]
 
-                text-[#006b3c]
+                text-[#6d28d9]
 
                 sm:text-lg
 
-                dark:text-emerald-400
+                dark:text-purple-400
               "
             >
 
@@ -311,14 +311,14 @@ export default function FeedbackSuccessCard({
 
                 rounded-xl
 
-                border-emerald-900/20
+                border-purple-900/20
 
                 bg-white
 
-                hover:bg-emerald-50
+                hover:bg-purple-50
 
 
-                dark:border-emerald-800/40
+                dark:border-purple-800/40
 
                 dark:bg-slate-900
               "
@@ -335,7 +335,7 @@ export default function FeedbackSuccessCard({
                     h-4
                     w-4
 
-                    text-[#006b3c]
+                    text-[#6d28d9]
                   "
                 />
 
@@ -372,7 +372,7 @@ export default function FeedbackSuccessCard({
 
             rounded-xl
 
-            bg-[#006b3c]
+            bg-[#6d28d9]
 
             font-semibold
 
@@ -380,9 +380,9 @@ export default function FeedbackSuccessCard({
 
             shadow-lg
 
-            shadow-emerald-900/20
+            shadow-purple-900/20
 
-            hover:bg-[#005631]
+            hover:bg-[#4c1d95]
           "
 
           onClick={onSubmitAnother}

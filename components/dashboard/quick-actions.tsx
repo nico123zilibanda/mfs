@@ -19,7 +19,7 @@ const actions: Action[] = [
       "kagua ripoti zote za maoni ya raia zinazowasilishwa kwenye mfumo.",
     href: "/reports",
     icon: FileText,
-    color: "from-emerald-500 via-emerald-600 to-green-700",
+    color: "from-purple-500 via-purple-600 to-purple-800",
   },
   {
     title: "Fuatilia Taarifa",
@@ -64,13 +64,13 @@ export default function QuickActions() {
                   transition-all
                   duration-300
                   hover:-translate-y-1
-                  hover:border-emerald-300
+                  hover:border-purple-300
                   hover:shadow-xl
                   dark:border-slate-800
                   dark:bg-slate-900
                 "
               >
-                <div className="absolute left-0 top-0 h-full w-1 bg-emerald-600 scale-y-0 origin-top transition-transform duration-300 group-hover:scale-y-100" />
+                <div className="absolute left-0 top-0 h-full w-1 bg-purple-600 scale-y-0 origin-top transition-transform duration-300 group-hover:scale-y-100" />
 
                 <CardContent className="p-7">
                   <div className="flex items-start justify-between">
@@ -98,7 +98,7 @@ export default function QuickActions() {
                         transition-all
                         duration-300
                         group-hover:translate-x-2
-                        group-hover:text-emerald-600
+                        group-hover:text-purple-600
                       "
                     />
                   </div>
@@ -114,15 +114,15 @@ export default function QuickActions() {
                   </div>
 
                   <div className="mt-8 flex items-center justify-between">
-                    <span className="text-sm font-medium text-emerald-600">
+                    <span className="text-sm font-medium text-purple-600">
                       Fungua Moduli
                     </span>
 
                     <Button
                       size="sm"
                       className="
-                        bg-emerald-600
-                        hover:bg-emerald-700
+                        bg-purple-600
+                        hover:bg-purple-700
                       "
                     >
                       Endelea
