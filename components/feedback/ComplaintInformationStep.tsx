@@ -65,7 +65,7 @@ export default function ComplaintInformationStep({
               dark:text-white
             "
           >
-            Taarifa ya tukio
+            Taarifa ya maoni au malalamiko
           </h3>
 
           <p
@@ -77,7 +77,7 @@ export default function ComplaintInformationStep({
               dark:text-slate-400
             "
           >
-            Eleza kwa undani tukio, eneo lilipotokea na taarifa nyingine muhimu.
+            Eleza kwa undani zaidi, eneo lilipotokea na taarifa nyingine muhimu....
           </p>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function ComplaintInformationStep({
                 dark:text-slate-200
               "
             >
-              Maelezo ya tukio
+              Maelezo ya taarifa
             </FormLabel>
 
             <FormControl>

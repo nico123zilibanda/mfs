@@ -36,7 +36,7 @@ const fields = [
   {
     name: "phone" as const,
     label: "Namba ya simu",
-    placeholder: "Mfano: 0712 345 678",
+    placeholder: "simu: +255 xxx xxx xxx",
     type: "tel",
   },
   {
