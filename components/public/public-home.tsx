@@ -20,11 +20,11 @@ export default function PublicHome() {
 
       <PublicHero />
 
-      <PublicServices />
+      {/* <PublicServices /> */}
 
-      <PublicTrust />
+      {/* <PublicTrust /> */}
 
-      <PublicStats />
+      {/* <PublicStats /> */}
 
       <PublicProcess />
 
