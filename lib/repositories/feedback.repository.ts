@@ -275,6 +275,119 @@ async function findByReferenceNumber(
 
   return mapFeedbackRow(data);
 }
+export interface FeedbackChartData {
+  status: {
+    status: string;
+    count: number;
+  }[];
+
+  monthly: {
+    month: string;
+    count: number;
+  }[];
+}
+
+async function findChartData(): Promise<FeedbackChartData> {
+  const supabase = await createSupabaseServerClient();
+
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .select("status, created_at")
+    .eq("is_deleted", false)
+    .order("created_at", {
+      ascending: true,
+    });
+
+  throwDatabaseError(error, "fetching feedback chart data");
+
+  const rows = data ?? [];
+
+  /**
+   * ----------------------------------------
+   * Feedback by status
+   * ----------------------------------------
+   */
+  const statusMap = new Map<string, number>();
+
+  for (const row of rows) {
+    const status = row.status;
+
+    statusMap.set(
+      status,
+      (statusMap.get(status) ?? 0) + 1
+    );
+  }
+
+  const status = Array.from(statusMap.entries()).map(
+    ([status, count]) => ({
+      status,
+      count,
+    })
+  );
+
+  /**
+   * ----------------------------------------
+   * Feedback by month
+   * Last 6 months
+   * ----------------------------------------
+   */
+  const monthlyMap = new Map<string, number>();
+
+  const now = new Date();
+
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(
+      now.getFullYear(),
+      now.getMonth() - i,
+      1
+    );
+
+    const key = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}`;
+
+    monthlyMap.set(key, 0);
+  }
+
+  for (const row of rows) {
+    const date = new Date(row.created_at);
+
+    const key = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}`;
+
+    if (monthlyMap.has(key)) {
+      monthlyMap.set(
+        key,
+        (monthlyMap.get(key) ?? 0) + 1
+      );
+    }
+  }
+
+  const monthly = Array.from(monthlyMap.entries()).map(
+    ([key, count]) => {
+      const [year, month] = key.split("-");
+
+      const date = new Date(
+        Number(year),
+        Number(month) - 1,
+        1
+      );
+
+      return {
+        month: date.toLocaleDateString("sw-TZ", {
+          month: "short",
+        }),
+        count,
+      };
+    }
+  );
+
+  return {
+    status,
+    monthly,
+  };
+}
 
 export const feedbackRepository = {
   findById,
@@ -288,4 +401,6 @@ export const feedbackRepository = {
   permanentlyDelete,
   findDeleted,
   findDeletedById,
+
+  findChartData,
 };

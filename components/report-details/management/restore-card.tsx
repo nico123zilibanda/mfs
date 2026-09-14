@@ -49,7 +49,7 @@ export default function RestoreCard({
         result.message ?? "Report restored successfully."
       );
 
-      router.replace(`/reports/${report.id}`);
+      router.replace(`/all-reports/${report.id}`);
       router.refresh();
     });
   }

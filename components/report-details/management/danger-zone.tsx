@@ -94,7 +94,7 @@ export default function DangerZone({
 
     setOpen(false);
 
-    router.replace("/reports");
+    router.replace("/all-reports");
 
     router.refresh();
   }

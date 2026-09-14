@@ -8,18 +8,29 @@ import DataTableEmpty from "@/components/table/data-table-empty";
 
 import RecentRptTable from "./recent-rpt-table";
 
-import { getDashboardStats, getRecentFeedback } from "@/lib/actions/dashboard";
+import {
+  getDashboardStats,
+  getRecentFeedback,
+} from "@/lib/actions/dashboard";
+
+import { getFeedbackChartData } from "@/lib/actions/get-feedback-charts";
+
+import FeedbackCharts from "@/components/dashboard/feedback-charts";
 
 export default async function AdminPage() {
-  const [statsResult, recentResult] = await Promise.all([
+  const [
+    statsResult,
+    recentResult,
+    chartResult,
+  ] = await Promise.all([
     getDashboardStats(),
     getRecentFeedback(),
+    getFeedbackChartData(),
   ]);
 
   if (!statsResult.success) {
     return (
       <DashboardPage>
-
         <div
           className="
             rounded-xl
@@ -53,22 +64,30 @@ export default async function AdminPage() {
     );
   }
 
-  const recentFeedback = recentResult.success ? recentResult.data : [];
+  const recentFeedback =
+    recentResult.success
+      ? recentResult.data
+      : [];
 
   return (
     <DashboardPage>
-      {/* Header */}
-
-
       {/* Statistics */}
-
       <StatsGrid stats={statsResult.data} />
 
-      {/* Recent Reports */}
+      {/* Feedback Charts */}
+      {chartResult.success && (
+        <FeedbackCharts
+          statusData={chartResult.data.status}
+          monthlyData={chartResult.data.monthly}
+        />
+      )}
 
+      {/* Recent Reports */}
       <PageSection>
         {recentFeedback.length > 0 ? (
-          <RecentRptTable reports={recentFeedback} />
+          <RecentRptTable
+            reports={recentFeedback}
+          />
         ) : (
           <DataTableEmpty
             title="Hakuna taarifa za karibuni"
@@ -78,7 +97,6 @@ export default async function AdminPage() {
       </PageSection>
 
       {/* Quick Actions */}
-
       <QuickActions />
     </DashboardPage>
   );

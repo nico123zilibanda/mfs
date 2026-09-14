@@ -103,7 +103,7 @@ export default function PermanentDeleteDangerZone({
     setOpen(false);
 
     router.replace(
-      "/reports/deleted"
+      "/deleted"
     );
 
     router.refresh();
