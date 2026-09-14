@@ -23,14 +23,11 @@ export default function ReportDetailsLayout({
 
         <ComplaintInformation report={report} />
 
-        <TimelineCard report={report} />
       </div>
 
       {/* Sidebar */}
 
       <div className="space-y-6">
-        <ReportInformation report={report} />
-
         <ManagementCard report={report} />
       </div>
     </div>

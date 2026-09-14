@@ -139,7 +139,7 @@ export default function AdminNoteForm({
           <div>
 
             <CardTitle className="text-lg">
-              Maelezo ya Afisa
+              Maelezo ya Msimamizi
             </CardTitle>
 
             <CardDescription>
@@ -167,8 +167,7 @@ export default function AdminNoteForm({
             </p>
 
             <p className="mt-1 text-sm text-muted-foreground">
-              Maelezo haya yanaonekana kwa wasimamizi wa mfumo pekee
-              na hayataonekana kwa mwananchi aliyewasilisha taarifa.
+              Maelezo haya yanaonekana kwa wasimamizi Tu.
             </p>
 
           </div>
@@ -190,7 +189,7 @@ export default function AdminNoteForm({
                 <FormItem>
 
                   <FormLabel>
-                    Maelezo ya Afisa
+                    Maelezo ya Msimamizi
                   </FormLabel>
 
                   <FormControl>

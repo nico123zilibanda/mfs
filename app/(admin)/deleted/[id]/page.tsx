@@ -3,10 +3,8 @@ import DashboardHeader from "@/components/dashboard/dashboard-header";
 import EmptyState from "@/components/dashboard/empty-state";
 
 import ReportHeader from "@/components/report-details/report-header";
-import ReportInformation from "@/components/report-details/report-information";
 import CitizenInformation from "@/components/report-details/citizen-information";
 import ComplaintInformation from "@/components/report-details/complaint-information";
-import TimelineCard from "@/components/report-details/timeline-card";
 
 import RestoreCard from "@/components/report-details/management/restore-card";
 import PermanentDeleteDangerZone from "@/components/report-details/management/permanent-delete-danger-zone";
@@ -41,13 +39,13 @@ export default async function DeletedReportDetailsPage({
       <DashboardPage>
 
         <DashboardHeader
-          title="Taarifa Zilizofutwa"
-          description="Tazama na urejeshe ripoti za maoni ya raia zilizofutwa."
+          title="Taarifa Zilizohifadhiwa"
+          description="Tazama na urejeshe taarifa za maoni na malalamiko ya raia zilizohifadhiwa."
         />
 
 
         <EmptyState
-          title="Taarifa zilizofutwa hazipo!"
+          title="Taarifa zilizohifadhiwa hazipo!"
           description={result.message}
         />
 
@@ -61,8 +59,8 @@ export default async function DeletedReportDetailsPage({
     <DashboardPage>
 
       <DashboardHeader
-        title="Taarifa Zilizofutwa."
-        description="Tazama na urejeshe ripoti za maoni ya raia zilizofutwa."
+        title="Taarifa Zilizohifadhiwa."
+        description="Tazama na urejeshe taarifa za maoni na malalamiko ya raia zilizohifadhiwa."
       />
 
 
@@ -79,22 +77,12 @@ export default async function DeletedReportDetailsPage({
           />
 
 
-          <ReportInformation
-            report={result.data}
-          />
-
-
           <CitizenInformation
             report={result.data}
           />
 
 
           <ComplaintInformation
-            report={result.data}
-          />
-
-
-          <TimelineCard
             report={result.data}
           />
 

@@ -20,7 +20,7 @@ const services = [
   {
     title: "Toa Taarifa",
     description:
-      "Wasilisha maoni, malalamiko au taarifa kwa Halmashauri ya Wilaya ya Mlele kupitia mfumo huu wa kidigitali.",
+      "Wasilisha maoni, malalamiko au taarifa.",
     href: "#feedback-form",
     icon: FileText,
     button: "Wasilisha",
@@ -28,7 +28,7 @@ const services = [
   {
     title: "Fuatilia Taarifa",
     description:
-      "Tumia namba yako ya kumbukumbu kufuatilia hatua zilizofikiwa katika kushughulikia taarifa yako.",
+      "Tumia namba yako ya kumbukumbu kufuatilia taarifa yako.",
     href: "/public/tracking",
     icon: Search,
     button: "Fuatilia",
@@ -155,7 +155,7 @@ export default function PublicServices() {
                     flex
                     h-full
                     flex-col
-                    p-8
+                    p-2
                   "
                 >
 

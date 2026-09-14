@@ -118,7 +118,7 @@ export default function PublicFooter() {
 
               <ShieldCheck className="h-3.5 w-3.5" />
 
-              Mfumo Rasmi wa Serikali
+              Maoni ma Malalamiko Portal
 
             </div>
 

@@ -16,9 +16,9 @@ export default function DeletedReportsTable(props: Props) {
   return (
     <ReportTable
       {...props}
-      title="Taarifa zilizofutwa"
+      title="Taarifa zilizohifadhiwa"
       description="Rejesha au futa kabisa taarifa zilizowekwa kwenye kumbukumbu ya taka."
-      detailBasePath="/reports/deleted"
+      detailBasePath="/deleted"
     />
   );
 }

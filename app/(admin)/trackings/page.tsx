@@ -1,35 +1,128 @@
-// app/tracking/page.tsx
+// app/public/tracking/page.tsx
+
 import Image from "next/image";
 
+import { ClipboardCheck } from "lucide-react";
+
 import TrackingForm from "@/components/tracking/TrackingForm";
-import { SearchCheck } from "lucide-react";
+import Container from "@/components/layout/Container";
+
 export default function TrackingPage() {
   return (
-    <div className="mx-auto max-w-2xl py-4 sm:py-8">
-      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-        <div className="flex flex-col items-center text-center">
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg ring-4 ring-purple-100">
-                  <Image
-                    src="/images/tanzania-logo.png"
-                    alt="Nembo ya Taifa"
-                    width={72}
-                    height={72}
-                    priority
-                    className="object-contain"
-                  />
-                </div>
-            <span className="mt-6 inline-flex rounded-full bg-purple-900/10 px-4 py-1.5 text-sm font-semibold text-[#6d28d9]">
+    <section
+      className="
+        min-h-[calc(100vh-18rem)]
+        bg-slate-50
+        py-16
+        sm:py-24
+        dark:bg-slate-950
+      "
+    >
+      <Container>
+        <div className="mx-auto max-w-2xl">
+
+          <div className="flex flex-col items-center text-center">
+
+            {/* National Logo */}
+            <div
+              className="
+                relative
+                flex
+                h-28
+                w-28
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-purple-900/10
+                bg-white
+                shadow-xl
+                ring-4
+                ring-purple-100
+                dark:border-purple-400/20
+                dark:bg-slate-900
+                dark:ring-purple-900/40
+              "
+            >
+              <Image
+                src="/images/tanzania-logo.png"
+                alt="Nembo ya Taifa"
+                width={78}
+                height={78}
+                sizes="20"
+                priority
+                className="
+                  object-contain
+                "
+              />
+            </div>
+
+            {/* Title Badge */}
+            <div
+              className="
+                mt-6
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-purple-900/10
+                bg-purple-50
+                px-4
+                py-1.5
+                text-sm
+                font-semibold
+                text-[#6d28d9]
+                dark:border-purple-400/20
+                dark:bg-purple-950/40
+                dark:text-purple-400
+              "
+            >
+              <ClipboardCheck className="h-4 w-4" />
+
               Ufuatiliaji wa Taarifa
-            </span>
-            <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+            </div>
+
+
+            <p
+              className="
+                mx-auto
+                mt-5
+                max-w-xl
+                leading-7
+                text-slate-600
+                dark:text-slate-400
+              "
+            >
               Weka namba ya kumbukumbu uliyopokea baada ya kutuma taarifa ili
               uone hatua iliyofikiwa.
             </p>
+
+          </div>
+
+
+          {/* Tracking Form Container */}
+          <div
+            className="
+              mt-10
+              rounded-3xl
+              border
+              border-slate-200
+              bg-white
+              p-2
+              shadow-xl
+              shadow-purple-950/5
+              sm:p-6
+              dark:border-slate-800
+              dark:bg-slate-900
+              dark:shadow-black/20
+            "
+          >
+            <TrackingForm />
+          </div>
+
         </div>
-        <div className="mt-6">
-          <TrackingForm />
-        </div>
-      </div>
-    </div>
+      </Container>
+    </section>
   );
 }

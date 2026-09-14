@@ -119,11 +119,11 @@ export default function DangerZone({
           <div>
 
             <CardTitle className="text-lg text-amber-700 dark:text-amber-400">
-              Archive Report
+              Hifadhi Taarifa
             </CardTitle>
 
             <CardDescription>
-              Reversible administrative action
+              Kitendo kinachoweza kubatilishwa.
             </CardDescription>
 
           </div>
@@ -131,8 +131,8 @@ export default function DangerZone({
         </div>
 
         <p className="text-sm leading-6 text-muted-foreground">
-          This report will be removed from active reports and moved to
-          the archive. It can be restored at any time.
+          Ripoti hii itatolewa kwenye ripoti zinazotumika sasa na kuhamishwa kwenye jarada. 
+          Inaweza kurejeshwa wakati wowote
         </p>
 
       </CardHeader>
@@ -163,7 +163,7 @@ export default function DangerZone({
 
               <Archive className="mr-2 h-4 w-4" />
 
-              Archive Report
+              Hifadhi Taarifa
 
             </Button>
 
@@ -174,12 +174,12 @@ export default function DangerZone({
             <AlertDialogHeader>
 
               <AlertDialogTitle>
-                Archive this report?
+               Hifadhi Taarifa hii?
               </AlertDialogTitle>
 
               <AlertDialogDescription>
-                This report will be removed from active records and moved
-                to the archive. You can restore it later if necessary.
+                 Ripoti hii itatolewa kwenye ripoti zinazotumika sasa na kuhamishwa kwenye jarada. 
+                 Inaweza kurejeshwa wakati wowote
               </AlertDialogDescription>
 
             </AlertDialogHeader>
@@ -207,8 +207,8 @@ export default function DangerZone({
               >
 
                 {isPending
-                  ? "Archiving..."
-                  : "Archive Report"}
+                  ? "Kuhifadhi..."
+                  : "Hifadhi Taarifa"}
 
               </AlertDialogAction>
 

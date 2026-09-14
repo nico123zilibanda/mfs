@@ -40,12 +40,12 @@ const navigation = [
   },
   {
     title: "Taarifa Zote",
-    href: "/reports",
+    href: "/all-reports",
     icon: FileText,
   },
   {
     title: "Taarifa Zilizohifadhiwa",
-    href: "/reports/deleted",
+    href: "/deleted",
     icon: Trash2,
   },
   {
@@ -166,10 +166,6 @@ function SidebarContent({
               Halmashauri ya Wilaya ya Mlele
             </p>
 
-            <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-purple-400">
-              Mfumo wa Serikali
-            </p>
-
           </div>
 
         </Link>
@@ -213,19 +209,31 @@ function SidebarContent({
               icon: Icon,
             }) => {
 
+              /*
+               * Keep the parent navigation item active
+               * when visiting its detail/sub-pages.
+               *
+               * Examples:
+               * /all-reports
+               * /all-reports/123
+               * /all-reports/123/edit
+               *
+               * All of the above keep "Taarifa Zote" active.
+               */
               const active =
                 pathname === href ||
-                (
-                  href === "/reports" &&
-                  pathname.startsWith("/reports/") &&
-                  !pathname.startsWith("/reports/deleted")
-                );
+                pathname.startsWith(`${href}/`);
 
               return (
                 <Link
                   key={href}
                   href={href}
                   onClick={onNavigate}
+                  aria-current={
+                    active
+                      ? "page"
+                      : undefined
+                  }
                   className={cn(
                     `
                       group
@@ -304,10 +312,20 @@ function SidebarContent({
 
         </form>
 
-        <div className="mt-6 rounded-xl border border-white/5 bg-slate-900/50 p-3 text-center">
+        <div
+          className="
+            mt-6
+            rounded-xl
+            border
+            border-white/5
+            bg-slate-900/50
+            p-3
+            text-center
+          "
+        >
 
           <p className="text-sm font-semibold text-purple-400">
-            Mfumo wa Mlele
+            Maoni na Malalamiko Portal
           </p>
 
           <p className="mt-1 text-xs text-slate-500">
@@ -316,7 +334,15 @@ function SidebarContent({
 
           <div className="mt-3 h-px bg-white/10" />
 
-          <p className="mt-3 text-[11px] uppercase tracking-wider text-slate-600">
+          <p
+            className="
+              mt-3
+              text-[11px]
+              uppercase
+              tracking-wider
+              text-slate-600
+            "
+          >
             Version 1.0
           </p>
 

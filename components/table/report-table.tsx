@@ -291,7 +291,9 @@ export default function ReportTable({
                   asChild
                   variant="outline"
                   size="sm"
-                  className="border-slate-200"
+                  className="border-slate-200 text-[hsl(233,70%,50%)] hover:text-[hsl(233,70%,50%)]
+                  bg-purple-300 hover:bg-purple-400 
+                  dark:bg-purple-300 hover:dark:bg-purple-400"
                 >
                   <Link href={`${detailBasePath}/${report.id}`}>
                     <Eye className="mr-1.5 h-4 w-4" /> Angalia

@@ -18,7 +18,7 @@ export default function ReportsTable(props: Props) {
       {...props}
       title="Taarifa zote"
       description="Kagua na simamia taarifa zote za wananchi."
-      detailBasePath="/reports"
+      detailBasePath="/all-reports"
     />
   );
 }

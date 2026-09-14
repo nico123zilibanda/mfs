@@ -10,7 +10,7 @@ import Container from "@/components/layout/Container";
 
 const items = [
   {
-    title: "Mfumo Rasmi",
+    title: "Maoni na Malalamiko Portal",
     description:
       "Mfumo huu unasimamiwa na Halmashauri ya Wilaya ya Mlele kwa ajili ya kupokea maoni, malalamiko na taarifa kutoka kwa wananchi.",
     icon: Building2,

@@ -35,7 +35,7 @@ export default function PublicHero() {
 
         <Image
           src="/images/mkurugenzi_banner.png"
-          alt="Mfumo wa Kupokea Maoni"
+          alt="Mfumo wa Kupokea Maoni na Malalamiko"
           fill
           priority
           className="
@@ -133,7 +133,7 @@ export default function PublicHero() {
                 "
               />
 
-              Mfumo Rasmi wa Kupokea Maoni na Malalamiko
+              Mfumo wa Kupokea Maoni na Malalamiko
 
             </div>
 

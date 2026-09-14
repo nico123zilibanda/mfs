@@ -17,7 +17,7 @@ const actions: Action[] = [
     title: "Angalia Taarifa",
     description:
       "kagua ripoti zote za maoni ya raia zinazowasilishwa kwenye mfumo.",
-    href: "/reports",
+    href: "/all-reports",
     icon: FileText,
     color: "from-purple-500 via-purple-600 to-purple-800",
   },
@@ -39,14 +39,10 @@ export default function QuickActions() {
           <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
             Vitendo vya Haraka
           </h2>
-
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Angalia Taarifa au Fuatilia Mrejesho
-          </p>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {actions.map((action) => {
           const Icon = action.icon;
 
@@ -70,9 +66,10 @@ export default function QuickActions() {
                   dark:bg-slate-900
                 "
               >
-                <div className="absolute left-0 top-0 h-full w-1 bg-purple-600 scale-y-0 origin-top transition-transform duration-300 group-hover:scale-y-100" />
+                <div className="absolute left-0 top-0 h-full w-1 bg-purple-600 
+                scale-y-0 origin-top transition-transform duration-300 group-hover:scale-y-100" />
 
-                <CardContent className="p-7">
+                <CardContent className="p-2">
                   <div className="flex items-start justify-between">
                     <div
                       className={`
@@ -107,10 +104,6 @@ export default function QuickActions() {
                     <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
                       {action.title}
                     </h3>
-
-                    <p className="mt-2 leading-7 text-slate-500 dark:text-slate-400">
-                      {action.description}
-                    </p>
                   </div>
 
                   <div className="mt-8 flex items-center justify-between">

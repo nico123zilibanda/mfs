@@ -23,7 +23,7 @@ export default function ThemeToggle() {
       aria-label={isDark ? "Washa mandhari meupe" : "Washa mandhari meusi"}
     >
       {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-      {isDark ? "Giza" : "Mwanga"}
+      {isDark ? "" : ""}
     </Button>
   );
 }

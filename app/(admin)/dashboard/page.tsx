@@ -19,10 +19,6 @@ export default async function AdminPage() {
   if (!statsResult.success) {
     return (
       <DashboardPage>
-        <DashboardHeader
-          title="Dashibodi"
-          description="Fuatilia taarifa za wananchi na mwenendo wa mfumo."
-        />
 
         <div
           className="
@@ -63,10 +59,6 @@ export default async function AdminPage() {
     <DashboardPage>
       {/* Header */}
 
-      <DashboardHeader
-        title="Dashibodi"
-        description="Muhtasari wa taarifa za wananchi na hatua za ushughulikiaji."
-      />
 
       {/* Statistics */}
 

@@ -37,8 +37,8 @@ export default async function ReportsPage({
   return (
     <DashboardPage>
       <DashboardHeader
-        title="Taarifa zilizofutwa"
-        description="Rejesha au futa kabisa taarifa za wananchi zilizofutwa."
+        title="Taarifa zilizohifadhiwa"
+        description="Rejesha au futa kabisa taarifa za wananchi zilizohifadhiwa."
       />
 
       <PageSection>

@@ -58,7 +58,7 @@ export default function StatsCard({
         "
       />
 
-      <CardContent className="p-6">
+      <CardContent className="p-2">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm font-medium text-muted-foreground">
@@ -73,8 +73,8 @@ export default function StatsCard({
           <div
             className="
               flex
-              h-14
-              w-14
+              h-8
+              w-8
               items-center
               justify-center
               rounded-2xl
@@ -90,7 +90,7 @@ export default function StatsCard({
           >
             <Icon
               className={cn(
-                "h-7 w-7 text-white",
+                "h-4 w-4 text-white",
                 iconClassName
               )}
             />

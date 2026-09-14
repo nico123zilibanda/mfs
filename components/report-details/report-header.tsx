@@ -38,7 +38,7 @@ export default function ReportHeader({
 
               <div>
                 <CardDescription className="text-xs uppercase tracking-[0.18em] text-purple-700 dark:text-purple-500">
-                  Citizen Feedback Report
+                  Taarifa ya maoni au malalamiko ya Wananchi
                 </CardDescription>
 
                 <CardTitle className="mt-1 font-mono text-2xl font-bold tracking-tight text-foreground">

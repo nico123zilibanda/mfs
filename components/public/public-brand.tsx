@@ -63,7 +63,7 @@ export default function PublicBrand() {
             dark:text-slate-400
           "
         >
-          Mfumo wa Maoni na Malalamiko ya Wananchi
+        Maoni na Malalamiko Portal
         </p>
 
       </div>

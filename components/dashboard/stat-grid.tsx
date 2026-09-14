@@ -15,7 +15,7 @@ type StatsGridProps = {
 
 export default function StatsGrid({ stats }: StatsGridProps) {
   return (
-    <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <StatsCard
         title="Taarifa zote"
         value={stats.total}
