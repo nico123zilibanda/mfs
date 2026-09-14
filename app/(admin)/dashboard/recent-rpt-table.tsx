@@ -11,7 +11,7 @@ export default function RecentReportsTable({
       reports={reports}
       title="Taarifa za karibuni"
       description="Taarifa za wananchi zilizowasilishwa hivi karibuni."
-      detailBasePath="/reports"
+      detailBasePath="/all-reports"
       searchable={false}
     />
     

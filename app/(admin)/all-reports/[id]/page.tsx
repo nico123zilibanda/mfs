@@ -21,10 +21,6 @@ export default async function ReportDetailsPage({
 
   return (
     <main className="space-y-6">
-      <DashboardHeader
-        title="Maelezo ya taarifa"
-        description="Kagua taarifa ya mwananchi na simamia hatua za ushughulikiaji."
-      />
       {!result.success ? (
         <EmptyState title="Taarifa haijapatikana" description={result.message} />
       ) : (

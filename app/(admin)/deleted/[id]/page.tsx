@@ -38,12 +38,6 @@ export default async function DeletedReportDetailsPage({
     return (
       <DashboardPage>
 
-        <DashboardHeader
-          title="Taarifa Zilizohifadhiwa"
-          description="Tazama na urejeshe taarifa za maoni na malalamiko ya raia zilizohifadhiwa."
-        />
-
-
         <EmptyState
           title="Taarifa zilizohifadhiwa hazipo!"
           description={result.message}
@@ -57,14 +51,6 @@ export default async function DeletedReportDetailsPage({
 
   return (
     <DashboardPage>
-
-      <DashboardHeader
-        title="Taarifa Zilizohifadhiwa."
-        description="Tazama na urejeshe taarifa za maoni na malalamiko ya raia zilizohifadhiwa."
-      />
-
-
-
       <div className="grid gap-6 lg:grid-cols-3">
 
 
