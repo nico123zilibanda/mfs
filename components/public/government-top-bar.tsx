@@ -1,72 +1,70 @@
-import {
-  Building2,
-  MapPin,
-} from "lucide-react";
-
-import Container from "@/components/layout/Container";
+import Image from "next/image";
 
 export default function GovernmentTopBar() {
   return (
-    <div
+    <header
       className="
+        relative
+        w-full
+        overflow-hidden
         border-b
-        border-purple-900/20
-        bg-purple-800
-        text-purple-50
-
-        dark:border-purple-700/30
-        dark:bg-slate-950
-        dark:text-purple-200
+        border-slate-900/20
+        bg-slate-950
+        shadow-sm
       "
+      aria-label="Government of Tanzania"
     >
-      <Container className="flex h-10 items-center justify-between py-0 text-xs sm:text-sm">
-
-        <div className="flex min-w-0 items-center gap-2">
-
-          <Building2
-            className="
-              h-3.5
-              w-3.5
-              shrink-0
-              text-purple-200
-              dark:text-purple-400
-            "
-          />
-
-          <span className="truncate font-medium tracking-wide">
-            Serikali ya Jamhuri ya Muungano wa Tanzania
-          </span>
-
-        </div>
-
-        <div
+      <div
+        className="
+          relative
+          w-full
+          bg-slate-950
+        "
+      >
+        <Image
+          src="/images/Malalamiko_Portal_banner_2.png"
+          alt="Malalamiko Portal — President's Office, Public Service Recruitment Secretariat"
+          width={2048}
+          height={134}
+          priority
+          sizes="100vw"
           className="
-            hidden
-            items-center
-            gap-2
-            text-purple-100/90
-            sm:flex
-
-            dark:text-slate-300
+            block
+            h-auto
+            w-full
+            max-w-none
+            select-none
           "
-        >
+          draggable={false}
+        />
 
-          <MapPin
-            className="
-              h-3.5
-              w-3.5
-              text-amber-300
-              dark:text-amber-400
-            "
-          />
+        {/* Premium subtle overlay */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-linear-to-b
+            from-white/3
+            via-transparent
+            to-black/8
+          "
+        />
 
-          <span>
-            Halmashauri ya Wilaya ya Mlele • Mkoa wa Katavi
-          </span>
-
-        </div>
-
-      </Container>
-    </div>
+        {/* Bottom highlight */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            h-px
+            bg-white/20
+          "
+        />
+      </div>
+    </header>
   );
 }

@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 
-import PublicBrand from "./public-brand";
 import GovernmentTopBar from "./government-top-bar";
 import MobileNavigation from "./mobile-navigation";
 
@@ -40,22 +39,12 @@ export default function PublicNavbar() {
     resolvedTheme,
   } = useTheme();
 
-  /*
-   * Prevent hydration mismatch.
-   *
-   * next-themes does not know the actual theme
-   * during the first server/client render.
-   */
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  /*
-   * resolvedTheme gives us the actual theme when
-   * theme === "system".
-   */
   const isDark =
     mounted &&
     (resolvedTheme === "dark" ||
@@ -67,52 +56,60 @@ export default function PublicNavbar() {
 
   return (
     <>
+      {/* -------------------------------------------------------
+       * GOVERNMENT IDENTITY BANNER
+       * ----------------------------------------------------- */}
+
       <GovernmentTopBar />
+
+      {/* -------------------------------------------------------
+       * PUBLIC NAVIGATION
+       * ----------------------------------------------------- */}
 
       <header
         className="
           sticky
           top-0
           z-50
-          border-b
-          border-slate-200
-          bg-white/95
-          shadow-sm
-          backdrop-blur-xl
-          supports-backdrop-filter:bg-white/90
+          w-full
 
-          dark:border-slate-800
-          dark:bg-slate-950/90
+          border-b
+          border-slate-200/80
+
+          bg-white/95
+          shadow-[0_4px_20px_-12px_rgba(15,23,42,0.25)]
+
+          backdrop-blur-xl
+
+          supports-backdrop-filter:bg-white/85
+
+          dark:border-slate-800/80
+          dark:bg-slate-950/95
           dark:supports-backdrop-filter:bg-slate-950/85
         "
       >
         <Container
           className="
             flex
-            h-18
+            h-16
             items-center
             justify-between
             py-0
-            sm:h-20
+
+            sm:h-17
+            lg:h-18
           "
         >
-
-          {/* Brand */}
-
-          <Link
-            href="/"
-            aria-label="Nyumbani - Ongea na DED Mlele"
-          >
-            <PublicBrand />
-          </Link>
-
-          {/* Desktop Navigation */}
+          {/* ---------------------------------------------------
+           * DESKTOP NAVIGATION
+           * ------------------------------------------------- */}
 
           <nav
             className="
               hidden
               items-center
-              gap-6
+              gap-1
+
               lg:flex
             "
             aria-label="Menyu kuu"
@@ -136,22 +133,36 @@ export default function PublicNavbar() {
                   className={cn(
                     `
                       relative
-                      py-7
+                      flex
+                      h-10
+                      items-center
+                      rounded-xl
+                      px-4
+
                       text-sm
-                      font-medium
-                      transition-colors
+                      font-semibold
+
+                      transition-all
+                      duration-200
                     `,
+
                     active
                       ? `
-                          text-purple-600
-                          dark:text-purple-400
+                          bg-purple-50
+                          text-purple-700
+
+                          dark:bg-purple-950/50
+                          dark:text-purple-300
                         `
                       : `
                           text-slate-600
-                          hover:text-slate-900
+
+                          hover:bg-slate-100
+                          hover:text-slate-950
 
                           dark:text-slate-400
-                          dark:hover:text-slate-100
+                          dark:hover:bg-slate-900
+                          dark:hover:text-white
                         `
                   )}
                 >
@@ -159,22 +170,40 @@ export default function PublicNavbar() {
 
                   {active && (
                     <span
+                      aria-hidden="true"
                       className="
                         absolute
-                        bottom-0
-                        left-0
-                        h-0.5
-                        w-full
+                        bottom-1
+                        left-1/2
+                        h-1
+                        w-1
+                        -translate-x-1/2
                         rounded-full
-                        bg-amber-500
-                        dark:bg-amber-400
+
+                        bg-purple-600
+
+                        dark:bg-purple-400
                       "
                     />
                   )}
                 </Link>
               );
             })}
+          </nav>
 
+          {/* ---------------------------------------------------
+           * RIGHT CONTROLS
+           * ------------------------------------------------- */}
+
+          <div
+            className="
+              hidden
+              items-center
+              gap-2
+
+              lg:flex
+            "
+          >
             {/* Theme Toggle */}
 
             <Button
@@ -197,23 +226,31 @@ export default function PublicNavbar() {
                 w-10
                 rounded-xl
 
+                border
+                border-transparent
+
                 text-slate-600
-                hover:bg-purple-50
-                hover:text-purple-600
+
+                transition-all
+
+                hover:border-slate-200
+                hover:bg-slate-100
+                hover:text-slate-950
 
                 dark:text-slate-300
-                dark:hover:bg-purple-950/50
-                dark:hover:text-purple-400
+                dark:hover:border-slate-700
+                dark:hover:bg-slate-900
+                dark:hover:text-white
               "
             >
               {mounted ? (
                 isDark ? (
-                  <Sun className="h-5 w-5" />
+                  <Sun className="h-4.5 w-4.5" />
                 ) : (
-                  <Moon className="h-5 w-5" />
+                  <Moon className="h-4.5 w-4.5" />
                 )
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-4.5 w-4.5" />
               )}
 
               <span className="sr-only">
@@ -223,33 +260,65 @@ export default function PublicNavbar() {
               </span>
             </Button>
 
+            {/* Vertical Divider */}
+
+            <div
+              aria-hidden="true"
+              className="
+                mx-2
+                h-7
+                w-px
+                bg-slate-200
+
+                dark:bg-slate-800
+              "
+            />
+
             {/* Login */}
 
             <Button
               asChild
               className="
+                h-10
+                rounded-xl
+                px-5
+
                 bg-purple-600
                 text-white
+
+                font-semibold
+
+                shadow-sm
+                shadow-purple-600/20
+
+                transition-all
+                duration-200
+
                 hover:bg-purple-700
+                hover:shadow-md
+                hover:shadow-purple-600/25
+
+                active:scale-[0.98]
 
                 dark:bg-purple-600
                 dark:hover:bg-purple-500
               "
             >
               <Link href="/login">
-                <LogIn className="mr-2 h-4 w-4" />
+                <LogIn className="mr-2 h-4.25 w-4.25" />
 
                 Ingia
               </Link>
             </Button>
-          </nav>
+          </div>
 
-          {/* Mobile Navigation */}
+          {/* ---------------------------------------------------
+           * MOBILE NAVIGATION
+           * ------------------------------------------------- */}
 
           <div className="lg:hidden">
             <MobileNavigation />
           </div>
-
         </Container>
       </header>
     </>

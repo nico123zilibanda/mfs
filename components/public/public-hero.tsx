@@ -19,7 +19,7 @@ export default function PublicHero() {
       ========================================================= */}
       <div className="relative w-full">
         <Image
-          src="/images/banner_malalamiko.png"
+          src="/images/banner_mlele_v4.png"
           alt="Mfumo wa Maoni na Malalamiko kwa Wananchi wa Wilaya ya Mlele"
           width={2048}
           height={676}

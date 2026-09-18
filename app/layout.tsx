@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import PageTransition from "@/components/layout/PageTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,7 +59,10 @@ export default function RootLayout({
         `}
       >
         <ThemeProvider>
+        <PageTransition className="min-h-screen">
+          
           {children}
+          </PageTransition>
 
           <Toaster
             position="top-right"
