@@ -252,6 +252,27 @@ async function permanentlyDelete(
   );
 }
 
+async function permanentlyDeleteMany(
+  ids: string[]
+): Promise<void> {
+  const supabase = await createSupabaseServerClient();
+
+  if (ids.length === 0) {
+    return;
+  }
+
+  const { error } = await supabase
+    .from(TABLE_NAME)
+    .delete()
+    .in("id", ids);
+    
+
+  throwDatabaseError(
+    error,
+    "permanently deleting feedback reports"
+  );
+}
+
 async function findByReferenceNumber(
   referenceNumber: string
 ): Promise<Feedback | null> {
@@ -401,6 +422,6 @@ export const feedbackRepository = {
   permanentlyDelete,
   findDeleted,
   findDeletedById,
-
+  permanentlyDeleteMany,
   findChartData,
 };
