@@ -19,12 +19,12 @@ export default function PublicHero() {
       ========================================================= */}
       <div className="relative w-full">
         <Image
-          src="/images/banner_mlele_v4.png"
+          src="/images/ongea_ded.png"
           alt="Mfumo wa Maoni na Malalamiko kwa Wananchi wa Wilaya ya Mlele"
           width={2048}
           height={676}
+          sizes="38"
           priority
-          sizes="100vw"
           className="
             block
             h-auto
@@ -135,8 +135,8 @@ export default function PublicHero() {
                 sm:text-base
               "
             >
-              Wasilisha taarifa yako au fuatilia hatua iliyofikiwa kwa
-              urahisi, haraka na kwa usalama.
+              Wasilisha taarifa yako au fuatilia hatua iliyofikiwa.
+              
             </p>
           </div>
 
@@ -228,7 +228,7 @@ export default function PublicHero() {
                       text-purple-100/70
                     "
                   >
-                    Wasilisha maoni, malalamiko au taarifa mpya.
+                    Wasilisha malalamiko.
                   </p>
                 </div>
 
@@ -395,7 +395,7 @@ export default function PublicHero() {
               "
             >
               <ShieldCheck className="h-4 w-4 text-amber-300" />
-              Mfumo salama na wa kuaminika
+              Malalamiko Portal
             </div>
           </div>
         </Container>

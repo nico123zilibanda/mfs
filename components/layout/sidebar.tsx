@@ -23,9 +23,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import {
-  logoutAdmin,
-} from "@/lib/actions/auth";
+import { logoutAdmin } from "@/lib/actions/auth";
 
 type SidebarProps = {
   open: boolean;
@@ -61,6 +59,7 @@ export default function Sidebar({
 }: SidebarProps) {
   return (
     <>
+      {/* Desktop Sidebar */}
       <aside
         className="
           fixed
@@ -70,14 +69,17 @@ export default function Sidebar({
           hidden
           w-72
           border-r
-          border-purple-900/30
-          bg-slate-950
+          border-slate-200
+          bg-white
           lg:block
+          dark:border-slate-800
+          dark:bg-slate-950
         "
       >
         <SidebarContent />
       </aside>
 
+      {/* Mobile Sidebar */}
       <Sheet
         open={open}
         onOpenChange={onOpenChange}
@@ -86,10 +88,14 @@ export default function Sidebar({
           side="left"
           className="
             w-72
-            border-0
-            bg-slate-950
+            border-r
+            border-slate-200
+            bg-white
             p-0
-            text-white
+            text-slate-900
+            dark:border-slate-800
+            dark:bg-slate-950
+            dark:text-white
           "
         >
           <SheetTitle className="sr-only">
@@ -97,9 +103,7 @@ export default function Sidebar({
           </SheetTitle>
 
           <SidebarContent
-            onNavigate={() =>
-              onOpenChange(false)
-            }
+            onNavigate={() => onOpenChange(false)}
           />
         </SheetContent>
       </Sheet>
@@ -116,99 +120,151 @@ function SidebarContent({
 
   return (
     <div className="flex h-full flex-col">
-
-      {/* Branding */}
-
-      <div className="border-b border-white/10 p-6">
-
+      {/* =====================================================
+          BRANDING
+      ====================================================== */}
+      <div
+        className="
+          border-b
+          border-slate-100
+          px-5
+          py-5
+          dark:border-slate-800
+        "
+      >
         <Link
           href="/dashboard"
           onClick={onNavigate}
-          className="flex items-center gap-4"
+          className="
+            group
+            flex
+            items-center
+            gap-3
+            rounded-xl
+            outline-none
+            transition-opacity
+            hover:opacity-90
+            focus-visible:ring-2
+            focus-visible:ring-purple-500/40
+          "
         >
-
+          {/* Logo */}
           <div
             className="
               flex
-              h-14
-              w-14
+              h-12
+              w-12
+              shrink-0
               items-center
               justify-center
-              rounded-2xl
-              bg-white
+              rounded-xl
+              border
+              border-slate-200
+              bg-slate-50
               p-2
-              shadow-lg
-              shadow-purple-950/30
+              shadow-sm
               ring-1
-              ring-purple-500/20
+              ring-black/2
+              dark:border-slate-700
+              dark:bg-slate-900
+              dark:ring-white/5
             "
           >
-
             <Image
               src="/images/logo.jpeg"
               alt="Nembo ya Halmashauri ya Mlele"
-              width={42}
-              height={42}
-              sizes="20"
+              width={38}
+              height={38}
+              sizes="38"
               priority
               className="object-contain"
             />
-
           </div>
 
-          <div>
-
-            <h2 className="text-lg font-bold tracking-tight text-white">
+          {/* Brand */}
+          <div className="min-w-0">
+            <h2
+              className="
+                truncate
+                text-sm
+                font-bold
+                tracking-tight
+                text-slate-900
+                dark:text-white
+              "
+            >
               Ongea na DED
             </h2>
 
-            <p className="mt-1 text-xs text-slate-400">
+            <p
+              className="
+                mt-0.5
+                truncate
+                text-[11px]
+                leading-4
+                text-slate-500
+                dark:text-slate-400
+              "
+            >
               Halmashauri ya Wilaya ya Mlele
             </p>
-
           </div>
-
         </Link>
-
       </div>
 
-      {/* Navigation */}
-
+      {/* =====================================================
+          NAVIGATION
+      ====================================================== */}
       <nav
-        className="flex-1 p-4"
+        className="
+          flex-1
+          overflow-y-auto
+          px-3
+          py-5
+        "
         aria-label="Menyu ya msimamizi"
       >
-
+        {/* Section Label */}
         <div
           className="
-            mb-5
+            mb-3
             flex
             items-center
             gap-2
             px-3
-            text-xs
-            font-semibold
-            uppercase
-            tracking-[0.16em]
-            text-slate-500
           "
         >
+          <ShieldCheck
+            className="
+              h-3.5
+              w-3.5
+              text-purple-500
+              dark:text-purple-400
+            "
+          />
 
-          <ShieldCheck className="h-3.5 w-3.5" />
-
-          Usimamizi
-
+          <span
+            className="
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.14em]
+              text-slate-400
+              dark:text-slate-500
+            "
+          >
+            Usimamizi
+          </span>
         </div>
 
-        <div className="space-y-2">
-
+        {/* Navigation Items */}
+        <div className="space-y-1">
           {navigation.map(
             ({
               title,
               href,
               icon: Icon,
             }) => {
-
               /*
                * Keep the parent navigation item active
                * when visiting its detail/sub-pages.
@@ -230,126 +286,227 @@ function SidebarContent({
                   href={href}
                   onClick={onNavigate}
                   aria-current={
-                    active
-                      ? "page"
-                      : undefined
+                    active ? "page" : undefined
                   }
                   className={cn(
                     `
                       group
+                      relative
                       flex
+                      min-h-11
                       items-center
                       gap-3
                       rounded-xl
-                      px-4
-                      py-3
+                      px-3.5
+                      py-2.5
                       text-sm
                       font-medium
+                      outline-none
                       transition-all
                       duration-200
+                      focus-visible:ring-2
+                      focus-visible:ring-purple-500/40
                     `,
                     active
                       ? `
-                          bg-purple-600
-                          text-white
-                          shadow-lg
-                          shadow-purple-900/30
+                          bg-purple-50
+                          text-purple-700
+                          dark:bg-purple-950/40
+                          dark:text-purple-300
                         `
                       : `
-                          text-slate-400
-                          hover:bg-slate-900
-                          hover:text-white
+                          text-slate-600
+                          hover:bg-slate-50
+                          hover:text-slate-900
+                          dark:text-slate-400
+                          dark:hover:bg-slate-900
+                          dark:hover:text-slate-100
                         `
                   )}
                 >
+                  {/* Active Indicator */}
+                  {active && (
+                    <span
+                      aria-hidden="true"
+                      className="
+                        absolute
+                        left-0
+                        top-1/2
+                        h-6
+                        w-0.5
+                        -translate-y-1/2
+                        rounded-r-full
+                        bg-purple-600
+                        dark:bg-purple-400
+                      "
+                    />
+                  )}
 
+                  {/* Icon */}
                   <Icon
                     className={cn(
-                      "h-5 w-5 transition-colors",
+                      `
+                        h-4.5
+                        w-4.5
+                        shrink-0
+                        transition-colors
+                        duration-200
+                      `,
                       active
-                        ? "text-white"
-                        : "text-slate-500 group-hover:text-purple-400"
+                        ? `
+                            text-purple-600
+                            dark:text-purple-400
+                          `
+                        : `
+                            text-slate-400
+                            group-hover:text-purple-500
+                            dark:text-slate-500
+                            dark:group-hover:text-purple-400
+                          `
                     )}
                   />
 
-                  {title}
-
+                  {/* Label */}
+                  <span className="truncate">
+                    {title}
+                  </span>
                 </Link>
               );
-
             }
           )}
-
         </div>
-
       </nav>
 
-      {/* Footer */}
-
-      <div className="border-t border-white/10 p-4">
-
+      {/* =====================================================
+          FOOTER
+      ====================================================== */}
+      <div
+        className="
+          border-t
+          border-slate-100
+          p-3
+          dark:border-slate-800
+        "
+      >
+        {/* Logout */}
         <form action={logoutAdmin}>
-
           <Button
             type="submit"
             variant="ghost"
             className="
+              h-10
               w-full
               justify-start
               gap-3
               rounded-xl
-              text-slate-300
-              hover:bg-red-950/40
-              hover:text-red-400
+              px-3.5
+              text-sm
+              font-medium
+              text-slate-500
+              transition-colors
+              hover:bg-red-50
+              hover:text-red-600
+              dark:text-slate-400
+              dark:hover:bg-red-950/30
+              dark:hover:text-red-400
             "
           >
-
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-4.5 w-4.5" />
 
             Ondoka
-
           </Button>
-
         </form>
 
+        {/* System Information */}
         <div
           className="
-            mt-6
+            mt-3
             rounded-xl
             border
-            border-white/5
-            bg-slate-900/50
-            p-3
-            text-center
+            border-slate-200
+            bg-slate-50/80
+            px-3
+            py-3
+            dark:border-slate-800
+            dark:bg-slate-900/60
           "
         >
+          <div className="flex items-center gap-2">
+            <span
+              className="
+                h-2
+                w-2
+                shrink-0
+                rounded-full
+                bg-emerald-500
+                ring-4
+                ring-emerald-500/10
+              "
+            />
 
-          <p className="text-sm font-semibold text-purple-400">
-            Maoni na Malalamiko Portal
-          </p>
-
-          <p className="mt-1 text-xs text-slate-500">
-            Halmashauri ya Wilaya ya Mlele
-          </p>
-
-          <div className="mt-3 h-px bg-white/10" />
+            <p
+              className="
+                truncate
+                text-[11px]
+                font-semibold
+                text-slate-700
+                dark:text-slate-300
+              "
+            >
+              Malalamiko Portal
+            </p>
+          </div>
 
           <p
             className="
-              mt-3
-              text-[11px]
-              uppercase
-              tracking-wider
-              text-slate-600
+              mt-1.5
+              truncate
+              text-[10px]
+              text-slate-400
+              dark:text-slate-500
             "
           >
-            Version 1.0
+            Halmashauri ya Wilaya ya Mlele
           </p>
 
+          <div
+            className="
+              mt-3
+              flex
+              items-center
+              justify-between
+              border-t
+              border-slate-200
+              pt-2.5
+              dark:border-slate-800
+            "
+          >
+            <span
+              className="
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.12em]
+                text-slate-400
+                dark:text-slate-600
+              "
+            >
+              System
+            </span>
+
+            <span
+              className="
+                text-[9px]
+                font-semibold
+                text-slate-400
+                dark:text-slate-600
+              "
+            >
+              v1.0
+            </span>
+          </div>
         </div>
-
       </div>
-
     </div>
   );
 }

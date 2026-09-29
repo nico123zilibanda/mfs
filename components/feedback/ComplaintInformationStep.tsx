@@ -1,6 +1,11 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, FileText } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  FileText,
+  Info,
+} from "lucide-react";
 import type { Control } from "react-hook-form";
 
 import type { FeedbackInput } from "@/lib/schemas/feedback";
@@ -32,7 +37,6 @@ export default function ComplaintInformationStep({
 }: ComplaintInformationStepProps) {
   return (
     <div className="space-y-8">
-
       {/* Heading */}
       <div className="flex items-start gap-4">
         <div
@@ -65,25 +69,26 @@ export default function ComplaintInformationStep({
               dark:text-white
             "
           >
-            Taarifa ya maoni au malalamiko
+            Taarifa ya malalamiko
           </h3>
 
           <p
             className="
               mt-1
+              max-w-2xl
               text-sm
               leading-6
               text-slate-500
               dark:text-slate-400
             "
           >
-            Eleza kwa undani zaidi, eneo lilipotokea na taarifa nyingine muhimu....
+            Eleza kwa ufupi na kwa usahihi changamoto au malalamiko
+            uliyokutana nayo katika kupata huduma.
           </p>
         </div>
       </div>
 
-
-      {/* Description */}
+      {/* Complaint Description */}
       <FormField
         control={control}
         name="corruptionDescription"
@@ -103,9 +108,9 @@ export default function ComplaintInformationStep({
               <Textarea
                 {...field}
                 disabled={isPending}
-                placeholder="Eleza kilichotokea, eneo lilipotokea na taarifa nyingine muhimu..."
+                placeholder={`Mfano: Tarehe 15 Septemba 2026 nilifika katika Ofisi ya Wilaya kwa ajili ya kupata huduma ya .... Nilihudumiwa na .... Hata hivyo, nilikumbana na changamoto ya .... Nilijaribu kuwasiliana na .... lakini tatizo halikutatuliwa.`}
                 className="
-                  min-h-44
+                  min-h-48
                   resize-y
                   rounded-xl
                   border-slate-300
@@ -123,10 +128,141 @@ export default function ComplaintInformationStep({
             </FormControl>
 
             <FormMessage />
+
+            {/* Writing Guide */}
+            <div
+              className="
+                mt-3
+                rounded-xl
+                border
+                border-purple-100
+                bg-purple-50/70
+                p-4
+                dark:border-purple-900/40
+                dark:bg-purple-950/20
+              "
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className="
+                    mt-0.5
+                    flex
+                    h-8
+                    w-8
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-lg
+                    bg-purple-100
+                    text-[#6d28d9]
+                    dark:bg-purple-900/40
+                    dark:text-purple-300
+                  "
+                >
+                  <Info className="h-4 w-4" />
+                </div>
+
+                <div className="min-w-0">
+                  <p
+                    className="
+                      text-sm
+                      font-semibold
+                      text-slate-900
+                      dark:text-white
+                    "
+                  >
+                    Jinsi ya kuandika malalamiko yako
+                  </p>
+
+                  <p
+                    className="
+                      mt-1
+                      text-sm
+                      leading-6
+                      text-slate-600
+                      dark:text-slate-400
+                    "
+                  >
+                    Ili taarifa yako iwe rahisi kueleweka na kufanyiwa
+                    kazi, jaribu kutaja:
+                  </p>
+
+                  <ul
+                    className="
+                      mt-3
+                      space-y-1.5
+                      text-sm
+                      leading-6
+                      text-slate-600
+                      dark:text-slate-400
+                    "
+                  >
+                    <li>
+                      • <strong>Taasisi/ofisi</strong> iliyohusika.
+                    </li>
+                    <li>
+                      • <strong>Tarehe na eneo</strong> tukio lilipotokea.
+                    </li>
+                    <li>
+                      • <strong>Huduma</strong> uliyokuwa unahitaji.
+                    </li>
+                    <li>
+                      • <strong>Kilichotokea</strong> na changamoto
+                      uliyokutana nayo.
+                    </li>
+                    <li>
+                      • <strong>Hatua ulizochukua</strong> kabla ya
+                      kuwasilisha malalamiko haya.
+                    </li>
+                  </ul>
+
+                  <div
+                    className="
+                      mt-4
+                      rounded-lg
+                      border
+                      border-purple-100
+                      bg-white/80
+                      p-3
+                      dark:border-purple-900/40
+                      dark:bg-slate-900/60
+                    "
+                  >
+                    <p
+                      className="
+                        text-xs
+                        font-semibold
+                        uppercase
+                        tracking-wide
+                        text-[#6d28d9]
+                        dark:text-purple-300
+                      "
+                    >
+                      Mfano wa taarifa
+                    </p>
+
+                    <p
+                      className="
+                        mt-1.5
+                        text-sm
+                        leading-6
+                        text-slate-600
+                        dark:text-slate-400
+                      "
+                    >
+                      “Tarehe 15 Septemba 2026 nilifika katika Ofisi ya
+                      Wilaya kwa ajili ya kupata huduma ya .... Baada ya
+                      kufika, nilielekezwa kwa .... Hata hivyo, nilikumbana
+                      na changamoto ya .... Nilijaribu kutafuta ufumbuzi
+                      kupitia .... lakini tatizo halikutatuliwa.”
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </FormItem>
         )}
       />
-
 
       {/* Bribe Question */}
       <FormField
@@ -173,7 +309,6 @@ export default function ComplaintInformationStep({
           </FormItem>
         )}
       />
-
 
       {/* Actions */}
       <div
@@ -223,11 +358,9 @@ export default function ComplaintInformationStep({
           <ArrowRight className="ml-1 h-4 w-4" />
         </Button>
       </div>
-
     </div>
   );
 }
-
 
 function Choice({
   value,

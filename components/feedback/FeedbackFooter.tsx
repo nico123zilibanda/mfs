@@ -97,7 +97,7 @@ export default function FeedbackFooter() {
           {SITE.phone}
         </a>
 
-        {" "}kuwasiliana na Halmashauri ya Wilaya ya Mlele.
+        {" "}kuwasiliana na mkurugenzi mtendaji Halmashauri ya Mlele.
 
       </p>
 

@@ -65,7 +65,7 @@ export default function CitizenInformationStep({
       <StepHeading
         icon={UserRound}
         title="Taarifa za mwananchi"
-        description="Tafadhali jaza taarifa zako kwa usahihi ili kurahisisha mawasiliano."
+        description="Jaza taarifa zako kwa usahihi."
       />
 
 

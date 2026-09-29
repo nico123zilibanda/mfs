@@ -68,9 +68,7 @@ export default function PublicNavbar() {
 
       <header
         className="
-          sticky
-          top-0
-          z-50
+          relative
           w-full
 
           border-b
@@ -101,110 +99,142 @@ export default function PublicNavbar() {
           "
         >
           {/* ---------------------------------------------------
-           * DESKTOP NAVIGATION
+           * MOBILE MENU
            * ------------------------------------------------- */}
 
-          <nav
-            className="
-              hidden
-              items-center
-              gap-1
-
-              lg:flex
-            "
-            aria-label="Menyu kuu"
-          >
-            {navigation.map((item) => {
-              const active =
-                pathname === item.href ||
-                pathname.startsWith(
-                  `${item.href}/`
-                );
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={
-                    active
-                      ? "page"
-                      : undefined
-                  }
-                  className={cn(
-                    `
-                      relative
-                      flex
-                      h-10
-                      items-center
-                      rounded-xl
-                      px-4
-
-                      text-sm
-                      font-semibold
-
-                      transition-all
-                      duration-200
-                    `,
-
-                    active
-                      ? `
-                          bg-purple-50
-                          text-purple-700
-
-                          dark:bg-purple-950/50
-                          dark:text-purple-300
-                        `
-                      : `
-                          text-slate-600
-
-                          hover:bg-slate-100
-                          hover:text-slate-950
-
-                          dark:text-slate-400
-                          dark:hover:bg-slate-900
-                          dark:hover:text-white
-                        `
-                  )}
-                >
-                  {item.title}
-
-                  {active && (
-                    <span
-                      aria-hidden="true"
-                      className="
-                        absolute
-                        bottom-1
-                        left-1/2
-                        h-1
-                        w-1
-                        -translate-x-1/2
-                        rounded-full
-
-                        bg-purple-600
-
-                        dark:bg-purple-400
-                      "
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="lg:hidden">
+            <MobileNavigation />
+          </div>
 
           {/* ---------------------------------------------------
-           * RIGHT CONTROLS
+           * RIGHT-SIDE NAVIGATION + CONTROLS
            * ------------------------------------------------- */}
 
           <div
             className="
-              hidden
+              ml-auto
+              flex
               items-center
               gap-2
-
-              lg:flex
             "
           >
-            {/* Theme Toggle */}
+            {/* -------------------------------------------------
+             * DESKTOP NAVIGATION LINKS
+             * ------------------------------------------------ */}
+
+            <nav
+              className="
+                hidden
+                items-center
+                gap-1
+
+                lg:flex
+              "
+              aria-label="Menyu kuu"
+            >
+              {navigation.map((item) => {
+                const active =
+                  pathname === item.href ||
+                  pathname.startsWith(
+                    `${item.href}/`
+                  );
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={
+                      active
+                        ? "page"
+                        : undefined
+                    }
+                    className={cn(
+                      `
+                        relative
+                        flex
+                        h-10
+                        items-center
+                        rounded-xl
+                        px-4
+
+                        text-sm
+                        font-semibold
+
+                        transition-all
+                        duration-200
+                      `,
+
+                      active
+                        ? `
+                            bg-purple-50
+                            text-purple-700
+
+                            dark:bg-purple-950/50
+                            dark:text-purple-300
+                          `
+                        : `
+                            text-slate-600
+
+                            hover:bg-slate-100
+                            hover:text-slate-950
+
+                            dark:text-slate-400
+                            dark:hover:bg-slate-900
+                            dark:hover:text-white
+                          `
+                    )}
+                  >
+                    {item.title}
+
+                    {active && (
+                      <span
+                        aria-hidden="true"
+                        className="
+                          absolute
+                          bottom-1
+                          left-1/2
+
+                          h-1
+                          w-1
+
+                          -translate-x-1/2
+
+                          rounded-full
+
+                          bg-purple-600
+
+                          dark:bg-purple-400
+                        "
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* -------------------------------------------------
+             * SEPARATOR
+             * ------------------------------------------------ */}
+
+            <div
+              aria-hidden="true"
+              className="
+                hidden
+                lg:block
+
+                mx-2
+                h-7
+                w-px
+
+                bg-slate-200
+
+                dark:bg-slate-800
+              "
+            />
+
+            {/* -------------------------------------------------
+             * THEME TOGGLE
+             * ------------------------------------------------ */}
 
             <Button
               type="button"
@@ -224,6 +254,7 @@ export default function PublicNavbar() {
               className="
                 h-10
                 w-10
+                shrink-0
                 rounded-xl
 
                 border
@@ -232,6 +263,7 @@ export default function PublicNavbar() {
                 text-slate-600
 
                 transition-all
+                duration-200
 
                 hover:border-slate-200
                 hover:bg-slate-100
@@ -260,28 +292,19 @@ export default function PublicNavbar() {
               </span>
             </Button>
 
-            {/* Vertical Divider */}
-
-            <div
-              aria-hidden="true"
-              className="
-                mx-2
-                h-7
-                w-px
-                bg-slate-200
-
-                dark:bg-slate-800
-              "
-            />
-
-            {/* Login */}
+            {/* -------------------------------------------------
+             * LOGIN
+             * ------------------------------------------------ */}
 
             <Button
               asChild
               className="
                 h-10
+                shrink-0
                 rounded-xl
-                px-5
+
+                px-4
+                sm:px-5
 
                 bg-purple-600
                 text-white
@@ -306,18 +329,9 @@ export default function PublicNavbar() {
             >
               <Link href="/login">
                 <LogIn className="mr-2 h-4.25 w-4.25" />
-
                 Ingia
               </Link>
             </Button>
-          </div>
-
-          {/* ---------------------------------------------------
-           * MOBILE NAVIGATION
-           * ------------------------------------------------- */}
-
-          <div className="lg:hidden">
-            <MobileNavigation />
           </div>
         </Container>
       </header>

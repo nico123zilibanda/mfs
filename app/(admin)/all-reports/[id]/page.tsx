@@ -1,4 +1,3 @@
-import DashboardHeader from "@/components/dashboard/dashboard-header";
 import EmptyState from "@/components/dashboard/empty-state";
 
 import ReportHeader from "@/components/report-details/report-header";

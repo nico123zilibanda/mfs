@@ -161,8 +161,8 @@ export default function PublicFooter() {
                     text-purple-100/70
                   "
                 >
-                  Njia salama ya kuwasilisha maoni,
-                  malalamiko na taarifa kwa urahisi,
+                  Njia salama ya kuwasilisha
+                  malalamiko kwa urahisi,
                   haraka na kwa usalama.
                 </p>
               </div>
@@ -188,7 +188,7 @@ export default function PublicFooter() {
             >
               <ShieldCheck className="h-3.5 w-3.5" />
 
-              Maoni na Malalamiko Portal
+              Malalamiko Portal
             </div>
           </div>
 
@@ -280,7 +280,7 @@ export default function PublicFooter() {
                 </span>
 
                 <span className="text-sm text-purple-100/70">
-                  {SITE.phone}
+                  piga: {SITE.phone}
                 </span>
               </div>
 

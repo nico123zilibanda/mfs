@@ -82,12 +82,12 @@ export default function FeedbackHero() {
           md:text-4xl
         "
       >
-        Tuma maoni au malalamiko yako
+        Wasilisha Malalamiko Yako Hapa:
       </h2>
 
       {/* Description */}
 
-      <p
+      {/* <p
         className="
           mt-4
           leading-7
@@ -100,7 +100,7 @@ export default function FeedbackHero() {
       >
         Jaza fomu ifuatayo. Baada ya kuituma, utapokea namba ya kumbukumbu kwa
         ajili ya ufuatiliaji.
-      </p>
+      </p> */}
     </div>
   );
 }

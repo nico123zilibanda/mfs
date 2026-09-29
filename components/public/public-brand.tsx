@@ -63,7 +63,7 @@ export default function PublicBrand() {
             dark:text-slate-400
           "
         >
-        Maoni na Malalamiko Portal
+        Malalamiko Portal
         </p>
 
       </div>

@@ -12,21 +12,21 @@ const steps = [
     number: "01",
     title: "Jaza Taarifa",
     description:
-      "Weka taarifa zako na maelezo ya malalamiko au maoni kupitia fomu ya mfumo.",
+      "Weka taarifa zako na maelezo ya malalamiko kupitia fomu ya mfumo.",
     icon: FileText,
   },
   {
     number: "02",
     title: "Pokea Namba ya Kumbukumbu",
     description:
-      "Baada ya kutuma taarifa utapatiwa namba ya kumbukumbu kwa ajili ya ufuatiliaji.",
+      "Baada ya kutuma taarifa utapokea namba ya kumbukumbu kwa ajili ya ufuatiliaji.",
     icon: Search,
   },
   {
     number: "03",
     title: "Fuatilia Maendeleo",
     description:
-      "Tumia namba hiyo kufuatilia maendeleo ya uchakataji wa taarifa yako wakati wowote.",
+      "Tumia namba hiyo kufuatilia maendeleo au hali ya uchakataji wa taarifa yako wakati wowote.",
     icon: MessageCircleMore,
   },
 ];
@@ -91,23 +91,8 @@ export default function PublicProcess() {
               md:text-4xl
             "
           >
-            Hatua 3 Rahisi za Kuwasilisha Taarifa
+            Hatua tatu Rahisi za Kuwasilisha Taarifa
           </h2>
-
-
-
-          <p
-            className="
-              mt-4
-              text-muted-foreground
-
-              dark:text-slate-400
-            "
-          >
-            Mchakato umeboreshwa ili uwe rahisi kwa kila mwananchi.
-          </p>
-
-
         </div>
 
 
