@@ -1,0 +1,3 @@
+export const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
+export const SESSION_WARNING_SECONDS = 60;
+export const SESSION_ACTIVITY_THROTTLE_MS = 10 * 1000;
