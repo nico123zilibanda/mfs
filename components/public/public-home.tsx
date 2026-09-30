@@ -26,7 +26,6 @@ export default function PublicHome() {
 
       {/* <PublicStats /> */}
 
-      <PublicProcess />
 
 
       <section
@@ -61,6 +60,7 @@ export default function PublicHome() {
 
       </section>
 
+      <PublicProcess />
 
     </>
 
