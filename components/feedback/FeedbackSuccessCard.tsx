@@ -1,26 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Check,
   CheckCircle2,
   ClipboardCopy,
   Plus,
+  ShieldCheck,
 } from "lucide-react";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 
-import {
-  useState,
-} from "react";
-
-import {
-  toast,
-} from "sonner";
-
-
-import {
-  Button,
-} from "@/components/ui/button";
-
-
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -29,384 +20,536 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-
-
 type FeedbackSuccessCardProps = {
   referenceNumber: string;
   onSubmitAnother: () => void;
 };
 
-
-
 export default function FeedbackSuccessCard({
   referenceNumber,
   onSubmitAnother,
 }: FeedbackSuccessCardProps) {
+  const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    if (!copied) return;
 
-  const [
-    copied,
-    setCopied,
-  ] = useState(false);
+    const timer = window.setTimeout(() => {
+      setCopied(false);
+    }, 2200);
 
-
+    return () => window.clearTimeout(timer);
+  }, [copied]);
 
   async function copyReference() {
-
     try {
-
-      await navigator.clipboard.writeText(
-        referenceNumber
-      );
-
+      await navigator.clipboard.writeText(referenceNumber);
 
       setCopied(true);
 
-
       toast.success(
-        "Namba ya kumbukumbu imenakiliwa."
+        "Namba ya kumbukumbu imenakiliwa.",
       );
-
-
-      setTimeout(
-        () => setCopied(false),
-        2000
-      );
-
-
     } catch {
-
       toast.error(
-        "Imeshindwa kunakili namba ya kumbukumbu."
+        "Imeshindwa kunakili namba ya kumbukumbu.",
       );
-
     }
-
   }
 
-
-
   return (
-
-    <Card
-      className="
-        mx-auto
-        max-w-2xl
-
-        overflow-hidden
-
-        border
-        border-purple-900/15
-
-        bg-white
-
-        shadow-xl
-        shadow-purple-950/5
-
-
-        dark:border-purple-900/40
-        dark:bg-slate-950
-      "
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 24,
+        scale: 0.98,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      transition={{
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="mx-auto w-full max-w-2xl"
     >
-
-
-      {/* Header */}
-
-      <CardHeader
+      <Card
         className="
-          items-center
+          relative
+          overflow-hidden
+          rounded-3xl
 
-          px-5
-          pt-10
+          border
+          border-slate-200/80
 
-          text-center
+          bg-white
 
-          sm:px-8
+          shadow-2xl
+          shadow-slate-950/[0.07]
+
+          dark:border-slate-800
+          dark:bg-slate-950
+          dark:shadow-black/30
         "
       >
-
-
+        {/* Top success accent */}
         <div
+          aria-hidden="true"
           className="
-            mb-5
+            absolute
+            inset-x-0
+            top-0
+            h-1
+            bg-linear-to-r
+            from-emerald-500
+            via-green-500
+            to-violet-500
+          "
+        />
 
-            flex
-            h-20
-            w-20
-
-            items-center
-            justify-center
-
+        {/* Ambient glow */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            left-1/2
+            top-0
+            h-64
+            w-64
+            -translate-x-1/2
+            -translate-y-1/2
             rounded-full
+            bg-emerald-500/10
+            blur-3xl
 
-            bg-purple-100
-
-            shadow-inner
-
-
-            dark:bg-purple-950/50
+            dark:bg-emerald-500/5
           "
-        >
+        />
 
-          <CheckCircle2
-            className="
-              h-10
-              w-10
-
-              text-[#6d28d9]
-
-              dark:text-purple-400
-            "
-          />
-
-        </div>
-
-
-
-        <CardTitle
+        <CardHeader
           className="
-            text-2xl
-            font-bold
+            relative
+            items-center
+            px-5
+            pb-2
+            pt-12
+            text-center
 
-            text-slate-950
-
-            dark:text-white
+            sm:px-8
+            sm:pt-14
           "
         >
-
-          Taarifa imetumwa
-
-        </CardTitle>
-
-
-
-        <CardDescription
-          className="
-            mt-2
-
-            max-w-md
-
-            leading-7
-
-            text-slate-600
-
-            dark:text-slate-400
-          "
-        >
-
-          Asante kwa kushiriki.
-          Hifadhi namba hii ya kumbukumbu
-          ili uweze kufuatilia hatua za
-          taarifa yako.
-
-        </CardDescription>
-
-
-      </CardHeader>
-
-
-
-
-      <CardContent
-        className="
-          space-y-6
-
-          px-5
-
-          pb-8
-
-          sm:px-8
-        "
-      >
-
-
-        {/* Reference box */}
-
-        <div
-          className="
-            rounded-2xl
-
-            border
-
-            border-purple-900/15
-
-            bg-purple-50/70
-
-            p-5
-
-
-            dark:border-purple-800/40
-
-            dark:bg-purple-950/30
-          "
-        >
-
-
-          <p
-            className="
-              text-sm
-
-              font-medium
-
-              text-slate-600
-
-              dark:text-slate-300
-            "
+          {/* Animated success icon */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.4,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            transition={{
+              delay: 0.12,
+              duration: 0.55,
+              type: "spring",
+              stiffness: 260,
+              damping: 18,
+            }}
+            className="relative"
           >
-
-            Namba ya kumbukumbu
-
-          </p>
-
-
-
-          <div
-            className="
-              mt-3
-
-              flex
-
-              items-center
-
-              justify-between
-
-              gap-3
-            "
-          >
-
-
-            <code
+            {/* Outer pulse */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                scale: 0.8,
+              }}
+              animate={{
+                opacity: [0, 0.35, 0],
+                scale: [0.8, 1.25, 1.4],
+              }}
+              transition={{
+                duration: 1.4,
+                delay: 0.35,
+                ease: "easeOut",
+              }}
               className="
-                overflow-hidden
+                absolute
+                inset-0
+                rounded-full
+                bg-emerald-400
+              "
+            />
 
-                text-base
+            <div
+              className="
+                relative
+                flex
+                h-20
+                w-20
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-emerald-200
+                bg-emerald-50
+                shadow-lg
+                shadow-emerald-500/15
 
-                font-bold
-
-                tracking-[0.15em]
-
-                text-[#6d28d9]
-
-                sm:text-lg
-
-                dark:text-purple-400
+                dark:border-emerald-900/60
+                dark:bg-emerald-950/50
               "
             >
+              <CheckCircle2
+                className="
+                  h-10
+                  w-10
+                  text-emerald-600
+                  dark:text-emerald-400
+                "
+              />
+            </div>
+          </motion.div>
 
-              {referenceNumber}
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 8,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              delay: 0.25,
+              duration: 0.4,
+            }}
+          >
+            <CardTitle
+              className="
+                mt-6
+                text-2xl
+                font-bold
+                tracking-tight
+                text-slate-950
 
-            </code>
+                sm:text-3xl
 
+                dark:text-white
+              "
+            >
+              Taarifa imetumwa
+            </CardTitle>
 
+            <CardDescription
+              className="
+                mx-auto
+                mt-3
+                max-w-md
+                text-sm
+                leading-7
+                text-slate-500
 
+                sm:text-base
+
+                dark:text-slate-400
+              "
+            >
+              Asante kwa kushiriki taarifa hii. Taarifa yako
+              imepokelewa na unaweza kutumia namba ya
+              kumbukumbu hapa chini kufuatilia taarifa yako.
+            </CardDescription>
+          </motion.div>
+        </CardHeader>
+
+        <CardContent
+          className="
+            relative
+            space-y-5
+            px-5
+            pb-8
+            pt-5
+
+            sm:px-8
+            sm:pb-10
+          "
+        >
+          {/* Reference number */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 12,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              delay: 0.35,
+              duration: 0.4,
+            }}
+            className="
+              overflow-hidden
+              rounded-2xl
+              border
+              border-violet-200/80
+
+              bg-linear-to-br
+              from-violet-50
+              via-white
+              to-indigo-50/60
+
+              dark:border-violet-900/50
+              dark:from-violet-950/40
+              dark:via-slate-900
+              dark:to-indigo-950/30
+            "
+          >
+            <div className="p-5 sm:p-6">
+              <div className="flex items-center gap-2">
+                <div
+                  className="
+                    flex
+                    h-8
+                    w-8
+                    items-center
+                    justify-center
+                    rounded-lg
+                    bg-violet-100
+                    text-violet-700
+
+                    dark:bg-violet-900/50
+                    dark:text-violet-300
+                  "
+                >
+                  <ClipboardCopy className="h-4 w-4" />
+                </div>
+
+                <p
+                  className="
+                    text-xs
+                    font-bold
+                    uppercase
+                    tracking-[0.12em]
+                    text-slate-500
+
+                    dark:text-slate-400
+                  "
+                >
+                  Namba ya kumbukumbu
+                </p>
+              </div>
+
+              <div
+                className="
+                  mt-4
+                  flex
+                  items-center
+                  justify-between
+                  gap-3
+                "
+              >
+                <code
+                  className="
+                    min-w-0
+                    overflow-hidden
+                    text-ellipsis
+                    whitespace-nowrap
+                    text-lg
+                    font-bold
+                    tracking-[0.12em]
+                    text-violet-700
+
+                    sm:text-xl
+
+                    dark:text-violet-400
+                  "
+                  title={referenceNumber}
+                >
+                  {referenceNumber}
+                </code>
+
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={copyReference}
+                    aria-label="Nakili namba ya kumbukumbu"
+                    className="
+                      h-10
+                      w-10
+                      shrink-0
+                      rounded-xl
+
+                      border-violet-200
+                      bg-white
+
+                      text-violet-700
+
+                      shadow-sm
+
+                      hover:bg-violet-50
+                      hover:text-violet-800
+
+                      dark:border-violet-900/50
+                      dark:bg-slate-900
+                      dark:text-violet-300
+                      dark:hover:bg-violet-950/50
+                    "
+                  >
+                    <motion.div
+                      key={copied ? "copied" : "copy"}
+                      initial={{
+                        opacity: 0,
+                        scale: 0.5,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                      }}
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-emerald-500" />
+                      ) : (
+                        <ClipboardCopy className="h-4 w-4" />
+                      )}
+                    </motion.div>
+                  </Button>
+                </motion.div>
+              </div>
+
+              {/* Copy status */}
+              <motion.div
+                initial={false}
+                animate={{
+                  height: copied ? "auto" : 0,
+                  opacity: copied ? 1 : 0,
+                }}
+                className="overflow-hidden"
+              >
+                <p className="pt-3 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                  ✓ Namba imenakiliwa
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Security reminder */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 8,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              delay: 0.45,
+              duration: 0.35,
+            }}
+            className="
+              flex
+              items-start
+              gap-3
+              rounded-2xl
+              border
+              border-slate-200/80
+              bg-slate-50/70
+              p-4
+
+              dark:border-slate-800
+              dark:bg-slate-900/60
+            "
+          >
+            <div
+              className="
+                flex
+                h-8
+                w-8
+                shrink-0
+                items-center
+                justify-center
+                rounded-lg
+                bg-slate-200
+                text-slate-600
+
+                dark:bg-slate-800
+                dark:text-slate-300
+              "
+            >
+              <ShieldCheck className="h-4 w-4" />
+            </div>
+
+            <p
+              className="
+                text-xs
+                leading-6
+                text-slate-500
+
+                dark:text-slate-400
+              "
+            >
+              Hifadhi namba hii ya kumbukumbu mahali salama.
+              Itakusaidia kutambua na kufuatilia taarifa yako
+              baadaye.
+            </p>
+          </motion.div>
+
+          {/* Submit another */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 8,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              delay: 0.52,
+              duration: 0.35,
+            }}
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.985 }}
+          >
             <Button
               type="button"
-
-              variant="outline"
-
-              size="icon"
-
               className="
-                shrink-0
-
+                h-12
+                w-full
                 rounded-xl
 
-                border-purple-900/20
+                bg-violet-600
 
-                bg-white
+                font-semibold
+                text-white
 
-                hover:bg-purple-50
+                shadow-lg
+                shadow-violet-600/20
 
+                transition-all
 
-                dark:border-purple-800/40
-
-                dark:bg-slate-900
+                hover:bg-violet-700
+                hover:shadow-xl
+                hover:shadow-violet-600/25
               "
-
-              onClick={copyReference}
-
-              aria-label="Nakili namba ya kumbukumbu"
+              onClick={onSubmitAnother}
             >
+              <Plus className="mr-2 h-4 w-4" />
 
-              {copied ? (
-
-                <Check
-                  className="
-                    h-4
-                    w-4
-
-                    text-[#6d28d9]
-                  "
-                />
-
-              ) : (
-
-                <ClipboardCopy
-                  className="
-                    h-4
-                    w-4
-                  "
-                />
-
-              )}
-
+              Tuma taarifa nyingine
             </Button>
-
-
-          </div>
-
-
-        </div>
-
-
-
-
-
-        <Button
-          type="button"
-
-          className="
-            h-12
-
-            w-full
-
-            rounded-xl
-
-            bg-[#6d28d9]
-
-            font-semibold
-
-            text-white
-
-            shadow-lg
-
-            shadow-purple-900/20
-
-            hover:bg-[#4c1d95]
-          "
-
-          onClick={onSubmitAnother}
-        >
-
-          <Plus
-            className="
-              mr-2
-
-              h-4
-              w-4
-            "
-          />
-
-          Tuma taarifa nyingine
-
-        </Button>
-
-
-
-      </CardContent>
-
-
-    </Card>
-
+          </motion.div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

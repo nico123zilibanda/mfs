@@ -1,106 +1,218 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Info, ShieldCheck } from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
-import { Info } from "lucide-react";
-
 
 interface FeedbackCardProps {
   children: React.ReactNode;
 }
 
-
 export default function FeedbackCard({
   children,
 }: FeedbackCardProps) {
   return (
-    <Card
-      className="
-        mx-auto
-        max-w-4xl
-
-        border
-        border-slate-200
-
-        bg-white
-
-        shadow-xl
-        shadow-purple-950/5
-
-
-        dark:border-slate-800
-
-        dark:bg-slate-900
-
-        dark:shadow-black/20
-      "
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 18,
+        scale: 0.99,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      transition={{
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="mx-auto w-full max-w-4xl"
     >
-
-      <CardContent
+      <Card
         className="
-          space-y-6
+          relative
+          overflow-hidden
+          rounded-3xl
 
-          p-5
+          border
+          border-slate-200/80
 
-          sm:p-8
+          bg-white
+
+          shadow-2xl
+          shadow-slate-950/6
+
+          dark:border-slate-800
+          dark:bg-slate-950
+          dark:shadow-black/30
         "
       >
-
-
-        {/* Security Notice */}
-
-        <Alert
+        {/* Decorative top gradient */}
+        <div
+          aria-hidden="true"
           className="
-            border
-            border-purple-600/20
+            absolute
+            inset-x-0
+            top-0
+            h-1
+            bg-linear-to-r
+            from-violet-600
+            via-purple-500
+            to-indigo-500
+          "
+        />
 
-            bg-purple-50/70
+        {/* Subtle ambient glow */}
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            -right-24
+            -top-24
+            h-48
+            w-48
+            rounded-full
+            bg-violet-500/10
+            blur-3xl
 
-            text-purple-950
+            dark:bg-violet-500/5
+          "
+        />
 
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            -left-24
+            bottom-0
+            h-40
+            w-40
+            rounded-full
+            bg-indigo-500/5
+            blur-3xl
+          "
+        />
 
-            dark:border-purple-400/20
+        <CardContent
+          className="
+            relative
+            space-y-7
 
-            dark:bg-purple-950/40
+            p-5
+            pt-7
 
-            dark:text-purple-100
+            sm:p-8
+            sm:pt-9
+
+            lg:p-10
+            lg:pt-11
           "
         >
-
-          <Info
-            className="
-              h-4
-              w-4
-
-              text-purple-700
-
-
-              dark:text-purple-400
-            "
-          />
-
-
-          <AlertDescription
-            className="
-              text-purple-900
-
-
-              dark:text-purple-100
-            "
+          {/* Privacy / security notice */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: -6,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.35,
+              delay: 0.12,
+            }}
           >
-            Tafadhali jaza taarifa zote kwa usahihi.
-            Taarifa zako zitashughulikiwa kwa siri.
-          </AlertDescription>
+            <Alert
+              className="
+                relative
+                overflow-hidden
+                rounded-2xl
 
+                border
+                border-violet-200/80
 
-        </Alert>
+                bg-linear-to-r
+                from-violet-50
+                via-purple-50/70
+                to-indigo-50/50
 
+                px-4
+                py-3.5
 
+                text-violet-950
 
-        {children}
+                dark:border-violet-900/50
+                dark:from-violet-950/40
+                dark:via-purple-950/30
+                dark:to-indigo-950/20
+                dark:text-violet-100
 
+                sm:px-5
+                sm:py-4
+              "
+            >
+              <div
+                className="
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-violet-100
+                  text-violet-700
 
-      </CardContent>
+                  dark:bg-violet-900/50
+                  dark:text-violet-300
+                "
+              >
+                <ShieldCheck className="h-4.5 w-4.5" />
+              </div>
 
-    </Card>
+              <AlertDescription
+                className="
+                  ml-1
+                  text-sm
+                  leading-6
+                  text-violet-900
+
+                  dark:text-violet-100
+                "
+              >
+                <span className="font-semibold">
+                  Taarifa zako zinalindwa.
+                </span>{" "}
+                Tafadhali jaza taarifa zote kwa usahihi.
+                Taarifa utakazowasilisha zitashughulikiwa kwa
+                siri.
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+
+          {/* Form content */}
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            transition={{
+              duration: 0.4,
+              delay: 0.18,
+            }}
+          >
+            {children}
+          </motion.div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
