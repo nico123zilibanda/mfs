@@ -34,7 +34,59 @@ const actions: Action[] = [
   },
   {
     title: "Ufuatiliaji",
-    href: "/trackngs",
+    href: "/"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import {
+  ClipboardList,
+  FileText,
+  Bookmark,
+  LayoutDashboard,
+  Activity,
+  LogOut,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+import { logoutAdmin } from "@/lib/actions/auth";
+
+type SidebarProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const navigation = [
+  {
+    title: "Dashibodi",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Taarifa Zote",
+    href: "/all-reports",
+    icon: FileText,
+  },
+  {
+    title: "Taarifa Zilizohifadhiwa",
+    href: "/deleted",
+    icon: Bookmark,
+  },
+  {
+    title: "Ufuatiliaji",
+    href: "/trackings",
     icon: Activity,
   },
 ];
@@ -43,7 +95,7 @@ export default function QuickActions() {
   return (
     <section aria-labelledby="quick-actions-title" className="space-y-4">
       {/* Section heading */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <div
           className="
             flex h-8 w-8 shrink-0 items-center justify-center
