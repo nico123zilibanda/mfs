@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Info, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -130,8 +130,6 @@ export default function FeedbackCard({
           >
             <Alert
               className="
-                relative
-                overflow-hidden
                 rounded-2xl
 
                 border
@@ -143,9 +141,11 @@ export default function FeedbackCard({
                 to-indigo-50/50
 
                 px-4
-                py-3.5
+                py-4
 
                 text-violet-950
+
+                backdrop-blur-sm
 
                 dark:border-violet-900/50
                 dark:from-violet-950/40
@@ -154,45 +154,65 @@ export default function FeedbackCard({
                 dark:text-violet-100
 
                 sm:px-5
-                sm:py-4
               "
             >
               <div
                 className="
                   flex
-                  h-9
-                  w-9
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-xl
-                  bg-violet-100
-                  text-violet-700
-
-                  dark:bg-violet-900/50
-                  dark:text-violet-300
+                  items-start
+                  gap-3
                 "
               >
-                <ShieldCheck className="h-4.5 w-4.5" />
+                {/* Icon - left side */}
+                <div
+                  className="
+                    mt-0.5
+                    flex
+                    h-9
+                    w-9
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-xl
+
+                    bg-violet-100
+                    text-violet-700
+
+                    dark:bg-violet-900/50
+                    dark:text-violet-300
+                  "
+                >
+                  <ShieldCheck
+                    className="
+                      h-4.5
+                      w-4.5
+                    "
+                  />
+                </div>
+
+                {/* Text - right side */}
+                <AlertDescription
+                  className="
+                    m-0
+                    min-w-0
+                    flex-1
+
+                    text-sm
+                    leading-6
+
+                    text-violet-900
+
+                    dark:text-violet-100
+                  "
+                >
+                  <span className="font-semibold">
+                    Taarifa zako zinalindwa.
+                  </span>{" "}
+                  Tafadhali jaza taarifa zote kwa usahihi.
+                  Taarifa utakazowasilisha zitashughulikiwa kwa
+                  siri.
+                </AlertDescription>
               </div>
-
-              <AlertDescription
-                className="
-                  ml-1
-                  text-sm
-                  leading-6
-                  text-violet-900
-
-                  dark:text-violet-100
-                "
-              >
-                <span className="font-semibold">
-                  Taarifa zako zinalindwa.
-                </span>{" "}
-                Tafadhali jaza taarifa zote kwa usahihi.
-                Taarifa utakazowasilisha zitashughulikiwa kwa
-                siri.
-              </AlertDescription>
             </Alert>
           </motion.div>
 

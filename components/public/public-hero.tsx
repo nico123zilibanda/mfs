@@ -143,225 +143,95 @@ export default function PublicHero() {
           {/* =====================================================
               TWO ACTION CARDS
           ===================================================== */}
+
           <div
             className="
               mx-auto
-              grid
-              max-w-5xl
-              gap-4
+              flex
+              max-w-xl
+              flex-col
+              items-center
+              justify-center
+              gap-3
 
-              md:grid-cols-2
+              sm:flex-row
             "
           >
-            {/* TOA TAARIFA */}
-            <div
+            {/* Anza */}
+            <Button
+              asChild
+              size="lg"
               className="
-                group
-                relative
-                overflow-hidden
-                rounded-2xl
-                border
-                border-amber-300/20
-                bg-white/8
-                p-5
-                shadow-xl
-                shadow-black/10
-                backdrop-blur-md
+                h-12
+                min-w-40
 
-                transition
-                duration-300
+                rounded-xl
 
-                hover:-translate-y-1
-                hover:border-amber-300/40
-                hover:bg-white/10
+                bg-amber-500
+                px-6
+
+                font-bold
+                text-purple-950
+
+                shadow-lg
+                shadow-amber-950/20
+
+                transition-all
+                duration-200
+
+                hover:bg-amber-400
+                hover:shadow-xl
+                hover:shadow-amber-950/25
+
+                active:scale-[0.98]
               "
             >
-              {/* Accent line */}
-              <div
-                className="
-                  absolute
-                  inset-x-0
-                  top-0
-                  h-1
-                  bg-linear-to-r
-                  from-transparent
-                  via-amber-400
-                  to-transparent
-                "
-              />
+              <Link href="#feedback-form">
+                Anza
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
 
-              <div className="flex items-center gap-4">
-                <div
-                  className="
-                    flex
-                    h-12
-                    w-12
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-amber-400/15
-                    text-amber-300
-                  "
-                >
-                  <Send className="h-6 w-6" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <h3
-                    className="
-                      text-base
-                      font-bold
-                      text-white
-
-                      sm:text-lg
-                    "
-                  >
-                    Toa Taarifa
-                  </h3>
-
-                  <p
-                    className="
-                      mt-1
-                      text-sm
-                      leading-5
-                      text-purple-100/70
-                    "
-                  >
-                    Wasilisha malalamiko.
-                  </p>
-                </div>
-
-                <Button
-                  asChild
-                  className="
-                    shrink-0
-                    rounded-xl
-                    bg-amber-500
-                    px-5
-                    font-bold
-                    text-purple-950
-                    shadow-lg
-                    shadow-amber-950/20
-
-                    hover:bg-amber-400
-                  "
-                >
-                  <Link href="#feedback-form">
-                    Anza
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* FUATILIA TAARIFA */}
-            <div
+            {/* Fuatilia */}
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
               className="
-                group
-                relative
-                overflow-hidden
-                rounded-2xl
+                h-12
+                min-w-40
+
+                rounded-xl
+
                 border
-                border-cyan-300/20
-                bg-white/8
-                p-5
-                shadow-xl
-                shadow-black/10
-                backdrop-blur-md
+                border-cyan-300/40
 
-                transition
-                duration-300
+                bg-transparent
 
-                hover:-translate-y-1
-                hover:border-cyan-300/40
-                hover:bg-white/10
+                px-6
+
+                font-bold
+                text-white
+
+                transition-all
+                duration-200
+
+                hover:border-cyan-300
+                hover:bg-cyan-300
+                hover:text-purple-950
+
+                active:scale-[0.98]
               "
             >
-              {/* Accent line */}
-              <div
-                className="
-                  absolute
-                  inset-x-0
-                  top-0
-                  h-1
-                  bg-linear-to-r
-                  from-transparent
-                  via-cyan-300
-                  to-transparent
-                "
-              />
-
-              <div className="flex items-center gap-4">
-                <div
-                  className="
-                    flex
-                    h-12
-                    w-12
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-cyan-400/15
-                    text-cyan-300
-                  "
-                >
-                  <Search className="h-6 w-6" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <h3
-                    className="
-                      text-base
-                      font-bold
-                      text-white
-
-                      sm:text-lg
-                    "
-                  >
-                    Fuatilia Taarifa
-                  </h3>
-
-                  <p
-                    className="
-                      mt-1
-                      text-sm
-                      leading-5
-                      text-purple-100/70
-                    "
-                  >
-                    Angalia hali na maendeleo ya taarifa yako.
-                  </p>
-                </div>
-
-                <Button
-                  asChild
-                  variant="outline"
-                  className="
-                    shrink-0
-                    rounded-xl
-                    border-cyan-300/40
-                    bg-cyan-400/10
-                    px-5
-                    font-bold
-                    text-white
-
-                    hover:border-cyan-300
-                    hover:bg-cyan-300
-                    hover:text-purple-950
-                  "
-                >
-                  <Link href="/public/tracking">
-                    Fuatilia
-                    <Search className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
+              <Link href="/public/tracking">
+                Fuatilia
+                <Search className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
 
           {/* Bottom portal strip */}
-          <div
+          {/* <div
             className="
               mx-auto
               mt-7
@@ -397,7 +267,7 @@ export default function PublicHero() {
               <ShieldCheck className="h-4 w-4 text-amber-300" />
               Malalamiko Portal
             </div>
-          </div>
+          </div> */}
         </Container>
       </div>
     </section>

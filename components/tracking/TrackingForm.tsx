@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +11,8 @@ import { toast } from "sonner";
 import {
   Search,
   ShieldCheck,
+  ArrowRight,
+  Loader2,
 } from "lucide-react";
 
 import {
@@ -35,6 +38,8 @@ import {
 import { trackFeedback } from "@/lib/actions/tracking";
 
 import type { FeedbackTracking } from "@/lib/types/tracking";
+
+const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function TrackingForm() {
   const [result, setResult] =
@@ -95,66 +100,168 @@ export default function TrackingForm() {
   }
 
   return (
-    <>
-      <Form {...form}>
-        <section
+    <Form {...form}>
+      <div className="space-y-5">
+        {/* =================================================
+            TRACKING CARD
+        ================================================== */}
+        <motion.section
+          initial={{
+            opacity: 0,
+            y: 20,
+            scale: 0.985,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          transition={{
+            duration: 0.55,
+            ease,
+          }}
           className="
+            relative
             overflow-hidden
-            rounded-2xl
+            rounded-3xl
+
             border
-            border-slate-200
+            border-slate-200/80
+
             bg-white
-            shadow-sm
+
+            shadow-xl
             shadow-slate-950/5
+
             dark:border-slate-800
-            dark:bg-slate-900
+            dark:bg-slate-950
+            dark:shadow-black/20
           "
         >
+          {/* Top accent */}
+          <div
+            aria-hidden="true"
+            className="
+              absolute
+              inset-x-0
+              top-0
+              h-1
+
+              bg-linear-to-r
+              from-violet-600
+              via-purple-500
+              to-indigo-500
+            "
+          />
+
+          {/* Ambient glow */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              -right-20
+              -top-20
+
+              h-40
+              w-40
+
+              rounded-full
+
+              bg-purple-500/10
+
+              blur-3xl
+
+              dark:bg-purple-500/5
+            "
+          />
+
           {/* =================================================
               HEADER
           ================================================== */}
-          <div
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: -8,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.4,
+              delay: 0.08,
+              ease,
+            }}
             className="
+              relative
+
               border-b
               border-slate-100
+
               px-5
-              py-5
-              sm:px-6
+              py-6
+
+              sm:px-7
+              sm:py-7
+
               dark:border-slate-800
             "
           >
             <div className="flex items-start gap-4">
               {/* Icon */}
-              <div
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  scale: 0.8,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.15,
+                  ease,
+                }}
                 className="
                   flex
-                  h-11
-                  w-11
+                  h-12
+                  w-12
                   shrink-0
                   items-center
                   justify-center
-                  rounded-xl
+
+                  rounded-2xl
+
                   bg-purple-50
                   text-purple-600
+
+                  shadow-sm
+
                   ring-1
                   ring-purple-100
-                  dark:bg-purple-950/40
+
+                  dark:bg-purple-950/50
                   dark:text-purple-400
                   dark:ring-purple-900/50
                 "
               >
                 <Search className="h-5 w-5" />
-              </div>
+              </motion.div>
 
               {/* Heading */}
-              <div className="min-w-0">
+              <div className="min-w-0 pt-0.5">
                 <h2
                   className="
-                    text-base
+                    text-lg
                     font-bold
                     tracking-tight
-                    text-slate-900
-                    sm:text-lg
+
+                    text-slate-950
+
+                    sm:text-xl
+
                     dark:text-white
                   "
                 >
@@ -163,10 +270,14 @@ export default function TrackingForm() {
 
                 <p
                   className="
-                    mt-1
+                    mt-1.5
+                    max-w-xl
+
                     text-sm
                     leading-6
+
                     text-slate-500
+
                     dark:text-slate-400
                   "
                 >
@@ -175,7 +286,7 @@ export default function TrackingForm() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* =================================================
               FORM
@@ -183,113 +294,263 @@ export default function TrackingForm() {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="
+              relative
               space-y-6
+
               p-5
-              sm:p-6
+
+              sm:p-7
             "
           >
-            <FormField
-              control={form.control}
-              name="referenceNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    className="
-                      text-sm
-                      font-semibold
-                      text-slate-800
-                      dark:text-slate-200
-                    "
-                  >
-                    Namba ya Marejeleo
-                  </FormLabel>
-
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder="Mfano: MLE-2026-0001"
-                      autoComplete="off"
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 8,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.4,
+                delay: 0.18,
+                ease,
+              }}
+            >
+              <FormField
+                control={form.control}
+                name="referenceNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
                       className="
-                        mt-1.5
-                        h-12
-                        rounded-xl
-                        border-slate-200
-                        bg-slate-50/60
-                        px-4
                         text-sm
-                        shadow-none
-                        transition-all
-                        placeholder:text-slate-400
-                        focus-visible:border-purple-500
-                        focus-visible:ring-2
-                        focus-visible:ring-purple-500/15
-                        dark:border-slate-700
-                        dark:bg-slate-800/60
-                        dark:text-white
-                        dark:placeholder:text-slate-500
-                      "
-                    />
-                  </FormControl>
+                        font-semibold
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        text-slate-800
+
+                        dark:text-slate-200
+                      "
+                    >
+                      Namba ya Marejeleo
+                    </FormLabel>
+
+                    <FormControl>
+                      <div className="relative mt-1.5">
+                        <Search
+                          aria-hidden="true"
+                          className="
+                            pointer-events-none
+                            absolute
+                            left-4
+                            top-1/2
+                            z-10
+                            h-4
+                            w-4
+                            -translate-y-1/2
+
+                            text-slate-400
+
+                            transition-colors
+
+                            peer-focus:text-purple-600
+
+                            dark:text-slate-500
+                            dark:peer-focus:text-purple-400
+                          "
+                        />
+
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder="Mfano: MLE-2026-0001"
+                          autoComplete="off"
+                          className="
+                            peer
+
+                            h-13
+                            rounded-2xl
+
+                            border
+                            border-slate-200
+
+                            bg-slate-50/70
+
+                            pl-11
+                            pr-4
+
+                            text-sm
+                            font-medium
+
+                            shadow-none
+
+                            transition-all
+                            duration-200
+
+                            placeholder:text-slate-400
+
+                            hover:border-slate-300
+
+                            focus-visible:border-purple-500
+                            focus-visible:bg-white
+                            focus-visible:ring-4
+                            focus-visible:ring-purple-500/10
+
+                            dark:border-slate-700
+                            dark:bg-slate-900/70
+                            dark:text-white
+                            dark:placeholder:text-slate-500
+
+                            dark:hover:border-slate-600
+
+                            dark:focus-visible:border-purple-500
+                            dark:focus-visible:bg-slate-900
+                            dark:focus-visible:ring-purple-500/10
+                          "
+                        />
+                      </div>
+                    </FormControl>
+
+                    <FormMessage className="pt-1" />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
 
             {/* Submit */}
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="
-                h-11
-                w-full
-                rounded-xl
-                bg-purple-600
-                text-sm
-                font-semibold
-                text-white
-                shadow-sm
-                shadow-purple-600/20
-                transition-all
-                hover:bg-purple-700
-                hover:shadow-md
-                hover:shadow-purple-600/20
-                disabled:cursor-not-allowed
-                disabled:opacity-60
-                dark:bg-purple-600
-                dark:hover:bg-purple-700
-              "
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 8,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.4,
+                delay: 0.24,
+                ease,
+              }}
             >
-              <Search className="mr-2 h-4 w-4" />
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="
+                  group
 
-              {isPending
-                ? "Inatafuta..."
-                : "Fuatilia taarifa"}
-            </Button>
+                  h-12
+                  w-full
+
+                  rounded-2xl
+
+                  bg-purple-600
+
+                  text-sm
+                  font-semibold
+                  text-white
+
+                  shadow-lg
+                  shadow-purple-600/20
+
+                  transition-all
+                  duration-200
+
+                  hover:bg-purple-700
+                  hover:shadow-xl
+                  hover:shadow-purple-600/25
+
+                  active:scale-[0.99]
+
+                  disabled:cursor-not-allowed
+                  disabled:opacity-70
+
+                  dark:bg-purple-600
+                  dark:hover:bg-purple-700
+                "
+              >
+                {isPending ? (
+                  <>
+                    <Loader2
+                      className="
+                        mr-2
+                        h-4
+                        w-4
+                        animate-spin
+                      "
+                    />
+
+                    Inatafuta...
+                  </>
+                ) : (
+                  <>
+                    <Search
+                      className="
+                        mr-2
+                        h-4
+                        w-4
+                      "
+                    />
+
+                    Fuatilia taarifa
+
+                    <ArrowRight
+                      className="
+                        ml-2
+                        h-4
+                        w-4
+
+                        transition-transform
+                        duration-200
+
+                        group-hover:translate-x-0.5
+                      "
+                    />
+                  </>
+                )}
+              </Button>
+            </motion.div>
 
             {/* Security Notice */}
-            <div
+            <motion.div
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              transition={{
+                duration: 0.4,
+                delay: 0.3,
+              }}
               className="
                 flex
                 items-center
                 justify-center
                 gap-2
+
                 border-t
                 border-slate-100
+
                 pt-5
+
                 text-xs
+                leading-5
+
                 text-slate-500
+
                 dark:border-slate-800
                 dark:text-slate-400
               "
             >
               <ShieldCheck
                 className="
-                  h-3.5
-                  w-3.5
+                  h-4
+                  w-4
                   shrink-0
+
                   text-emerald-600
+
                   dark:text-emerald-400
                 "
               />
@@ -298,26 +559,68 @@ export default function TrackingForm() {
                 Taarifa zako zinalindwa na kuhifadhiwa
                 kwa usalama.
               </span>
-            </div>
+            </motion.div>
           </form>
-        </section>
-      </Form>
+        </motion.section>
 
-      {/* ===================================================
-          RESULT
-      ==================================================== */}
-      {result && (
-        <TrackingResultCard
-          feedback={result}
-        />
-      )}
+        {/* =================================================
+            RESULT / EMPTY STATE
+        ================================================== */}
+        <AnimatePresence mode="wait">
+          {result && (
+            <motion.div
+              key="tracking-result"
+              initial={{
+                opacity: 0,
+                y: 18,
+                scale: 0.98,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                y: -10,
+                scale: 0.98,
+              }}
+              transition={{
+                duration: 0.45,
+                ease,
+              }}
+            >
+              <TrackingResultCard
+                feedback={result}
+              />
+            </motion.div>
+          )}
 
-      {/* ===================================================
-          EMPTY / NOT FOUND
-      ==================================================== */}
-      {!result && notFound && (
-        <TrackingEmptyState />
-      )}
-    </>
+          {!result && notFound && (
+            <motion.div
+              key="tracking-empty"
+              initial={{
+                opacity: 0,
+                y: 18,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: -10,
+              }}
+              transition={{
+                duration: 0.4,
+                ease,
+              }}
+            >
+              <TrackingEmptyState />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </Form>
   );
 }

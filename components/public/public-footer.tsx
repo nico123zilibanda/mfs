@@ -324,7 +324,7 @@ export default function PublicFooter() {
         {/* =========================================================
             BOTTOM STATUS STRIP
         ========================================================= */}
-        <div
+        {/* <div
           className="
             mt-10
             flex
@@ -359,7 +359,7 @@ export default function PublicFooter() {
 
             Mfumo salama na wa kuaminika
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* =========================================================

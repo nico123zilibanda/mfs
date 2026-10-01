@@ -1,52 +1,138 @@
-import { FilePenLine } from "lucide-react";
+"use client";
+
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function FeedbackHero() {
   return (
-    <div
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 20,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       className="
         mx-auto
         mb-10
-        max-w-2xl
+        max-w-3xl
         text-center
 
         sm:mb-12
       "
     >
-      {/* Icon */}
-
-      <div
+      {/* National Logo */}
+      <motion.div
+        initial={{
+          opacity: 0,
+          scale: 0.75,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+        }}
+        transition={{
+          duration: 0.6,
+          delay: 0.1,
+          type: "spring",
+          stiffness: 220,
+          damping: 18,
+        }}
         className="
+          relative
           mx-auto
           flex
-          h-14
-          w-14
+          h-28
+          w-28
           items-center
           justify-center
-          rounded-2xl
-
-          bg-purple-600/10
-          text-purple-700
-
-          transition-colors
-          duration-300
-
-
-          dark:bg-purple-400/10
-          dark:text-purple-400
-        "
-      >
-        <FilePenLine className="h-7 w-7" />
-      </div>
-
-      {/* Badge */}
-
-      <span
-        className="
-          mt-6
-          inline-flex
           rounded-full
 
-          bg-purple-600/10
+          border
+          border-purple-900/10
+
+          bg-white
+
+          shadow-xl
+          shadow-purple-950/10
+
+          ring-4
+          ring-purple-100
+
+          dark:border-purple-400/20
+          dark:bg-slate-900
+          dark:ring-purple-900/40
+        "
+      >
+        <Image
+          src="/images/logo.jpeg"
+          alt="Nembo ya Taifa"
+          width={78}
+          height={78}
+          sizes="20"
+          priority
+          className="
+            object-contain
+          "
+        />
+
+        {/* Subtle decorative ring */}
+        <motion.div
+          aria-hidden="true"
+          initial={{
+            opacity: 0,
+            scale: 0.85,
+          }}
+          animate={{
+            opacity: [0, 0.35, 0],
+            scale: [0.85, 1.2, 1.3],
+          }}
+          transition={{
+            duration: 2,
+            delay: 0.7,
+            ease: "easeOut",
+          }}
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            rounded-full
+            ring-2
+            ring-purple-400
+          "
+        />
+      </motion.div>
+
+      {/* Badge */}
+      <motion.span
+        initial={{
+          opacity: 0,
+          y: 8,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.4,
+          delay: 0.25,
+        }}
+        className="
+          mt-7
+          inline-flex
+          items-center
+          rounded-full
+
+          border
+          border-purple-200
+
+          bg-purple-50
 
           px-4
           py-1.5
@@ -56,51 +142,81 @@ export default function FeedbackHero() {
 
           text-purple-700
 
+          shadow-sm
 
-          dark:bg-purple-400/10
-          dark:text-purple-400
+          dark:border-purple-900/50
+          dark:bg-purple-950/40
+          dark:text-purple-300
         "
       >
         Wasilisha Taarifa
-      </span>
+      </motion.span>
 
       {/* Title */}
-
-      <h2
+      <motion.h2
+        initial={{
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.45,
+          delay: 0.35,
+        }}
         className="
           mt-4
+
           text-3xl
           font-bold
           tracking-tight
 
           text-slate-950
 
+          sm:text-4xl
+          md:text-5xl
 
           dark:text-white
-
-
-          md:text-4xl
         "
       >
-        Wasilisha Malalamiko Yako Hapa:
-      </h2>
+        Wasilisha Malalamiko Yako Hapa
+      </motion.h2>
 
       {/* Description */}
-
-      {/* <p
+      <motion.p
+        initial={{
+          opacity: 0,
+          y: 8,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.4,
+          delay: 0.45,
+        }}
         className="
+          mx-auto
           mt-4
+          max-w-2xl
+
+          text-sm
           leading-7
 
-          text-slate-600
+          text-slate-500
 
+          sm:text-base
 
           dark:text-slate-400
         "
       >
-        Jaza fomu ifuatayo. Baada ya kuituma, utapokea namba ya kumbukumbu kwa
-        ajili ya ufuatiliaji.
-      </p> */}
-    </div>
+        Jaza fomu hapa chini kwa usahihi. Baada ya kutuma
+        taarifa yako, utapokea namba ya kumbukumbu kwa ajili
+        ya ufuatiliaji.
+      </motion.p>
+    </motion.div>
   );
 }

@@ -248,7 +248,7 @@ export default function LoginImageSlider() {
                 text-white
               "
             >
-              Mfumo Salama wa Wasimamizi
+              Malalamiko Portal
             </span>
           </div>
 
