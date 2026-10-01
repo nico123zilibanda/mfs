@@ -7,7 +7,9 @@ import { usePathname } from "next/navigation";
 import {
   ClipboardList,
   FileText,
+  Bookmark,
   LayoutDashboard,
+  Activity,
   LogOut,
   ShieldCheck,
   Trash2,
@@ -44,12 +46,12 @@ const navigation = [
   {
     title: "Taarifa Zilizohifadhiwa",
     href: "/deleted",
-    icon: Trash2,
+    icon: Bookmark,
   },
   {
     title: "Ufuatiliaji",
     href: "/trackings",
-    icon: ClipboardList,
+    icon: Activity,
   },
 ] as const;
 

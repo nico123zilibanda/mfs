@@ -21,26 +21,119 @@ export default function DataTableEmpty({
   action,
 }: DataTableEmptyProps) {
   return (
-    <Card className="border-dashed border-slate-300 bg-white shadow-none">
-      <CardContent className="flex min-h-72 flex-col items-center justify-center px-6 py-12 text-center">
-        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-          {icon ?? (
-            <Inbox className="h-8 w-8 text-muted-foreground" />
-          )}
+    <Card
+      className="
+        overflow-hidden
+        rounded-2xl
+        border
+        border-dashed
+        border-slate-300
+        bg-white
+        shadow-none
+        transition-colors
+        dark:border-slate-700
+        dark:bg-slate-950
+      "
+    >
+      <CardContent
+        className="
+          flex
+          min-h-64
+          flex-col
+          items-center
+          justify-center
+          px-4
+          py-10
+          text-center
+          sm:min-h-72
+          sm:px-6
+          sm:py-12
+        "
+      >
+        {/* Icon */}
+        <div
+          className="
+            relative
+            mb-5
+            flex
+            h-14
+            w-14
+            items-center
+            justify-center
+            rounded-2xl
+            border
+            border-slate-200
+            bg-slate-50
+            text-slate-400
+            shadow-sm
+            sm:h-16
+            sm:w-16
+            dark:border-slate-800
+            dark:bg-slate-900
+            dark:text-slate-500
+          "
+        >
+          {/* Soft glow */}
+          <div
+            aria-hidden="true"
+            className="
+              absolute
+              inset-0
+              rounded-2xl
+              bg-linear-to-br
+              from-purple-500/5
+              via-transparent
+              to-indigo-500/5
+            "
+          />
+
+          <div className="relative">
+            {icon ?? <Inbox className="h-7 w-7 sm:h-8 sm:w-8" />}
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-lg font-bold text-slate-950">
+        {/* Content */}
+        <div className="mx-auto w-full max-w-md space-y-1.5">
+          <h3
+            className="
+              text-base
+              font-bold
+              tracking-tight
+              text-slate-900
+              sm:text-lg
+              dark:text-white
+            "
+          >
             {title}
           </h3>
 
-          <p className="max-w-md text-sm text-muted-foreground">
+          <p
+            className="
+              mx-auto
+              max-w-sm
+              text-xs
+              leading-5
+              text-slate-500
+              sm:text-sm
+              sm:leading-6
+              dark:text-slate-400
+            "
+          >
             {description}
           </p>
         </div>
 
+        {/* Action */}
         {action ? (
-          <div className="mt-6">
+          <div
+            className="
+              mt-5
+              flex
+              w-full
+              justify-center
+              sm:mt-6
+            "
+          >
             {action}
           </div>
         ) : null}

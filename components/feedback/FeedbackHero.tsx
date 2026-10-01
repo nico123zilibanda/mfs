@@ -71,7 +71,7 @@ export default function FeedbackHero() {
         "
       >
         <Image
-          src="/images/logo.jpeg"
+          src="/images/tanzania-logo.png"
           alt="Nembo ya Taifa"
           width={78}
           height={78}
