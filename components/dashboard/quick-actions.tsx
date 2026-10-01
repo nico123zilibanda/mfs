@@ -2,10 +2,11 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   FileText,
+  Search,
+  LayoutDashboard
   Bookmark,
   Activity,
   Sparkles,
-  LayoutDashboard,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,59 +34,7 @@ const actions: Action[] = [
     icon: Bookmark,
   },
   {
-    title: "Ufuatiliaji",
-    href: "/"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-import {
-  ClipboardList,
-  FileText,
-  Bookmark,
-  LayoutDashboard,
-  Activity,
-  LogOut,
-  ShieldCheck,
-  Trash2,
-} from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-import { Button } from "@/components/ui/button";
-
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from "@/components/ui/sheet";
-
-import { logoutAdmin } from "@/lib/actions/auth";
-
-type SidebarProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-};
-
-const navigation = [
-  {
-    title: "Dashibodi",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Taarifa Zote",
-    href: "/all-reports",
-    icon: FileText,
-  },
-  {
-    title: "Taarifa Zilizohifadhiwa",
-    href: "/deleted",
-    icon: Bookmark,
-  },
-  {
-    title: "Ufuatiliaji",
+    title: "Fuatilia Taarifa",
     href: "/trackings",
     icon: Activity,
   },
