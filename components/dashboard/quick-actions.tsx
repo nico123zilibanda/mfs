@@ -95,7 +95,7 @@ export default function QuickActions() {
   return (
     <section aria-labelledby="quick-actions-title" className="space-y-4">
       {/* Section heading */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div
           className="
             flex h-8 w-8 shrink-0 items-center justify-center
