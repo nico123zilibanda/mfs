@@ -2,8 +2,7 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   FileText,
-  Search,
-  LayoutDashboard
+  LayoutDashboard,
   Bookmark,
   Activity,
   Sparkles,
