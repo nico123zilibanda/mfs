@@ -1,8 +1,8 @@
 import DashboardHeader from "@/components/dashboard/dashboard-header";
 import DashboardPage from "@/components/dashboard/dashboard-page";
 import PageSection from "@/components/dashboard/page-section";
-import QuickActions from "@/components/dashboard/quick-actions";
 import StatsGrid from "@/components/dashboard/stat-grid";
+import QuickActions from "../../../components/dashboard/quick-actions";
 
 import DataTableEmpty from "@/components/table/data-table-empty";
 
