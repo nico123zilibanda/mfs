@@ -5,20 +5,37 @@ import FeedbackHero from "@/components/feedback/FeedbackHero";
 
 import Container from "@/components/layout/Container";
 
+import Link from "next/link";
 import PublicHero from "./public-hero";
 import PublicProcess from "./public-process";
-import PublicServices from "./public-services";
-import PublicStats from "./public-stats";
-import PublicTrust from "./public-trust";
+import PublicMeetings from "@/components/meetings/public/PublicMeetings";
+import { listMeetingsAction } from "@/lib/actions/meeting.actions";
 
 
-export default function PublicHome() {
+export default async function PublicHome() {
+  const result = await listMeetingsAction({});
+  const initialMeetings = result.success ? result.data.meetings : [];
 
   return (
 
     <>
 
       <PublicHero />
+
+      <section className="py-8">
+        <Container>
+          <div className="flex justify-center">
+            <Link
+              href="/public/chat"
+              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-white font-medium shadow hover:bg-blue-700 transition"
+            >
+              Chat with Admin
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      <PublicMeetings initialMeetings={initialMeetings} />
 
       {/* <PublicServices /> */}
 

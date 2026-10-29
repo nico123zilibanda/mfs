@@ -13,6 +13,8 @@ import {
   LogOut,
   ShieldCheck,
   Trash2,
+  MessageSquare,
+  Video,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -52,6 +54,16 @@ const navigation = [
     title: "Ufuatiliaji",
     href: "/trackings",
     icon: Activity,
+  },
+  {
+    title: "Mazungumzo ya Chat",
+    href: "/chat",
+    icon: MessageSquare,
+  },
+  {
+    title: "Mikutano Hai",
+    href: "/meetings",
+    icon: Video,
   },
 ] as const;
 

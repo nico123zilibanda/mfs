@@ -20,10 +20,10 @@ export default function PublicHero() {
       <div className="relative w-full">
         <Image
           src="/images/ongea_ded.png"
-          alt="Mfumo wa Maoni na Malalamiko kwa Wananchi wa Wilaya ya Mlele"
+          alt="Mfumo wa Malalamiko kwa Wananchi wa Wilaya ya Mlele"
           width={2048}
           height={676}
-          sizes="38"
+          sizes="20"
           priority
           className="
             block

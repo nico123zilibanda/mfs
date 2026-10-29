@@ -1,10 +1,8 @@
-import type { PostgrestError } from "@supabase/supabase-js";
-
 /**
  * Throws a normalized database error.
  */
 export function throwDatabaseError(
-  error: PostgrestError | null,
+  error: { message: string } | null,
   operation: string
 ): void {
   if (!error) {

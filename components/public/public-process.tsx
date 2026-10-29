@@ -81,14 +81,15 @@ export default function PublicProcess() {
           <h2
             className="
               mt-3
-              text-3xl
+              text-2xl
               font-bold
               tracking-tight
               text-slate-950
 
               dark:text-white
 
-              md:text-4xl
+              md:text-3xl
+              sm:text-3xl
             "
           >
             Hatua tatu Rahisi za Kuwasilisha Taarifa

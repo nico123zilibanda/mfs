@@ -5,7 +5,13 @@ import { updateSession } from "@/lib/auth/update-session";
 export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request);
   const { pathname } = request.nextUrl;
-  const isProtectedRoute = ["/dashboard", "/reports", "/trackings"].some(
+  const isProtectedRoute = [
+    "/dashboard",
+    "/all-reports",
+    "/deleted",
+    "/trackings",
+    "/chat",
+  ].some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
