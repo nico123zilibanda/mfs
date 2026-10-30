@@ -360,6 +360,7 @@ export async function requestMeetingTokenAction(input: {
   const { url, apiKey, apiSecret } = getLiveKitConfig();
   const at = new AccessToken(apiKey, apiSecret, {
     identity: `anon-${reg.id}`,
+    name: reg.displayName,
     ttl: "10m",
   });
   at.addGrant({ roomJoin: true, room: meeting.roomName, canPublish: true, canSubscribe: true });
