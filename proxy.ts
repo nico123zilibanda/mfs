@@ -5,15 +5,19 @@ import { updateSession } from "@/lib/auth/update-session";
 export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request);
   const { pathname } = request.nextUrl;
-  const isProtectedRoute = [
+
+  const protectedExactOrPrefix = [
     "/dashboard",
     "/all-reports",
     "/deleted",
     "/trackings",
     "/chat",
-  ].some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+  ];
+
+  const isProtectedRoute =
+    protectedExactOrPrefix.some(
+      (route) => pathname === route || pathname.startsWith(`${route}/`),
+    ) || pathname === "/meetings";
 
   if (isProtectedRoute && !user) {
     return redirectWithSession(request, response, "/login");

@@ -374,20 +374,20 @@ export async function requestMeetingTokenAction(input: {
       return actionFailure("Invalid registration credential.");
     }
 
-    // 3. Identify the authenticated meeting creator.
+    // 3. Identify the authenticated meeting creator (if present).
     const supabase = await createSupabaseServerClient();
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError) {
-      return actionFailure("Unable to verify meeting identity.");
+    let user = null;
+    try {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+      user = authUser ?? null;
+    } catch {
+      user = null;
     }
 
-    const isModerator =
-      !!user && user.id === meeting.createdBy;
+    const isModerator = !!user && !!meeting.createdBy && user.id === meeting.createdBy;
 
     // 4. Generate trusted LiveKit participant metadata.
     const metadata = JSON.stringify({

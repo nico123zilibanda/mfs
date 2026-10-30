@@ -271,8 +271,27 @@ export async function verifyAnonymousRegistration(
   meetingId: string,
   rawToken: string,
 ): Promise<MeetingRegistration | null> {
-  const supabase = await createSupabaseServerClient();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const hash = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+  if (supabaseUrl && serviceRoleKey) {
+    const { createClient } = await import("@supabase/supabase-js");
+    const serviceClient = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+    const { data, error } = await serviceClient
+      .from(REGISTRATIONS_TABLE)
+      .select("*")
+      .eq("meeting_id", meetingId)
+      .eq("access_token_hash", hash)
+      .maybeSingle();
+    throwDatabaseError(error, "verifying registration");
+    if (!data) return null;
+    return mapRegistration(data as RegistrationRow);
+  }
+
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from(REGISTRATIONS_TABLE)
     .select("*")
