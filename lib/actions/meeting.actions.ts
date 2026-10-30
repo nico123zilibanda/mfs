@@ -344,28 +344,89 @@ export async function requestMeetingTokenAction(input: {
   meetingId: string;
   rawToken: string;
 }): Promise<ActionResult<{ token: string; serverUrl: string }>> {
-  const meetingIdValidation = z.string().uuid().safeParse(input?.meetingId);
-  if (!meetingIdValidation.success) return actionFailure("Validation failed.");
-  if (!input?.rawToken) return actionFailure("Validation failed.");
+  const meetingIdValidation = z
+    .string()
+    .uuid()
+    .safeParse(input?.meetingId);
 
-  const meeting = await meetingRepository.findMeetingById(meetingIdValidation.data);
-  if (meeting.status !== "live") return actionFailure("Meeting is not live.");
+  if (!meetingIdValidation.success || !input?.rawToken) {
+    return actionFailure("Validation failed.");
+  }
 
-  const reg = await meetingRepository.verifyAnonymousRegistration(
-    meetingIdValidation.data,
-    input.rawToken,
-  );
-  if (!reg) return actionFailure("Invalid registration credential.");
+  try {
+    // 1. Retrieve meeting from trusted database source.
+    const meeting = await meetingRepository.findMeetingById(
+      meetingIdValidation.data,
+    );
 
-  const { url, apiKey, apiSecret } = getLiveKitConfig();
-  const at = new AccessToken(apiKey, apiSecret, {
-    identity: `anon-${reg.id}`,
-    name: reg.displayName,
-    ttl: "10m",
-  });
-  at.addGrant({ roomJoin: true, room: meeting.roomName, canPublish: true, canSubscribe: true });
-  const token = await at.toJwt();
-  return { success: true, data: { token, serverUrl: url } };
+    if (meeting.status !== "live") {
+      return actionFailure("Meeting is not live.");
+    }
+
+    // 2. Verify anonymous registration credential.
+    const registration =
+      await meetingRepository.verifyAnonymousRegistration(
+        meetingIdValidation.data,
+        input.rawToken,
+      );
+
+    if (!registration) {
+      return actionFailure("Invalid registration credential.");
+    }
+
+    // 3. Identify the authenticated meeting creator.
+    const supabase = await createSupabaseServerClient();
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError) {
+      return actionFailure("Unable to verify meeting identity.");
+    }
+
+    const isModerator =
+      !!user && user.id === meeting.createdBy;
+
+    // 4. Generate trusted LiveKit participant metadata.
+    const metadata = JSON.stringify({
+      meetingRole: isModerator ? "moderator" : "participant",
+    });
+
+    // 5. Generate LiveKit token.
+    const { url, apiKey, apiSecret } = getLiveKitConfig();
+
+    const accessToken = new AccessToken(apiKey, apiSecret, {
+      identity: `anon-${registration.id}`,
+      name: registration.displayName,
+      metadata,
+      ttl: "10m",
+    });
+
+    accessToken.addGrant({
+      roomJoin: true,
+      room: meeting.roomName,
+      canPublish: true,
+      canSubscribe: true,
+    });
+
+    const token = await accessToken.toJwt();
+
+    return {
+      success: true,
+      data: {
+        token,
+        serverUrl: url,
+      },
+    };
+  } catch (error) {
+    console.error("requestMeetingTokenAction failed:", error);
+
+    return actionFailure(
+      "Unable to generate meeting access token.",
+    );
+  }
 }
 
 export async function listMeetingsAction(

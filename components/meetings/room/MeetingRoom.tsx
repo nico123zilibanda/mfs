@@ -1,11 +1,18 @@
 
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { requestMeetingTokenAction } from "@/lib/actions/meeting.actions";
+import type { Meeting } from "@/lib/types/meeting";
 
 import {
   LiveKitRoom,
@@ -17,15 +24,11 @@ import {
   VideoTrack,
   isTrackReference,
   useRoomContext,
- 
 } from "@livekit/components-react";
 
 import "@livekit/components-styles";
 
-import {
-  RoomEvent,
-  Track,
-} from "livekit-client";
+import { RoomEvent, Track } from "livekit-client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -65,10 +68,8 @@ import {
   CrownIcon,
   PresentationIcon,
   UserCheckIcon,
-  MoreVerticalIcon,
+  RefreshCwIcon,
 } from "lucide-react";
-
-import type { Meeting } from "@/lib/types/meeting";
 
 interface MeetingRoomProps {
   meetingId: string;
@@ -84,51 +85,122 @@ interface MeetingChatMessage {
   isOwn: boolean;
 }
 
-const CREDENTIAL_KEY = (id: string) => `meeting-credential-${id}`;
-const CHAT_TOPIC = "mlele-meeting-chat";
-const MEETING_CONTROL_TOPIC = "mlele-meeting-control";
-
 interface RaisedHand {
   identity: string;
   name: string;
   requestedAt: number;
 }
 
+type MeetingControlType =
+  | "raise_hand"
+  | "lower_hand"
+  | "promote"
+  | "demote";
+
 interface MeetingControlMessage {
-  type: "raise_hand" | "lower_hand" | "promote" | "demote";
+  type: MeetingControlType;
   targetIdentity?: string;
   timestamp: number;
+}
+
+interface ChatPayload {
+  id: string;
+  message: string;
+  timestamp: number;
+}
+
+const CREDENTIAL_KEY = (id: string) =>
+  `meeting-credential-${id}`;
+
+const CHAT_TOPIC = "mlele-meeting-chat";
+const MEETING_CONTROL_TOPIC = "mlele-meeting-control";
+
+const MAX_CHAT_LENGTH = 2000;
+
+function initials(name: string): string {
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "MW"
+  );
+}
+
+function formatTime(timestamp: number): string {
+  return new Intl.DateTimeFormat("sw-TZ", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(timestamp);
 }
 
 function getMeetingRole(metadata?: string): string | null {
   if (!metadata) return null;
 
   try {
-    const parsed = JSON.parse(metadata);
-    return typeof parsed.meetingRole === "string"
-      ? parsed.meetingRole
-      : null;
+    const parsed: unknown = JSON.parse(metadata);
+
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      "meetingRole" in parsed &&
+      typeof parsed.meetingRole === "string"
+    ) {
+      return parsed.meetingRole;
+    }
+
+    return null;
   } catch {
     return null;
   }
 }
 
-function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() || "MW";
+function isMeetingControlMessage(
+  value: unknown,
+): value is MeetingControlMessage {
+  if (!value || typeof value !== "object") return false;
+
+  const data = value as Record<string, unknown>;
+
+  const validTypes: MeetingControlType[] = [
+    "raise_hand",
+    "lower_hand",
+    "promote",
+    "demote",
+  ];
+
+  return (
+    typeof data.type === "string" &&
+    validTypes.includes(data.type as MeetingControlType) &&
+    typeof data.timestamp === "number" &&
+    Number.isFinite(data.timestamp) &&
+    (
+      data.targetIdentity === undefined ||
+      typeof data.targetIdentity === "string"
+    )
+  );
 }
 
-function formatTime(timestamp: number) {
-  return new Intl.DateTimeFormat("sw-TZ", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(timestamp);
+function isChatPayload(value: unknown): value is ChatPayload {
+  if (!value || typeof value !== "object") return false;
+
+  const data = value as Record<string, unknown>;
+
+  return (
+    typeof data.id === "string" &&
+    typeof data.message === "string" &&
+    data.message.trim().length > 0 &&
+    data.message.length <= MAX_CHAT_LENGTH &&
+    typeof data.timestamp === "number" &&
+    Number.isFinite(data.timestamp)
+  );
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                  MEETING CHAT                              */
+/* -------------------------------------------------------------------------- */
 
 function MeetingChat({
   open,
@@ -144,6 +216,20 @@ function MeetingChat({
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const processedMessageIds = useRef(new Set<string>());
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
   useEffect(() => {
     const handleDataReceived = (
       payload: Uint8Array,
@@ -155,27 +241,23 @@ function MeetingChat({
 
       try {
         const decoded = new TextDecoder().decode(payload);
-        const data = JSON.parse(decoded);
+        const data: unknown = JSON.parse(decoded);
 
-        if (
-          typeof data.message !== "string" ||
-          !data.message.trim() ||
-          data.message.length > 2000
-        ) {
-          return;
-        }
+        if (!isChatPayload(data)) return;
+
+        if (processedMessageIds.current.has(data.id)) return;
+
+        processedMessageIds.current.add(data.id);
 
         setMessages((previous) => [
           ...previous,
           {
-            id: crypto.randomUUID(),
+            id: data.id,
             senderIdentity: participant.identity,
             senderName: participant.name?.trim() || "Mshiriki",
             message: data.message.trim(),
-            timestamp: typeof data.timestamp === "number"
-              ? data.timestamp
-              : Date.now(),
-            isOwn: false,
+            timestamp: data.timestamp,
+            isOwn: participant.identity === localParticipant.identity,
           },
         ]);
       } catch {
@@ -188,41 +270,45 @@ function MeetingChat({
     return () => {
       room.off(RoomEvent.DataReceived, handleDataReceived);
     };
-  }, [room]);
+  }, [room, localParticipant.identity]);
 
   const handleSend = useCallback(async () => {
     const trimmed = message.trim();
 
     if (!trimmed || sending) return;
 
-    if (trimmed.length > 2000) {
+    if (trimmed.length > MAX_CHAT_LENGTH) {
       toast.error("Ujumbe haupaswi kuzidi herufi 2,000.");
       return;
     }
 
+    const payload: ChatPayload = {
+      id: crypto.randomUUID(),
+      message: trimmed,
+      timestamp: Date.now(),
+    };
+
     setSending(true);
 
     try {
-      const payload = new TextEncoder().encode(
-        JSON.stringify({
-          message: trimmed,
-          timestamp: Date.now(),
-        }),
+      await room.localParticipant.publishData(
+        new TextEncoder().encode(JSON.stringify(payload)),
+        {
+          reliable: true,
+          topic: CHAT_TOPIC,
+        },
       );
 
-      await room.localParticipant.publishData(payload, {
-        reliable: true,
-        topic: CHAT_TOPIC,
-      });
+      processedMessageIds.current.add(payload.id);
 
       setMessages((previous) => [
         ...previous,
         {
-          id: crypto.randomUUID(),
+          id: payload.id,
           senderIdentity: localParticipant.identity,
           senderName: localParticipant.name?.trim() || "Mimi",
           message: trimmed,
-          timestamp: Date.now(),
+          timestamp: payload.timestamp,
           isOwn: true,
         },
       ]);
@@ -246,7 +332,9 @@ function MeetingChat({
           </div>
 
           <div>
-            <h2 className="font-semibold text-white">Gumzo la Kikao</h2>
+            <h2 className="font-semibold text-white">
+              Gumzo la Kikao
+            </h2>
             <p className="text-xs text-slate-400">
               Ujumbe kwa washiriki wote
             </p>
@@ -267,7 +355,8 @@ function MeetingChat({
       <div className="flex items-start gap-2 border-b border-slate-800 bg-blue-500/5 px-4 py-3">
         <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-blue-400" />
         <p className="text-xs leading-relaxed text-slate-400">
-          Gumzo hili linapatikana kwa washiriki waliounganishwa kwenye kikao hiki.
+          Gumzo hili linapatikana kwa washiriki waliounganishwa
+          kwenye kikao hiki.
         </p>
       </div>
 
@@ -328,6 +417,8 @@ function MeetingChat({
             </div>
           ))
         )}
+
+        <div ref={messagesEndRef} />
       </div>
 
       <form
@@ -342,14 +433,18 @@ function MeetingChat({
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
+              if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.nativeEvent.isComposing
+              ) {
                 event.preventDefault();
                 void handleSend();
               }
             }}
             placeholder="Andika ujumbe..."
             rows={1}
-            maxLength={2000}
+            maxLength={MAX_CHAT_LENGTH}
             className="max-h-28 min-h-9 flex-1 resize-none bg-transparent px-2 py-2 text-sm text-white outline-none placeholder:text-slate-500"
           />
 
@@ -369,40 +464,62 @@ function MeetingChat({
         </div>
 
         <p className="mt-2 text-[10px] text-slate-500">
-          Bonyeza Enter kutuma • Shift + Enter kwenda mstari mwingine
+          Enter kutuma • Shift + Enter kwenda mstari mwingine
         </p>
       </form>
     </aside>
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               MEETING ROOM                                 */
+/* -------------------------------------------------------------------------- */
 
-function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
+function MeetingRoomInner({
+  meeting,
+}: {
+  meeting: Meeting | null;
+}) {
   const router = useRouter();
   const room = useRoomContext();
 
   const participants = useParticipants();
   const speaking = useSpeakingParticipants();
-  const { localParticipant } = useLocalParticipant();
+
+  const {
+    localParticipant,
+    isMicrophoneEnabled,
+    isCameraEnabled,
+    isScreenShareEnabled,
+  } = useLocalParticipant();
 
   const [chatOpen, setChatOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
+
   const [raisedHands, setRaisedHands] = useState<RaisedHand[]>([]);
   const [raisedHand, setRaisedHand] = useState(false);
+
   const [promotedSpeakerIdentity, setPromotedSpeakerIdentity] =
     useState<string | null>(null);
+
   const [controlLoading, setControlLoading] = useState(false);
 
-  // Camera and screen-share tracks are both subscribed.
-  const tracks = useTracks(
-    [Track.Source.Camera, Track.Source.ScreenShare],
-    { onlySubscribed: true },
-  );
+  const navigationStarted = useRef(false);
 
-  // The moderator role is assigned through trusted LiveKit token metadata.
-  const moderator = participants.find(
-    (participant) =>
-      getMeetingRole(participant.metadata) === "moderator",
+  const tracks = useTracks([
+    Track.Source.Camera,
+    Track.Source.ScreenShare,
+  ]);
+
+  /* ---------------------------- Moderator role --------------------------- */
+
+  const moderator = useMemo(
+    () =>
+      participants.find(
+        (participant) =>
+          getMeetingRole(participant.metadata) === "moderator",
+      ) ?? null,
+    [participants],
   );
 
   const isModerator =
@@ -410,20 +527,31 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
 
   const moderatorIdentity = moderator?.identity ?? null;
 
-  const screenShareTrack = tracks.find(
-    (track) =>
-      track.publication.source === Track.Source.ScreenShare &&
-      isTrackReference(track),
+  /* ------------------------------ Stage logic ----------------------------- */
+
+  const screenShareTrack = useMemo(
+    () =>
+      tracks.find(
+        (track) =>
+          track.publication.source === Track.Source.ScreenShare &&
+          isTrackReference(track),
+      ),
+    [tracks],
   );
 
-  const screenShareParticipant = screenShareTrack?.participant ?? null;
+  const screenShareParticipant =
+    screenShareTrack?.participant ?? null;
 
-  const promotedSpeaker = promotedSpeakerIdentity
-    ? participants.find(
-        (participant) =>
-          participant.identity === promotedSpeakerIdentity,
-      ) ?? null
-    : null;
+  const promotedSpeaker = useMemo(
+    () =>
+      promotedSpeakerIdentity
+        ? participants.find(
+            (participant) =>
+              participant.identity === promotedSpeakerIdentity,
+          ) ?? null
+        : null,
+    [participants, promotedSpeakerIdentity],
+  );
 
   const activeSpeaker =
     screenShareParticipant ??
@@ -433,13 +561,18 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
 
   const isScreenSharing = Boolean(screenShareParticipant);
 
-  const activeCameraTrack = activeSpeaker
-    ? tracks.find(
-        (track) =>
-          track.participant.identity === activeSpeaker.identity &&
-          track.publication.source === Track.Source.Camera,
-      )
-    : undefined;
+  const activeCameraTrack = useMemo(
+    () =>
+      activeSpeaker
+        ? tracks.find(
+            (track) =>
+              track.participant.identity === activeSpeaker.identity &&
+              track.publication.source === Track.Source.Camera &&
+              isTrackReference(track),
+          )
+        : undefined,
+    [tracks, activeSpeaker],
+  );
 
   const activeIsSpeaking = speaking.some(
     (participant) =>
@@ -455,21 +588,24 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
     [participants, activeSpeaker],
   );
 
+  const activeName =
+    activeSpeaker?.name?.trim() || "Mzungumzaji";
+
+  /* --------------------------- Control messaging ------------------------- */
+
   const publishControlMessage = useCallback(
     async (message: MeetingControlMessage) => {
-      const payload = new TextEncoder().encode(
-        JSON.stringify(message),
+      await localParticipant.publishData(
+        new TextEncoder().encode(JSON.stringify(message)),
+        {
+          reliable: true,
+          topic: MEETING_CONTROL_TOPIC,
+        },
       );
-
-      await localParticipant.publishData(payload, {
-        reliable: true,
-        topic: MEETING_CONTROL_TOPIC,
-      });
     },
     [localParticipant],
   );
 
-  // Receive hand-raising and moderator stage-management events.
   useEffect(() => {
     const handleDataReceived = (
       payload: Uint8Array,
@@ -485,27 +621,19 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
       }
 
       try {
-        const data = JSON.parse(
+        const data: unknown = JSON.parse(
           new TextDecoder().decode(payload),
-        ) as MeetingControlMessage;
+        );
 
-        if (
-          !data ||
-          typeof data.type !== "string" ||
-          typeof data.timestamp !== "number"
-        ) {
-          return;
-        }
+        if (!isMeetingControlMessage(data)) return;
 
         if (data.type === "raise_hand") {
           setRaisedHands((previous) => {
-            if (
-              previous.some(
-                (item) => item.identity === participant.identity,
-              )
-            ) {
-              return previous;
-            }
+            const exists = previous.some(
+              (item) => item.identity === participant.identity,
+            );
+
+            if (exists) return previous;
 
             return [
               ...previous,
@@ -532,20 +660,19 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
           return;
         }
 
-        // Only the participant whose server-issued metadata identifies
-        // them as moderator can issue stage-management commands.
+        // Stage-management messages must originate from the
+        // participant identified as moderator by server-issued metadata.
         if (
           !moderatorIdentity ||
-          participant.identity !== moderatorIdentity
+          participant.identity !== moderatorIdentity ||
+          !data.targetIdentity
         ) {
           return;
         }
 
-        if (
-          data.type === "promote" &&
-          data.targetIdentity
-        ) {
+        if (data.type === "promote") {
           setPromotedSpeakerIdentity(data.targetIdentity);
+
           setRaisedHands((previous) =>
             previous.filter(
               (item) => item.identity !== data.targetIdentity,
@@ -553,10 +680,7 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
           );
         }
 
-        if (
-          data.type === "demote" &&
-          data.targetIdentity
-        ) {
+        if (data.type === "demote") {
           setPromotedSpeakerIdentity((current) =>
             current === data.targetIdentity ? null : current,
           );
@@ -566,142 +690,229 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
       }
     };
 
+    const handleParticipantDisconnected = (
+      participant: { identity: string },
+    ) => {
+      setRaisedHands((previous) =>
+        previous.filter(
+          (item) => item.identity !== participant.identity,
+        ),
+      );
+
+      setPromotedSpeakerIdentity((current) =>
+        current === participant.identity ? null : current,
+      );
+    };
+
     room.on(RoomEvent.DataReceived, handleDataReceived);
+    room.on(
+      RoomEvent.ParticipantDisconnected,
+      handleParticipantDisconnected,
+    );
 
     return () => {
       room.off(RoomEvent.DataReceived, handleDataReceived);
+      room.off(
+        RoomEvent.ParticipantDisconnected,
+        handleParticipantDisconnected,
+      );
     };
   }, [room, moderatorIdentity]);
 
-  const handleRaiseHand = async () => {
+  /* ----------------------------- Raise hand ------------------------------- */
+
+  const handleRaiseHand = useCallback(async () => {
     if (controlLoading) return;
 
     setControlLoading(true);
 
+    const nextRaisedState = !raisedHand;
+
     try {
-      if (raisedHand) {
-        await publishControlMessage({
-          type: "lower_hand",
-          timestamp: Date.now(),
-        });
+      await publishControlMessage({
+        type: nextRaisedState ? "raise_hand" : "lower_hand",
+        timestamp: Date.now(),
+      });
 
-        setRaisedHand(false);
-        toast.success("Umeshusha mkono wako.");
-      } else {
-        await publishControlMessage({
-          type: "raise_hand",
-          timestamp: Date.now(),
-        });
+      setRaisedHand(nextRaisedState);
 
-        setRaisedHand(true);
-        toast.success("Ombi lako la kuzungumza limetumwa.");
-      }
+      // Update the local queue immediately. DataReceived is not
+      // guaranteed to echo a participant's own published packet.
+      setRaisedHands((previous) => {
+        if (nextRaisedState) {
+          if (
+            previous.some(
+              (item) =>
+                item.identity === localParticipant.identity,
+            )
+          ) {
+            return previous;
+          }
+
+          return [
+            ...previous,
+            {
+              identity: localParticipant.identity,
+              name: localParticipant.name?.trim() || "Mimi",
+              requestedAt: Date.now(),
+            },
+          ].sort(
+            (a, b) => a.requestedAt - b.requestedAt,
+          );
+        }
+
+        return previous.filter(
+          (item) =>
+            item.identity !== localParticipant.identity,
+        );
+      });
+
+      toast.success(
+        nextRaisedState
+          ? "Ombi lako la kuzungumza limetumwa."
+          : "Umeshusha mkono wako.",
+      );
     } catch {
       toast.error("Imeshindwa kutuma ombi. Jaribu tena.");
     } finally {
       setControlLoading(false);
     }
-  };
+  }, [
+    controlLoading,
+    raisedHand,
+    publishControlMessage,
+    localParticipant,
+  ]);
 
-  const handlePromote = async (identity: string) => {
-    if (!isModerator || controlLoading) return;
+  /* --------------------------- Moderator actions ------------------------- */
 
-    setControlLoading(true);
+  const handlePromote = useCallback(
+    async (identity: string) => {
+      if (!isModerator || controlLoading) return;
 
-    try {
-      await publishControlMessage({
-        type: "promote",
-        targetIdentity: identity,
-        timestamp: Date.now(),
-      });
+      setControlLoading(true);
 
-      setPromotedSpeakerIdentity(identity);
+      try {
+        await publishControlMessage({
+          type: "promote",
+          targetIdentity: identity,
+          timestamp: Date.now(),
+        });
 
-      setRaisedHands((previous) =>
-        previous.filter((item) => item.identity !== identity),
-      );
+        setPromotedSpeakerIdentity(identity);
 
-      toast.success("Mshiriki ameruhusiwa kuzungumza.");
-    } catch {
-      toast.error("Imeshindwa kumruhusu mshiriki.");
-    } finally {
-      setControlLoading(false);
-    }
-  };
+        setRaisedHands((previous) =>
+          previous.filter(
+            (item) => item.identity !== identity,
+          ),
+        );
 
-  const handleDemote = async (identity: string) => {
-    if (!isModerator || controlLoading) return;
+        toast.success("Mshiriki ameruhusiwa kuzungumza.");
+      } catch {
+        toast.error("Imeshindwa kumruhusu mshiriki.");
+      } finally {
+        setControlLoading(false);
+      }
+    },
+    [isModerator, controlLoading, publishControlMessage],
+  );
 
-    setControlLoading(true);
+  const handleDemote = useCallback(
+    async (identity: string) => {
+      if (!isModerator || controlLoading) return;
 
-    try {
-      await publishControlMessage({
-        type: "demote",
-        targetIdentity: identity,
-        timestamp: Date.now(),
-      });
+      setControlLoading(true);
 
-      setPromotedSpeakerIdentity((current) =>
-        current === identity ? null : current,
-      );
+      try {
+        await publishControlMessage({
+          type: "demote",
+          targetIdentity: identity,
+          timestamp: Date.now(),
+        });
 
-      toast.success("Mshiriki amerudishwa kwenye orodha ya washiriki.");
-    } catch {
-      toast.error("Imeshindwa kumaliza nafasi ya mzungumzaji.");
-    } finally {
-      setControlLoading(false);
-    }
-  };
+        setPromotedSpeakerIdentity((current) =>
+          current === identity ? null : current,
+        );
 
-  const handleToggleMic = async () => {
+        toast.success(
+          "Mshiriki amerudishwa kwenye orodha ya washiriki.",
+        );
+      } catch {
+        toast.error("Imeshindwa kumaliza nafasi ya mzungumzaji.");
+      } finally {
+        setControlLoading(false);
+      }
+    },
+    [isModerator, controlLoading, publishControlMessage],
+  );
+
+  /* ------------------------------ Media controls -------------------------- */
+
+  const handleToggleMic = useCallback(async () => {
     try {
       await localParticipant.setMicrophoneEnabled(
-        !localParticipant.isMicrophoneEnabled,
+        !isMicrophoneEnabled,
       );
     } catch {
       toast.error("Imeshindwa kubadilisha mipangilio ya sauti.");
     }
-  };
+  }, [localParticipant, isMicrophoneEnabled]);
 
-  const handleToggleCam = async () => {
+  const handleToggleCam = useCallback(async () => {
     try {
       await localParticipant.setCameraEnabled(
-        !localParticipant.isCameraEnabled,
+        !isCameraEnabled,
       );
     } catch {
       toast.error("Imeshindwa kubadilisha mipangilio ya kamera.");
     }
-  };
+  }, [localParticipant, isCameraEnabled]);
 
-  const handleScreenShare = async () => {
+  const handleScreenShare = useCallback(async () => {
     try {
       await localParticipant.setScreenShareEnabled(
-        !localParticipant.isScreenShareEnabled,
+        !isScreenShareEnabled,
       );
     } catch {
       toast.error("Imeshindwa kushiriki skrini.");
     }
-  };
+  }, [localParticipant, isScreenShareEnabled]);
 
-  const handleLeave = async () => {
+  /* ------------------------------- Leave room ----------------------------- */
+
+  const navigateAway = useCallback(() => {
+    if (navigationStarted.current) return;
+
+    navigationStarted.current = true;
+    router.replace("/public");
+  }, [router]);
+
+  const handleLeave = useCallback(async () => {
     if (leaving) return;
 
     setLeaving(true);
 
     try {
       await room.disconnect();
+    } catch {
+      toast.error("Hitilafu imetokea wakati wa kuondoka kwenye kikao.");
     } finally {
-      router.push("/public");
+      navigateAway();
     }
-  };
+  }, [leaving, room, navigateAway]);
 
-  const activeName =
-    activeSpeaker?.name?.trim() || "Mzungumzaji";
+  const meetingDateLabel = useMemo(
+    () =>
+      new Intl.DateTimeFormat("sw-TZ", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date()),
+    [],
+  );
 
-  const getParticipantName = (identity: string) =>
-    participants.find(
-      (participant) => participant.identity === identity,
-    )?.name?.trim() || "Mshiriki";
+  /* ------------------------------------------------------------------------ */
+  /*                                    UI                                    */
+  /* ------------------------------------------------------------------------ */
 
   return (
     <div className="flex h-dvh min-h-150 flex-col overflow-hidden bg-[#080F1D] text-white">
@@ -742,7 +953,9 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
               <span className="text-sm font-medium">
                 {participants.length}
               </span>
-              <span className="text-xs text-slate-400">Washiriki</span>
+              <span className="text-xs text-slate-400">
+                Washiriki
+              </span>
             </div>
 
             <div className="hidden items-center gap-1.5 text-xs text-emerald-400 md:flex">
@@ -777,16 +990,14 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                     Mkutano Unaendelea
                   </h2>
                   <p className="mt-1 text-xs text-slate-400 md:text-sm">
-                    Karibu kwenye kikao cha mtandaoni cha Halmashauri ya Wilaya ya Mlele.
+                    Karibu kwenye kikao cha mtandaoni cha
+                    Halmashauri ya Wilaya ya Mlele.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/3 px-3 py-2 text-xs text-slate-400">
                   <ClockIcon className="size-3.5" />
-                  {new Intl.DateTimeFormat("sw-TZ", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  }).format(new Date())}
+                  {meetingDateLabel}
                 </div>
               </div>
 
@@ -926,6 +1137,7 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                         {raisedHands.length}
                       </Badge>
                     </div>
+
                     <p className="mt-1 text-xs text-slate-500">
                       {isModerator
                         ? "Chagua mshiriki wa kumpa nafasi ya kuzungumza."
@@ -949,7 +1161,7 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                       >
                         <div className="flex min-w-0 items-center gap-3">
                           <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-lg">
-                            👋
+                            <HandIcon className="size-5 text-amber-400" />
                           </div>
 
                           <div className="min-w-0">
@@ -1007,13 +1219,15 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                       const cameraTrack = tracks.find(
                         (track) =>
                           track.participant.identity === participant.identity &&
-                          track.publication.source === Track.Source.Camera,
+                          track.publication.source === Track.Source.Camera &&
+                          isTrackReference(track),
                       );
 
                       const participantScreenShare = tracks.find(
                         (track) =>
                           track.participant.identity === participant.identity &&
-                          track.publication.source === Track.Source.ScreenShare,
+                          track.publication.source === Track.Source.ScreenShare &&
+                          isTrackReference(track),
                       );
 
                       const participantName =
@@ -1044,14 +1258,12 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                           }`}
                         >
                           <div className="relative flex aspect-video items-center justify-center overflow-hidden bg-[#192940]">
-                            {participantScreenShare &&
-                            isTrackReference(participantScreenShare) ? (
+                            {participantScreenShare ? (
                               <VideoTrack
                                 trackRef={participantScreenShare}
                                 className="size-full object-contain"
                               />
                             ) : cameraTrack &&
-                              isTrackReference(cameraTrack) &&
                               participant.isCameraEnabled ? (
                               <VideoTrack
                                 trackRef={cameraTrack}
@@ -1066,8 +1278,8 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                             )}
 
                             {hasRaisedHand && (
-                              <div className="absolute right-2 top-2 rounded-lg border border-amber-400/30 bg-amber-500/20 px-2 py-1 text-sm">
-                                👋
+                              <div className="absolute right-2 top-2 rounded-lg border border-amber-400/30 bg-amber-500/20 p-1.5">
+                                <HandIcon className="size-4 text-amber-300" />
                               </div>
                             )}
 
@@ -1133,15 +1345,15 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 <Button
                   variant="secondary"
                   size="icon"
-                  onClick={handleToggleMic}
+                  onClick={() => void handleToggleMic()}
                   className={`size-11 rounded-xl border ${
-                    localParticipant.isMicrophoneEnabled
+                    isMicrophoneEnabled
                       ? "border-white/10 bg-white/10 text-white hover:bg-white/20"
                       : "border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25"
                   }`}
                   aria-label="Badilisha sauti"
                 >
-                  {localParticipant.isMicrophoneEnabled ? (
+                  {isMicrophoneEnabled ? (
                     <MicIcon className="size-5" />
                   ) : (
                     <MicOffIcon className="size-5" />
@@ -1149,9 +1361,7 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {localParticipant.isMicrophoneEnabled
-                  ? "Zima Sauti"
-                  : "Washa Sauti"}
+                {isMicrophoneEnabled ? "Zima Sauti" : "Washa Sauti"}
               </TooltipContent>
             </Tooltip>
 
@@ -1160,15 +1370,15 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 <Button
                   variant="secondary"
                   size="icon"
-                  onClick={handleToggleCam}
+                  onClick={() => void handleToggleCam()}
                   className={`size-11 rounded-xl border ${
-                    localParticipant.isCameraEnabled
+                    isCameraEnabled
                       ? "border-white/10 bg-white/10 text-white hover:bg-white/20"
                       : "border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25"
                   }`}
                   aria-label="Badilisha kamera"
                 >
-                  {localParticipant.isCameraEnabled ? (
+                  {isCameraEnabled ? (
                     <VideoIcon className="size-5" />
                   ) : (
                     <VideoOffIcon className="size-5" />
@@ -1176,9 +1386,7 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {localParticipant.isCameraEnabled
-                  ? "Zima Kamera"
-                  : "Washa Kamera"}
+                {isCameraEnabled ? "Zima Kamera" : "Washa Kamera"}
               </TooltipContent>
             </Tooltip>
 
@@ -1187,9 +1395,9 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 <Button
                   variant="secondary"
                   size="icon"
-                  onClick={handleScreenShare}
+                  onClick={() => void handleScreenShare()}
                   className={`size-11 rounded-xl border ${
-                    localParticipant.isScreenShareEnabled
+                    isScreenShareEnabled
                       ? "border-blue-400/30 bg-blue-500/15 text-blue-300"
                       : "border-white/10 bg-white/10 text-white hover:bg-white/20"
                   }`}
@@ -1199,13 +1407,12 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {localParticipant.isScreenShareEnabled
+                {isScreenShareEnabled
                   ? "Acha Kushiriki Skrini"
                   : "Shiriki Skrini"}
               </TooltipContent>
             </Tooltip>
 
-            {/* Raise hand control for citizens */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -1218,11 +1425,14 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                       ? "border-amber-400/40 bg-amber-500/20 text-amber-300"
                       : "border-white/10 bg-white/10 text-white hover:bg-white/20"
                   }`}
-                  aria-label={
-                    raisedHand ? "Shusha mkono" : "Inua mkono"
-                  }
+                  aria-label={raisedHand ? "Shusha mkono" : "Inua mkono"}
                 >
-                  <HandIcon className="size-5" />
+                  {controlLoading ? (
+                    <Loader2Icon className="size-5 animate-spin" />
+                  ) : (
+                    <HandIcon className="size-5" />
+                  )}
+
                   {raisedHand && (
                     <span className="absolute -right-1 -top-1 size-3 rounded-full border-2 border-[#0D1728] bg-amber-400" />
                   )}
@@ -1238,7 +1448,9 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                 <Button
                   variant="secondary"
                   size="icon"
-                  onClick={() => setChatOpen((previous) => !previous)}
+                  onClick={() =>
+                    setChatOpen((previous) => !previous)
+                  }
                   className={`relative size-11 rounded-xl border ${
                     chatOpen
                       ? "border-blue-400/30 bg-blue-500/15 text-blue-300"
@@ -1271,7 +1483,9 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Ondoka Kwenye Mkutano</TooltipContent>
+              <TooltipContent>
+                Ondoka Kwenye Mkutano
+              </TooltipContent>
             </Tooltip>
           </div>
 
@@ -1284,6 +1498,9 @@ function MeetingRoomInner({ meeting }: { meeting: Meeting | null }) {
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/*                            MEETING ROOM ENTRY                              */
+/* -------------------------------------------------------------------------- */
 
 export default function MeetingRoom({
   meetingId,
@@ -1293,29 +1510,49 @@ export default function MeetingRoom({
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [token, setToken] = useState<string | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(null);
 
+  const [attempt, setAttempt] = useState(0);
+
+  const navigationStarted = useRef(false);
+
   const meeting = initialMeeting ?? null;
+
+  const navigateHome = useCallback(() => {
+    if (navigationStarted.current) return;
+
+    navigationStarted.current = true;
+    router.replace("/public");
+  }, [router]);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function load() {
+    async function loadMeetingToken() {
       setLoading(true);
       setError(null);
+      setToken(null);
+      setServerUrl(null);
 
       try {
-        const rawToken =
-          typeof window !== "undefined"
-            ? localStorage.getItem(CREDENTIAL_KEY(meetingId))
-            : null;
+        let rawToken: string | null = null;
+
+        try {
+          rawToken = localStorage.getItem(
+            CREDENTIAL_KEY(meetingId),
+          );
+        } catch {
+          throw new Error(
+            "Imeshindikana kusoma hati ya usajili kutoka kwenye kifaa hiki.",
+          );
+        }
 
         if (!rawToken) {
-          if (!cancelled) {
-            setError("Hakuna hati ya usajili. Tafadhali jisajili kwanza.");
-          }
-          return;
+          throw new Error(
+            "Hakuna hati ya usajili. Tafadhali jisajili kwanza.",
+          );
         }
 
         const result = await requestMeetingTokenAction({
@@ -1325,24 +1562,25 @@ export default function MeetingRoom({
 
         if (cancelled) return;
 
-        if (result.success && result.data?.token) {
-          setToken(result.data.token);
-          setServerUrl(result.data.serverUrl ?? null);
-        } else {
-          const message =
-            result.message || "Imeshindwa kupata tokeni ya mkutano.";
-
-          setError(message);
-          toast.error(message);
+        if (!result.success || !result.data?.token) {
+          throw new Error(
+            result.message ||
+              "Imeshindwa kupata tokeni ya mkutano.",
+          );
         }
-      } catch {
-        if (!cancelled) {
-          const message =
-            "Hitilafu imetokea wakati wa kujiunga na mkutano.";
 
-          setError(message);
-          toast.error(message);
-        }
+        setToken(result.data.token);
+        setServerUrl(result.data.serverUrl ?? null);
+      } catch (caughtError) {
+        if (cancelled) return;
+
+        const message =
+          caughtError instanceof Error
+            ? caughtError.message
+            : "Hitilafu imetokea wakati wa kujiunga na mkutano.";
+
+        setError(message);
+        toast.error(message);
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -1350,12 +1588,12 @@ export default function MeetingRoom({
       }
     }
 
-    void load();
+    void loadMeetingToken();
 
     return () => {
       cancelled = true;
     };
-  }, [meetingId]);
+  }, [meetingId, attempt]);
 
   if (loading) {
     return (
@@ -1391,14 +1629,24 @@ export default function MeetingRoom({
             </CardTitle>
 
             <CardDescription className="text-slate-400">
-              {error || "Imeshindwa kuanzisha muunganisho wa mkutano."}
+              {error ||
+                "Imeshindwa kuanzisha muunganisho wa mkutano."}
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="space-y-2">
             <Button
-              onClick={() => router.push("/public")}
+              onClick={() => setAttempt((previous) => previous + 1)}
               className="w-full bg-blue-600 hover:bg-blue-500"
+            >
+              <RefreshCwIcon className="mr-2 size-4" />
+              Jaribu Tena
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={navigateHome}
+              className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10"
             >
               Rudi Nyumbani
             </Button>
@@ -1421,9 +1669,10 @@ export default function MeetingRoom({
               Anwani ya seva ya mkutano haijasanidiwa.
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <Button
-              onClick={() => router.push("/public")}
+              onClick={navigateHome}
               className="w-full"
             >
               Rudi Nyumbani
@@ -1436,11 +1685,11 @@ export default function MeetingRoom({
 
   return (
     <LiveKitRoom
-      video={true}
-      audio={true}
+      video
+      audio
       token={token}
       serverUrl={url}
-      onDisconnected={() => router.push("/public")}
+      onDisconnected={navigateHome}
       data-lk-theme="default"
       style={{ height: "100dvh" }}
     >
