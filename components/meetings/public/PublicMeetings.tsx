@@ -51,7 +51,7 @@ import {
 
 const CREDENTIAL_KEY = (id: string) => `meeting-credential-${id}`;
 const getMeetingLobbyPath = (meetingId: string) =>
-  `/public/live/meeting/${encodeURIComponent(meetingId)}`;
+  `/live/meeting/${encodeURIComponent(meetingId)}`;
 
 type MeetingStatusFilter = "all" | Meeting["status"];
 

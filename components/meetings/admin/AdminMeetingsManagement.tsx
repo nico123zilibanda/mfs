@@ -98,7 +98,7 @@ type EditMeetingFormValues = {
 type MeetingFilter = "all" | "scheduled" | "live" | "ended" | "cancelled";
 
 const MEETING_LOBBY_PATH = (meetingId: string) =>
-  `/public/live/meeting/${encodeURIComponent(meetingId)}`;
+  `/live/meeting/${encodeURIComponent(meetingId)}`;
 
 function formatDateTime(isoString: string) {
   const date = new Date(isoString);
