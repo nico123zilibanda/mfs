@@ -1,41 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+  type FormEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-import {
-  getPublicMeetingAction,
-  listMeetingsAction,
-  registerAnonymousForMeetingAction,
-} from "@/lib/actions/meeting.actions";
-import type { Meeting, MeetingSummary } from "@/lib/types/meeting";
-import { MEETING_STATUS_LABELS } from "@/lib/types/meeting";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   AlertCircle,
   ArrowRight,
-  CalendarDays,
   CalendarClock,
+  CalendarDays,
   CheckCircle2,
   Clock3,
   Info,
@@ -47,68 +28,292 @@ import {
   UsersRound,
   Video,
   X,
+  type LucideIcon,
 } from "lucide-react";
 
-const CREDENTIAL_KEY = (id: string) => `meeting-credential-${id}`;
+import {
+  getPublicMeetingAction,
+  listMeetingsAction,
+  registerAnonymousForMeetingAction,
+} from "@/lib/actions/meeting.actions";
+import type { Meeting, MeetingSummary } from "@/lib/types/meeting";
+import { MEETING_STATUS_LABELS } from "@/lib/types/meeting";
+import { cn } from "@/lib/utils";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+/* -------------------------------------------------------------------------- */
+/*  Constants & types                                                         */
+/* -------------------------------------------------------------------------- */
+
+type MeetingStatus = Meeting["status"];
+type StatusFilter = "all" | MeetingStatus;
+
+const CREDENTIAL_PREFIX = "meeting-credential-";
+const CREDENTIAL_KEY = (id: string) => `${CREDENTIAL_PREFIX}${id}`;
 const getMeetingLobbyPath = (meetingId: string) =>
   `/live/meeting/${encodeURIComponent(meetingId)}`;
 
-type MeetingStatusFilter = "all" | Meeting["status"];
-
-const STATUS_FILTERS: { value: MeetingStatusFilter; label: string }[] = [
-  { value: "all", label: "Mikutano yote" },
+const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
+  { value: "all", label: "Yote" },
   { value: "live", label: "Inaendelea" },
   { value: "scheduled", label: "Imepangwa" },
   { value: "ended", label: "Imemalizika" },
   { value: "cancelled", label: "Imeghairishwa" },
 ];
 
-function formatDateTime(isoString: string) {
+const STATUS_PRIORITY: Record<MeetingStatus, number> = {
+  live: 0,
+  scheduled: 1,
+  ended: 2,
+  cancelled: 3,
+};
+
+/** Single source of truth for every status-based style / hint. */
+const STATUS_CONFIG: Record<
+  MeetingStatus,
+  { accent: string; badge: string; tile: string; hint: string; hintTone: string }
+> = {
+  live: {
+    accent: "bg-emerald-500",
+    badge:
+      "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+    tile: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+    hint: "Mkutano unaendelea sasa",
+    hintTone: "text-emerald-700 dark:text-emerald-400",
+  },
+  scheduled: {
+    accent: "bg-primary/70",
+    badge: "border-primary/25 bg-primary/10 text-primary",
+    tile: "border-primary/25 bg-primary/10 text-primary",
+    hint: "Mkutano uliopangwa",
+    hintTone: "text-muted-foreground",
+  },
+  ended: {
+    accent: "bg-muted-foreground/30",
+    badge: "border-border bg-muted text-muted-foreground",
+    tile: "border-border bg-muted text-muted-foreground",
+    hint: "Mkutano umekamilika",
+    hintTone: "text-muted-foreground",
+  },
+  cancelled: {
+    accent: "bg-destructive/70",
+    badge: "border-destructive/25 bg-destructive/10 text-destructive",
+    tile: "border-destructive/25 bg-destructive/10 text-destructive",
+    hint: "Mkutano umeghairishwa",
+    hintTone: "text-destructive",
+  },
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Date helpers (formatters are created once, not on every render)           */
+/* -------------------------------------------------------------------------- */
+
+const LOCALE = "sw-TZ";
+const TIME_ZONE = "Africa/Dar_es_Salaam";
+
+const fullFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  dateStyle: "full",
+  timeStyle: "short",
+});
+const dayFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  day: "numeric",
+});
+const monthFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  month: "short",
+});
+const weekdayFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  weekday: "short",
+});
+const timeFormatter = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: TIME_ZONE,
+  timeStyle: "short",
+});
+
+function parseDate(iso: string): Date | null {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatDateTime(iso: string) {
+  const date = parseDate(iso);
+  return date ? fullFormatter.format(date) : iso;
+}
+
+function getDateParts(iso: string) {
+  const date = parseDate(iso);
+  if (!date) return null;
+  return {
+    day: dayFormatter.format(date),
+    month: monthFormatter.format(date),
+    weekday: weekdayFormatter.format(date),
+    time: timeFormatter.format(date),
+  };
+}
+
+function toTime(iso: string) {
+  return parseDate(iso)?.getTime() ?? 0;
+}
+
+function getCountdownLabel(iso: string, now: number | null) {
+  if (now === null) return null;
+  const date = parseDate(iso);
+  if (!date) return null;
+
+  const diff = date.getTime() - now;
+  if (diff <= 0) return "Unaanza hivi karibuni";
+
+  const minutes = Math.max(1, Math.round(diff / 60_000));
+  if (minutes < 60) return `Unaanza baada ya dakika ${minutes}`;
+
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `Unaanza baada ya saa ${hours}`;
+
+  return `Unaanza baada ya siku ${Math.round(hours / 24)}`;
+}
+
+function sortMeetings(list: MeetingSummary[]) {
+  return [...list].sort((a, b) => {
+    const byStatus = STATUS_PRIORITY[a.status] - STATUS_PRIORITY[b.status];
+    if (byStatus !== 0) return byStatus;
+
+    const aTime = toTime(a.scheduledStartAt);
+    const bTime = toTime(b.scheduledStartAt);
+    // Past meetings: newest first. Upcoming / live: soonest first.
+    return a.status === "ended" || a.status === "cancelled"
+      ? bTime - aTime
+      : aTime - bTime;
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Hooks                                                                     */
+/* -------------------------------------------------------------------------- */
+
+function hasCredential(meetingId: string) {
   try {
-    const date = new Date(isoString);
-    if (Number.isNaN(date.getTime())) return isoString;
-
-    return new Intl.DateTimeFormat("sw-TZ", {
-      timeZone: "Africa/Dar_es_Salaam",
-      dateStyle: "full",
-      timeStyle: "short",
-    }).format(date);
+    return Boolean(window.localStorage.getItem(CREDENTIAL_KEY(meetingId)));
   } catch {
-    return isoString;
+    return false; // storage blocked (private mode, etc.)
   }
 }
 
-function getStatusVariant(status: string) {
-  switch (status) {
-    case "live":
-      return "default" as const;
-    case "scheduled":
-      return "secondary" as const;
-    case "ended":
-      return "outline" as const;
-    case "cancelled":
-      return "destructive" as const;
-    default:
-      return "outline" as const;
-  }
+/** Tracks which meetings this device has a stored credential for. */
+function useRegisteredMeetings(meetings: MeetingSummary[]) {
+  const [registered, setRegistered] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const next: Record<string, boolean> = {};
+    for (const meeting of meetings) next[meeting.id] = hasCredential(meeting.id);
+    setRegistered(next);
+  }, [meetings]);
+
+  // Keep several open tabs in sync.
+  useEffect(() => {
+    function onStorage(event: StorageEvent) {
+      if (!event.key?.startsWith(CREDENTIAL_PREFIX)) return;
+      const id = event.key.slice(CREDENTIAL_PREFIX.length);
+      setRegistered((prev) => ({ ...prev, [id]: Boolean(event.newValue) }));
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const markRegistered = useCallback((id: string) => {
+    setRegistered((prev) => ({ ...prev, [id]: true }));
+  }, []);
+
+  return { registered, markRegistered };
 }
 
-function hasMeetingCredential(meetingId: string) {
-  if (typeof window === "undefined") return false;
-  return Boolean(window.localStorage.getItem(CREDENTIAL_KEY(meetingId)));
+/** Client-only clock (null on the server → no hydration mismatch). */
+function useNow(intervalMs = 60_000) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+    const timer = window.setInterval(() => setNow(Date.now()), intervalMs);
+    return () => window.clearInterval(timer);
+  }, [intervalMs]);
+  return now;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Small presentational pieces                                               */
+/* -------------------------------------------------------------------------- */
+
+function LiveDot() {
+  return (
+    <span className="relative flex size-2">
+      <span className="absolute inline-flex size-full rounded-full bg-emerald-500 opacity-50 motion-safe:animate-ping" />
+      <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+    </span>
+  );
+}
+
+function StatusBadge({ status }: { status: MeetingStatus }) {
+  return (
+    <Badge
+      variant="outline"
+      className={cn("gap-1.5 rounded-full font-medium", STATUS_CONFIG[status].badge)}
+    >
+      {status === "live" && <LiveDot />}
+      {status === "scheduled" && <CalendarClock className="size-3.5" />}
+      {MEETING_STATUS_LABELS[status]}
+    </Badge>
+  );
+}
+
+function DateTile({ iso, status }: { iso: string; status: MeetingStatus }) {
+  const parts = getDateParts(iso);
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        "flex size-14 shrink-0 flex-col items-center justify-center rounded-xl border",
+        STATUS_CONFIG[status].tile,
+      )}
+    >
+      {parts ? (
+        <>
+          <span className="text-xs font-medium leading-none">{parts.month}</span>
+          <span className="mt-1 text-xl font-bold leading-none tabular-nums">
+            {parts.day}
+          </span>
+        </>
+      ) : (
+        <CalendarDays className="size-6" />
+      )}
+    </div>
+  );
 }
 
 function SectionHeading() {
   return (
-    <div className="mx-auto mb-10 max-w-3xl text-center">
+    <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
       <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary">
         <Radio className="size-4" />
         <span>Mawasiliano ya moja kwa moja</span>
       </div>
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+      <h2 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
         Mikutano <span className="text-primary">Hai</span>
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+      <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
         Shiriki katika mikutano ya moja kwa moja, pata taarifa muhimu na ungana
         na jamii kupitia jukwaa letu la kidijitali.
       </p>
@@ -124,33 +329,89 @@ function SectionHeading() {
   );
 }
 
+function StatusFilters({
+  value,
+  counts,
+  showCounts,
+  onChange,
+}: {
+  value: StatusFilter;
+  counts: Record<StatusFilter, number>;
+  showCounts: boolean;
+  onChange: (value: StatusFilter) => void;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label="Chuja mikutano kwa hali"
+      // Horizontal scroll on phones, wrapping on larger screens.
+      className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+    >
+      {STATUS_FILTERS.map((filter) => {
+        const active = value === filter.value;
+        return (
+          <Button
+            key={filter.value}
+            type="button"
+            size="sm"
+            variant={active ? "default" : "outline"}
+            className="shrink-0 gap-2 rounded-full"
+            onClick={() => onChange(filter.value)}
+            aria-pressed={active}
+          >
+            {filter.label}
+            {showCounts && (
+              <span
+                className={cn(
+                  "min-w-5 rounded-full px-1.5 text-xs font-semibold tabular-nums",
+                  active
+                    ? "bg-primary-foreground/20"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                {counts[filter.value]}
+              </span>
+            )}
+          </Button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  States: loading / empty / error                                           */
+/* -------------------------------------------------------------------------- */
+
 function MeetingsSkeleton() {
   return (
     <div
-      className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
       aria-label="Inapakia mikutano"
       aria-busy="true"
     >
       {Array.from({ length: 6 }).map((_, index) => (
-        <Card key={index} className="overflow-hidden rounded-2xl border-border/60">
-          <div className="h-1.5 animate-pulse bg-muted" />
-          <CardHeader className="space-y-4 pb-3">
-            <div className="flex items-center justify-between gap-3">
+        <Card key={index} className="gap-0 overflow-hidden rounded-2xl py-0">
+          <div className="h-1 animate-pulse bg-muted" />
+          <CardContent className="space-y-4 p-5">
+            <div className="flex items-center justify-between">
               <div className="h-6 w-24 animate-pulse rounded-full bg-muted" />
-              <div className="h-6 w-20 animate-pulse rounded-full bg-muted" />
+              <div className="h-4 w-20 animate-pulse rounded bg-muted" />
             </div>
-            <div className="h-6 w-4/5 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-3/5 animate-pulse rounded bg-muted" />
-          </CardHeader>
-          <CardContent className="space-y-5">
+            <div className="flex gap-3">
+              <div className="size-14 shrink-0 animate-pulse rounded-xl bg-muted" />
+              <div className="flex-1 space-y-2 pt-1">
+                <div className="h-5 w-4/5 animate-pulse rounded bg-muted" />
+                <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
+              </div>
+            </div>
             <div className="space-y-2">
               <div className="h-4 w-full animate-pulse rounded bg-muted" />
               <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
             </div>
-            <div className="h-px bg-border" />
-            <div className="flex gap-3">
-              <div className="h-10 flex-1 animate-pulse rounded-lg bg-muted" />
-              <div className="h-10 flex-1 animate-pulse rounded-lg bg-muted" />
+            <div className="flex gap-2 border-t pt-4">
+              <div className="h-10 flex-1 animate-pulse rounded-xl bg-muted" />
+              <div className="h-10 flex-1 animate-pulse rounded-xl bg-muted" />
             </div>
           </CardContent>
         </Card>
@@ -159,7 +420,13 @@ function MeetingsSkeleton() {
   );
 }
 
-function EmptyMeetings({ filtered = false, onReset }: { filtered?: boolean; onReset?: () => void }) {
+function EmptyMeetings({
+  filtered = false,
+  onReset,
+}: {
+  filtered?: boolean;
+  onReset?: () => void;
+}) {
   return (
     <Card className="overflow-hidden rounded-2xl border-dashed shadow-none">
       <CardContent className="flex flex-col items-center px-6 py-14 text-center sm:py-20">
@@ -171,7 +438,7 @@ function EmptyMeetings({ filtered = false, onReset }: { filtered?: boolean; onRe
         </h3>
         <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
           {filtered
-            ? "Chagua status nyingine ili kuona mikutano iliyopo."
+            ? "Chagua hali nyingine ili kuona mikutano iliyopo."
             : "Mikutano itakapoandaliwa, taarifa zake zitaonekana hapa. Tafadhali tembelea ukurasa huu tena baadaye."}
         </p>
         {filtered && onReset && (
@@ -184,101 +451,146 @@ function EmptyMeetings({ filtered = false, onReset }: { filtered?: boolean; onRe
   );
 }
 
-function MeetingCard({
-  meeting,
-  isRegistered,
-  onOpenDetails,
-  onJoin,
-}: {
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <Card className="overflow-hidden rounded-2xl border-destructive/20">
+      <CardContent className="flex flex-col items-center px-6 py-12 text-center">
+        <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
+          <AlertCircle className="size-7 text-destructive" />
+        </div>
+        <h3 className="text-lg font-semibold">Imeshindikana kupakia mikutano</h3>
+        <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{message}</p>
+        <Button type="button" className="mt-6 gap-2 rounded-xl" onClick={onRetry}>
+          <RefreshCw className="size-4" /> Jaribu tena
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Meeting card                                                              */
+/* -------------------------------------------------------------------------- */
+
+type MeetingCardProps = {
   meeting: MeetingSummary;
   isRegistered: boolean;
+  isOpening: boolean;
+  now: number | null;
   onOpenDetails: (meetingId: string) => void;
   onJoin: (meeting: MeetingSummary) => void;
-}) {
+};
+
+const MeetingCard = memo(function MeetingCard({
+  meeting,
+  isRegistered,
+  isOpening,
+  now,
+  onOpenDetails,
+  onJoin,
+}: MeetingCardProps) {
+  const config = STATUS_CONFIG[meeting.status];
   const isLive = meeting.status === "live";
   const isScheduled = meeting.status === "scheduled";
-  const isEnded = meeting.status === "ended";
-  const isCancelled = meeting.status === "cancelled";
+  const canJoin = isLive || isScheduled;
+  const parts = getDateParts(meeting.scheduledStartAt);
+
+  const hint = isScheduled
+    ? (getCountdownLabel(meeting.scheduledStartAt, now) ?? config.hint)
+    : config.hint;
+
+  const joinLabel = isRegistered
+    ? isLive
+      ? "Jiunge sasa"
+      : "Fungua lobby"
+    : isLive
+      ? "Jiunge"
+      : "Jiandikishe";
 
   return (
-    <Card className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5">
-      <div
-        className={`h-1.5 w-full ${
-          isLive
-            ? "bg-emerald-500"
-            : isScheduled
-              ? "bg-primary/60"
-              : isCancelled
-                ? "bg-destructive/70"
-                : "bg-muted-foreground/30"
-        }`}
-      />
-      <CardHeader className="space-y-4 pb-3">
-        <div className="flex items-center justify-between gap-3">
-          <Badge
-            variant={getStatusVariant(meeting.status)}
-            className={
-              isLive
-                ? "gap-1.5 border-emerald-500/20 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-400"
-                : "gap-1.5"
-            }
-          >
-            {isLive && (
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-50" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-              </span>
-            )}
-            {!isLive && isScheduled && <CalendarClock className="size-3.5" />}
-            {MEETING_STATUS_LABELS[meeting.status]}
-          </Badge>
-          <span className="inline-flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
-            <UsersRound className="size-3.5" /> {meeting.participantCount} washiriki
+    <Card
+      className={cn(
+        "group relative h-full gap-0 overflow-hidden rounded-2xl border-border/70 bg-card py-0 shadow-sm",
+        "transition-[transform,box-shadow,border-color] duration-200",
+        "hover:border-primary/30 hover:shadow-lg motion-safe:hover:-translate-y-0.5",
+        isLive && "border-emerald-500/30",
+      )}
+    >
+      <div className={cn("h-1 w-full", config.accent)} />
+
+      <CardContent className="flex flex-1 flex-col gap-4 p-5">
+        {/* Status row */}
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <StatusBadge status={meeting.status} />
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <UsersRound className="size-3.5" />
+            <span className="tabular-nums">{meeting.participantCount}</span> washiriki
           </span>
         </div>
-        <CardTitle className="line-clamp-2 min-h-14 text-xl font-semibold leading-7 tracking-tight transition-colors group-hover:text-primary">
-          {meeting.title}
-        </CardTitle>
-        <CardDescription className="flex items-start gap-2 text-sm leading-6">
-          <CalendarDays className="mt-0.5 size-4 shrink-0 text-primary" />
-          <span>{formatDateTime(meeting.scheduledStartAt)}</span>
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-5 pt-2">
-        <p className="line-clamp-3 min-h-18 text-sm leading-6 text-muted-foreground">
-          {meeting.description?.trim() || "Fungua maelezo ya mkutano ili kupata taarifa zaidi kuhusu mkutano huu."}
-        </p>
-        <div className="mt-auto space-y-4">
-          <div className="flex items-center gap-2 border-t border-border/70 pt-4 text-xs text-muted-foreground">
-            <Clock3 className="size-3.5 shrink-0" />
-            <span>
-              {isLive
-                ? "Mkutano unaendelea sasa"
-                : isScheduled
-                  ? "Mkutano uliopangwa"
-                  : isEnded
-                    ? "Mkutano umekamilika"
-                    : "Mkutano umeghairishwa"}
-            </span>
+
+        {/* Date tile + title */}
+        <div className="flex items-start gap-3.5">
+          <DateTile iso={meeting.scheduledStartAt} status={meeting.status} />
+          <div className="min-w-0 flex-1">
+            <CardTitle className="line-clamp-2 min-h-12 text-lg leading-6 font-semibold tracking-tight transition-colors group-hover:text-primary">
+              {meeting.title}
+            </CardTitle>
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+              <CalendarClock className="size-3.5 shrink-0" />
+              <span className="truncate">
+                {parts ? `${parts.weekday}, ${parts.time}` : meeting.scheduledStartAt}
+              </span>
+            </p>
           </div>
+        </div>
+
+        <p className="line-clamp-2 min-h-12 text-sm leading-6 text-muted-foreground">
+          {meeting.description?.trim() ||
+            "Fungua maelezo ya mkutano ili kupata taarifa zaidi kuhusu mkutano huu."}
+        </p>
+
+        {/* Footer */}
+        <div className="mt-auto space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-4 text-xs">
+            <span className={cn("inline-flex items-center gap-1.5 font-medium", config.hintTone)}>
+              <Clock3 className="size-3.5 shrink-0" />
+              {hint}
+            </span>
+            {isRegistered && canJoin && (
+              <span className="inline-flex items-center gap-1 font-medium text-emerald-700 dark:text-emerald-400">
+                <CheckCircle2 className="size-3.5" /> Umejiandikisha
+              </span>
+            )}
+          </div>
+
           <div className="flex gap-2">
-            <Button type="button" variant="outline" className="min-w-0 flex-1 gap-2 rounded-xl" onClick={() => onOpenDetails(meeting.id)}>
-              <Info className="size-4 shrink-0" /> <span>Maelezo</span>
+            <Button
+              type="button"
+              variant="outline"
+              className="min-w-0 flex-1 gap-2 rounded-xl"
+              onClick={() => onOpenDetails(meeting.id)}
+              disabled={isOpening}
+            >
+              {isOpening ? (
+                <Loader2 className="size-4 shrink-0 animate-spin" />
+              ) : (
+                <Info className="size-4 shrink-0" />
+              )}
+              <span className="truncate">Maelezo</span>
             </Button>
-            {isEnded ? (
-              <Button type="button" variant="secondary" className="min-w-0 flex-1 rounded-xl" disabled>Imemalizika</Button>
-            ) : isCancelled ? (
-              <Button type="button" variant="destructive" className="min-w-0 flex-1 rounded-xl" disabled>Imeghairishwa</Button>
-            ) : (
+
+            {canJoin && (
               <Button
                 type="button"
                 className="min-w-0 flex-1 gap-2 rounded-xl"
                 onClick={() => onJoin(meeting)}
               >
-                {isLive ? <Video className="size-4 shrink-0" /> : <ArrowRight className="size-4 shrink-0" />}
-                <span className="truncate">
-                  {isLive ? "Jiunge" : isRegistered ? "Fungua Lobby" : "Jiandikishe"}
-                </span>
+                {isLive ? (
+                  <Video className="size-4 shrink-0" />
+                ) : (
+                  <ArrowRight className="size-4 shrink-0" />
+                )}
+                <span className="truncate">{joinLabel}</span>
               </Button>
             )}
           </div>
@@ -286,7 +598,251 @@ function MeetingCard({
       </CardContent>
     </Card>
   );
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Details dialog                                                            */
+/* -------------------------------------------------------------------------- */
+
+function PanelHeader({
+  icon: Icon,
+  title,
+  text,
+  tone = "primary",
+}: {
+  icon: LucideIcon;
+  title: string;
+  text: string;
+  tone?: "primary" | "success";
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <div
+        className={cn(
+          "flex size-10 shrink-0 items-center justify-center rounded-xl",
+          tone === "success" ? "bg-emerald-500/10" : "bg-primary/10",
+        )}
+      >
+        <Icon
+          className={cn(
+            "size-5",
+            tone === "success" ? "text-emerald-600 dark:text-emerald-400" : "text-primary",
+          )}
+        />
+      </div>
+      <div className="min-w-0 space-y-1">
+        <h3 className="font-semibold leading-6">{title}</h3>
+        <p className="text-sm leading-6 text-muted-foreground">{text}</p>
+      </div>
+    </div>
+  );
 }
+
+function ClosedNotice({ status }: { status: "ended" | "cancelled" }) {
+  const cancelled = status === "cancelled";
+  const Icon = cancelled ? AlertCircle : CheckCircle2;
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-3 rounded-2xl border p-4",
+        cancelled ? "border-destructive/20 bg-destructive/5" : "bg-muted/30",
+      )}
+    >
+      <Icon
+        className={cn(
+          "mt-0.5 size-5 shrink-0",
+          cancelled ? "text-destructive" : "text-muted-foreground",
+        )}
+      />
+      <div>
+        <h3 className="text-sm font-semibold">
+          {cancelled ? "Mkutano umeghairishwa" : "Mkutano umekamilika"}
+        </h3>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          {cancelled
+            ? "Mkutano huu umeghairishwa na haupatikani kwa ajili ya kujiunga."
+            : "Mkutano huu umemalizika na hauwezi kuunganishwa tena kupitia ukurasa huu."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type JoinPanelProps = {
+  isLive: boolean;
+  isRegistered: boolean;
+  registering: boolean;
+  displayName: string;
+  onDisplayNameChange: (value: string) => void;
+  onRegister: () => void;
+  onJoin: () => void;
+};
+
+function JoinPanel({
+  isLive,
+  isRegistered,
+  registering,
+  displayName,
+  onDisplayNameChange,
+  onRegister,
+  onJoin,
+}: JoinPanelProps) {
+  if (isRegistered) {
+    return (
+      <div className="space-y-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:p-5">
+        <PanelHeader
+          icon={CheckCircle2}
+          tone="success"
+          title="Usajili umekamilika"
+          text={
+            isLive
+              ? "Mkutano unaendelea. Unaweza kujiunga sasa."
+              : "Tayari umejiandikisha kwa mkutano huu. Fungua lobby ili kusubiri mkutano uanze."
+          }
+        />
+        <Button type="button" className="h-11 w-full gap-2 rounded-xl" onClick={onJoin}>
+          {isLive ? <Video className="size-4" /> : <ArrowRight className="size-4" />}
+          {isLive ? "Jiunge na mkutano" : "Fungua lobby"}
+        </Button>
+      </div>
+    );
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!registering) onRegister();
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border bg-muted/20 p-4 sm:p-5">
+      <PanelHeader
+        icon={isLive ? Video : Sparkles}
+        title={isLive ? "Mkutano unaendelea" : "Jiandikishe kushiriki"}
+        text={
+          isLive
+            ? "Jiandikishe kwa jina lako ili kujiunga na mkutano huu."
+            : "Weka jina litakaloonekana kwa washiriki wengine unapoungana na mkutano."
+        }
+      />
+      <div className="space-y-2">
+        <Label htmlFor="meeting-display-name">Jina la kuonyesha</Label>
+        <Input
+          id="meeting-display-name"
+          value={displayName}
+          onChange={(event) => onDisplayNameChange(event.target.value)}
+          placeholder="Mfano: Juma Hassan"
+          autoComplete="name"
+          maxLength={100}
+          disabled={registering}
+          className="h-11 rounded-xl bg-background"
+        />
+        <p className="text-xs leading-5 text-muted-foreground">
+          Akaunti haihitajiki kwa usajili huu.
+        </p>
+      </div>
+      <Button
+        type="submit"
+        className="h-11 w-full gap-2 rounded-xl"
+        disabled={registering || !displayName.trim()}
+      >
+        {registering ? (
+          <>
+            <Loader2 className="size-4 animate-spin" /> Inasajili...
+          </>
+        ) : (
+          <>
+            Jiandikishe <ArrowRight className="size-4" />
+          </>
+        )}
+      </Button>
+    </form>
+  );
+}
+
+type MeetingDetailsDialogProps = {
+  meeting: Meeting | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  now: number | null;
+} & Omit<JoinPanelProps, "isLive">;
+
+function MeetingDetailsDialog({
+  meeting,
+  open,
+  onOpenChange,
+  now,
+  ...joinProps
+}: MeetingDetailsDialogProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="flex max-h-[90dvh] w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg">
+        {meeting && (
+          <>
+            <div className="shrink-0 border-b bg-linear-to-br from-primary/10 via-primary/4 to-transparent px-5 pb-5 pt-6 sm:px-7">
+              <div className="mb-4 pr-8">
+                <StatusBadge status={meeting.status} />
+              </div>
+              <DialogHeader className="space-y-3 text-left">
+                <DialogTitle className="pr-8 text-xl leading-tight font-bold tracking-tight sm:text-2xl">
+                  {meeting.title}
+                </DialogTitle>
+                <DialogDescription asChild>
+                  <div className="space-y-1.5 text-sm leading-6">
+                    <p className="flex items-start gap-2">
+                      <CalendarDays className="mt-0.5 size-4 shrink-0 text-primary" />
+                      <span>{formatDateTime(meeting.scheduledStartAt)}</span>
+                    </p>
+                    {meeting.status === "scheduled" &&
+                      getCountdownLabel(meeting.scheduledStartAt, now) && (
+                        <p className="flex items-start gap-2 font-medium text-foreground">
+                          <Clock3 className="mt-0.5 size-4 shrink-0 text-primary" />
+                          <span>{getCountdownLabel(meeting.scheduledStartAt, now)}</span>
+                        </p>
+                      )}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </div>
+
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-6 sm:px-7">
+              {meeting.description && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold">Kuhusu mkutano</h3>
+                  <p className="whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
+                    {meeting.description}
+                  </p>
+                </div>
+              )}
+
+              {(meeting.status === "live" || meeting.status === "scheduled") && (
+                <JoinPanel isLive={meeting.status === "live"} {...joinProps} />
+              )}
+
+              {(meeting.status === "ended" || meeting.status === "cancelled") && (
+                <ClosedNotice status={meeting.status} />
+              )}
+            </div>
+
+            <DialogFooter className="shrink-0 border-t bg-muted/10 px-5 py-4 sm:px-7">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full gap-2 rounded-xl sm:w-auto"
+                onClick={() => onOpenChange(false)}
+              >
+                <X className="size-4" /> Funga
+              </Button>
+            </DialogFooter>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Main component                                                            */
+/* -------------------------------------------------------------------------- */
 
 export default function PublicMeetings({
   initialMeetings = [],
@@ -294,20 +850,28 @@ export default function PublicMeetings({
   initialMeetings?: MeetingSummary[];
 } = {}) {
   const router = useRouter();
+  const now = useNow();
+  const hadInitialData = useRef(initialMeetings.length > 0);
+
   const [meetings, setMeetings] = useState<MeetingSummary[]>(initialMeetings);
   const [loading, setLoading] = useState(initialMeetings.length === 0);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<MeetingStatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [registrationStatus, setRegistrationStatus] = useState<Record<string, boolean>>({});
-  const [registering, startRegisterTransition] = useTransition();
+  const [openingId, setOpeningId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState("");
+  const [registering, startRegisterTransition] = useTransition();
 
-  const loadMeetings = useCallback(async (showLoading = true) => {
-    if (showLoading) setLoading(true);
-    else setRefreshing(true);
+  const { registered, markRegistered } = useRegisteredMeetings(meetings);
+
+  /* ----------------------------- data loading ----------------------------- */
+
+  const loadMeetings = useCallback(async (silent = false) => {
+    if (silent) setRefreshing(true);
+    else setLoading(true);
 
     try {
       const result = await listMeetingsAction({});
@@ -315,8 +879,7 @@ export default function PublicMeetings({
         setError(result.message ?? "Imeshindwa kupakia mikutano.");
         return;
       }
-
-      // Do not filter by status here: the public page must show historical meetings too.
+      // No status filtering here: the public page must also show past meetings.
       setMeetings(result.data.meetings);
       setError(null);
     } catch {
@@ -328,86 +891,106 @@ export default function PublicMeetings({
   }, []);
 
   useEffect(() => {
-    void loadMeetings(initialMeetings.length === 0);
-  }, [loadMeetings, initialMeetings.length]);
+    void loadMeetings(hadInitialData.current);
+  }, [loadMeetings]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const statuses: Record<string, boolean> = {};
-    meetings.forEach((meeting) => {
-      statuses[meeting.id] = Boolean(window.localStorage.getItem(CREDENTIAL_KEY(meeting.id)));
-    });
-    setRegistrationStatus(statuses);
-  }, [meetings]);
+  /* ------------------------------ derived data ---------------------------- */
 
-  const meetingCounts = useMemo(() => {
-    const counts: Record<MeetingStatusFilter, number> = {
+  const counts = useMemo(() => {
+    const result: Record<StatusFilter, number> = {
       all: meetings.length,
-      scheduled: 0,
       live: 0,
+      scheduled: 0,
       ended: 0,
       cancelled: 0,
     };
-    meetings.forEach((meeting) => {
-      counts[meeting.status] += 1;
-    });
-    return counts;
+    for (const meeting of meetings) result[meeting.status] += 1;
+    return result;
   }, [meetings]);
 
-  const visibleMeetings = useMemo(() => {
-    const priority: Record<MeetingSummary["status"], number> = {
-      live: 0,
-      scheduled: 1,
-      ended: 2,
-      cancelled: 3,
-    };
-    return meetings
-      .filter((meeting) => statusFilter === "all" || meeting.status === statusFilter)
-      .slice()
-      .sort((a, b) => {
-        const statusDifference = priority[a.status] - priority[b.status];
-        if (statusDifference !== 0) return statusDifference;
-        const aTime = new Date(a.scheduledStartAt).getTime();
-        const bTime = new Date(b.scheduledStartAt).getTime();
-        if (a.status === "ended" || a.status === "cancelled") return bTime - aTime;
-        return aTime - bTime;
-      });
-  }, [meetings, statusFilter]);
+  const visibleMeetings = useMemo(
+    () =>
+      sortMeetings(
+        statusFilter === "all"
+          ? meetings
+          : meetings.filter((meeting) => meeting.status === statusFilter),
+      ),
+    [meetings, statusFilter],
+  );
 
-  async function openDetails(meetingId: string) {
-    try {
-      const result = await getPublicMeetingAction(meetingId);
-      if (result.success) {
-        setSelectedMeeting(result.data);
-        setDetailOpen(true);
-      } else {
-        toast.error(result.message ?? "Mkutano haukuweza kupakuliwa.");
+  const isRegistered = useCallback((id: string) => Boolean(registered[id]), [registered]);
+
+  /* -------------------------------- actions ------------------------------- */
+
+  const goToLobby = useCallback(
+    (meetingId: string) => router.push(getMeetingLobbyPath(meetingId)),
+    [router],
+  );
+
+  const openDetails = useCallback(
+    async (meetingId: string) => {
+      if (openingId) return;
+      setOpeningId(meetingId);
+      try {
+        const result = await getPublicMeetingAction(meetingId);
+        if (result.success) {
+          setSelectedMeeting(result.data);
+          setDetailOpen(true);
+        } else {
+          toast.error(result.message ?? "Mkutano haukuweza kupakuliwa.");
+        }
+      } catch {
+        toast.error("Hitilafu imetokea wakati wa kufungua maelezo.");
+      } finally {
+        setOpeningId(null);
       }
-    } catch {
-      toast.error("Hitilafu imetokea wakati wa kufungua maelezo.");
-    }
-  }
+    },
+    [openingId],
+  );
+
+  const handleJoin = useCallback(
+    (meeting: MeetingSummary) => {
+      if (meeting.status === "live" && !isRegistered(meeting.id)) {
+        // Live meetings need a registration first: open the details to register.
+        void openDetails(meeting.id);
+        return;
+      }
+      if (meeting.status === "live" || meeting.status === "scheduled") {
+        goToLobby(meeting.id);
+      }
+    },
+    [goToLobby, isRegistered, openDetails],
+  );
 
   function handleRegister() {
     if (!selectedMeeting) return;
-    if (!displayName.trim()) {
+    const name = displayName.trim();
+    if (!name) {
       toast.error("Tafadhali ingiza jina lako la kuonyesha.");
       return;
     }
 
+    const meetingId = selectedMeeting.id;
+
     startRegisterTransition(async () => {
       try {
         const result = await registerAnonymousForMeetingAction({
-          meetingId: selectedMeeting.id,
-          displayName: displayName.trim(),
+          meetingId,
+          displayName: name,
         });
         if (!result.success || !result.data?.rawToken) {
           toast.error(result.message ?? "Usajili haukuwezekana.");
           return;
         }
 
-        window.localStorage.setItem(CREDENTIAL_KEY(selectedMeeting.id), result.data.rawToken);
-        setRegistrationStatus((previous) => ({ ...previous, [selectedMeeting.id]: true }));
+        try {
+          window.localStorage.setItem(CREDENTIAL_KEY(meetingId), result.data.rawToken);
+        } catch {
+          toast.error("Kivinjari chako kimezuia kuhifadhi taarifa za usajili.");
+          return;
+        }
+
+        markRegistered(meetingId);
         toast.success("Umejiandikisha kwa mafanikio.");
       } catch {
         toast.error("Hitilafu imetokea. Tafadhali jaribu tena.");
@@ -415,270 +998,126 @@ export default function PublicMeetings({
     });
   }
 
-  function handleJoin(meeting: MeetingSummary) {
-    if (meeting.status === "live") {
-      if (registrationStatus[meeting.id] || hasMeetingCredential(meeting.id)) {
-        router.push(getMeetingLobbyPath(meeting.id));
-      } else {
-        toast.error("Lazima ujiandikishe ili kujiunga na mkutano unaoendelea.");
-      }
-      return;
-    }
-    if (meeting.status === "scheduled") router.push(getMeetingLobbyPath(meeting.id));
+  function handleDialogOpenChange(open: boolean) {
+    setDetailOpen(open);
+    if (!open) setDisplayName("");
   }
 
-  function handleDialogJoin() {
-    if (!selectedMeeting) return;
-    if (selectedMeeting.status === "live") {
-      if (registrationStatus[selectedMeeting.id] || hasMeetingCredential(selectedMeeting.id)) {
-        router.push(getMeetingLobbyPath(selectedMeeting.id));
-      } else {
-        toast.error("Lazima ujiandikishe ili kujiunga na mkutano unaoendelea.");
-      }
-      return;
-    }
-    if (selectedMeeting.status === "scheduled") router.push(getMeetingLobbyPath(selectedMeeting.id));
-  }
+  /* --------------------------------- render ------------------------------- */
 
-  const selectedIsRegistered = selectedMeeting
-    ? Boolean(registrationStatus[selectedMeeting.id] || hasMeetingCredential(selectedMeeting.id))
-    : false;
+  const showFullError = Boolean(error) && meetings.length === 0;
+  const showInlineError = Boolean(error) && meetings.length > 0;
 
   return (
-    <section className="relative overflow-hidden py-14 sm:py-20 lg:py-24">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-linear-to-b from-primary/6 via-primary/2.5 to-transparent" />
-      <div aria-hidden="true" className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-72 -translate-x-1/2 rounded-full bg-primary/6 blur-3xl" />
+    <section className="relative overflow-hidden py-12 sm:py-20 lg:py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-linear-to-b from-primary/6 via-primary/2.5 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-72 -translate-x-1/2 rounded-full bg-primary/6 blur-3xl"
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading />
+
         <div className="mx-auto max-w-7xl">
+          {/* Toolbar */}
           <div className="mb-6 space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight">Mikutano yote</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {loading ? "Inapakia taarifa..." : `${visibleMeetings.length} kati ya ${meetings.length} mikutano`}
+            <div className="flex items-end justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="text-lg font-semibold tracking-tight">Orodha ya mikutano</h3>
+                <p className="mt-1 text-sm text-muted-foreground" aria-live="polite">
+                  {loading
+                    ? "Inapakia taarifa..."
+                    : `${visibleMeetings.length} kati ya ${meetings.length} mikutano`}
                 </p>
               </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="w-fit gap-2 rounded-xl"
-                onClick={() => void loadMeetings(false)}
+                className="shrink-0 gap-2 rounded-xl"
+                onClick={() => void loadMeetings(true)}
                 disabled={loading || refreshing}
               >
-                <RefreshCw className={`size-4 ${refreshing ? "animate-spin" : ""}`} />
-                {refreshing ? "Inasasisha..." : "Sasisha taarifa"}
+                <RefreshCw className={cn("size-4", refreshing && "animate-spin")} />
+                <span className="hidden sm:inline">
+                  {refreshing ? "Inasasisha..." : "Sasisha taarifa"}
+                </span>
+                <span className="sm:hidden">{refreshing ? "Inasasisha" : "Sasisha"}</span>
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-2" aria-label="Chuja mikutano kwa status">
-              {STATUS_FILTERS.map((filter) => (
-                <Button
-                  key={filter.value}
-                  type="button"
-                  size="sm"
-                  variant={statusFilter === filter.value ? "default" : "outline"}
-                  className="gap-2 rounded-full"
-                  onClick={() => setStatusFilter(filter.value)}
-                  aria-pressed={statusFilter === filter.value}
-                >
-                  {filter.label}
-                  <Badge variant="secondary" className="min-w-6 justify-center rounded-full px-1.5">
-                    {meetingCounts[filter.value]}
-                  </Badge>
-                </Button>
-              ))}
-            </div>
+            <StatusFilters
+              value={statusFilter}
+              counts={counts}
+              showCounts={!loading}
+              onChange={setStatusFilter}
+            />
           </div>
 
+          {showInlineError && (
+            <div
+              role="alert"
+              className="mb-5 flex flex-col gap-3 rounded-2xl border border-destructive/20 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <p className="flex items-start gap-2 text-sm text-destructive">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" />
+                <span>{error} Unaona taarifa za mwisho zilizopakiwa.</span>
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="w-fit gap-2 rounded-xl"
+                onClick={() => void loadMeetings(true)}
+              >
+                <RefreshCw className="size-4" /> Jaribu tena
+              </Button>
+            </div>
+          )}
+
+          {/* Content */}
           {loading ? (
             <MeetingsSkeleton />
-          ) : error ? (
-            <Card className="overflow-hidden rounded-2xl border-destructive/20">
-              <CardContent className="flex flex-col items-center px-6 py-12 text-center">
-                <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
-                  <AlertCircle className="size-7 text-destructive" />
-                </div>
-                <h3 className="text-lg font-semibold">Imeshindikana kupakia mikutano</h3>
-                <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{error}</p>
-                <Button type="button" className="mt-6 gap-2 rounded-xl" onClick={() => void loadMeetings()}>
-                  <RefreshCw className="size-4" /> Jaribu tena
-                </Button>
-              </CardContent>
-            </Card>
+          ) : showFullError ? (
+            <ErrorState message={error!} onRetry={() => void loadMeetings()} />
           ) : meetings.length === 0 ? (
             <EmptyMeetings />
           ) : visibleMeetings.length === 0 ? (
             <EmptyMeetings filtered onReset={() => setStatusFilter("all")} />
           ) : (
-            <div className="grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid items-stretch gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
               {visibleMeetings.map((meeting) => (
                 <MeetingCard
                   key={meeting.id}
                   meeting={meeting}
-                  isRegistered={Boolean(registrationStatus[meeting.id])}
+                  isRegistered={isRegistered(meeting.id)}
+                  isOpening={openingId === meeting.id}
+                  now={now}
                   onOpenDetails={openDetails}
                   onJoin={handleJoin}
                 />
               ))}
             </div>
           )}
-
-          <div className="mt-10 flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/30 p-4 sm:mt-12 sm:p-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-              <ShieldCheck className="size-5 text-primary" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm font-semibold">Taarifa kwa washiriki</p>
-              <p className="text-sm leading-6 text-muted-foreground">
-                Kwa mikutano inayohitaji usajili, tumia jina lako la kuonyesha kabla ya kujiunga. Ikiwa tayari umejiandikisha kwenye kifaa hiki, unaweza kufungua lobby kupitia taarifa za mkutano husika.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
-      <Dialog
+      <MeetingDetailsDialog
+        meeting={selectedMeeting}
         open={detailOpen}
-        onOpenChange={(open) => {
-          setDetailOpen(open);
-          if (!open) setDisplayName("");
-        }}
-      >
-        <DialogContent className="max-h-[90dvh] overflow-y-auto rounded-2xl p-0 sm:max-w-lg">
-          {selectedMeeting && (
-            <>
-              <div className="relative overflow-hidden border-b bg-linear-to-br from-primary/10 via-primary/4 to-transparent px-6 pb-5 pt-7 sm:px-7">
-                <div className="mb-4 flex items-center gap-2">
-                  <Badge
-                    variant={getStatusVariant(selectedMeeting.status)}
-                    className={selectedMeeting.status === "live" ? "gap-1.5 border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : ""}
-                  >
-                    {selectedMeeting.status === "live" && <span className="size-2 animate-pulse rounded-full bg-emerald-500" />}
-                    {MEETING_STATUS_LABELS[selectedMeeting.status]}
-                  </Badge>
-                  {selectedMeeting.status === "live" && (
-                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">Unaendelea sasa</span>
-                  )}
-                </div>
-                <DialogHeader className="space-y-3 text-left">
-                  <DialogTitle className="pr-5 text-2xl font-bold leading-tight tracking-tight">{selectedMeeting.title}</DialogTitle>
-                  <DialogDescription className="flex items-start gap-2 text-sm leading-6">
-                    <CalendarDays className="mt-0.5 size-4 shrink-0 text-primary" />
-                    <span>{formatDateTime(selectedMeeting.scheduledStartAt)}</span>
-                  </DialogDescription>
-                </DialogHeader>
-              </div>
-
-              <div className="space-y-6 px-6 py-6 sm:px-7">
-                {selectedMeeting.description && (
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-semibold">Kuhusu mkutano</h3>
-                    <p className="whitespace-pre-wrap text-sm leading-7 text-muted-foreground">{selectedMeeting.description}</p>
-                  </div>
-                )}
-
-                {selectedMeeting.status === "scheduled" && (
-                  <div className="rounded-2xl border bg-muted/20 p-4 sm:p-5">
-                    {selectedIsRegistered ? (
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10">
-                            <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400" />
-                          </div>
-                          <div className="space-y-1">
-                            <h3 className="font-semibold">Usajili umekamilika</h3>
-                            <p className="text-sm leading-6 text-muted-foreground">Tayari umejiandikisha kwa mkutano huu. Unaweza kuendelea kwenda kwenye lobby.</p>
-                          </div>
-                        </div>
-                        <Button type="button" className="w-full gap-2 rounded-xl" onClick={handleDialogJoin}>Fungua Lobby <ArrowRight className="size-4" /></Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10"><Sparkles className="size-5 text-primary" /></div>
-                          <div className="space-y-1">
-                            <h3 className="font-semibold">Jiandikishe kushiriki</h3>
-                            <p className="text-sm leading-6 text-muted-foreground">Weka jina litakaloonekana kwa washiriki wengine unapoungana na mkutano.</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="meeting-display-name">Jina la kuonyesha</Label>
-                          <Input
-                            id="meeting-display-name"
-                            value={displayName}
-                            onChange={(event) => setDisplayName(event.target.value)}
-                            placeholder="Mfano: Juma Hassan"
-                            autoComplete="name"
-                            maxLength={100}
-                            disabled={registering}
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter" && !registering) {
-                                event.preventDefault();
-                                handleRegister();
-                              }
-                            }}
-                            className="h-11 rounded-xl bg-background"
-                          />
-                          <p className="text-xs leading-5 text-muted-foreground">Akaunti haihitajiki kwa usajili huu.</p>
-                        </div>
-                        <Button type="button" className="w-full gap-2 rounded-xl" onClick={handleRegister} disabled={registering || !displayName.trim()}>
-                          {registering ? <><Loader2 className="size-4 animate-spin" /> Inasajili...</> : <>Jiandikishe <ArrowRight className="size-4" /></>}
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {selectedMeeting.status === "live" && (
-                  <div className="rounded-2xl border bg-muted/20 p-4 sm:p-5">
-                    <div className="mb-4 flex items-start gap-3">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10"><Video className="size-5 text-primary" /></div>
-                      <div className="space-y-1">
-                        <h3 className="font-semibold">Mkutano unaendelea</h3>
-                        <p className="text-sm leading-6 text-muted-foreground">
-                          {selectedIsRegistered ? "Umejiandikisha. Unaweza kuendelea kujiunga na mkutano." : "Unahitaji kujiandikisha ili kujiunga na mkutano unaoendelea."}
-                        </p>
-                      </div>
-                    </div>
-                    {selectedIsRegistered ? (
-                      <Button type="button" className="w-full gap-2 rounded-xl" onClick={handleDialogJoin}><Video className="size-4" /> Jiunge na Mkutano</Button>
-                    ) : (
-                      <Button type="button" variant="outline" className="w-full gap-2 rounded-xl" onClick={() => router.push(getMeetingLobbyPath(selectedMeeting.id))}>Jiandikishe kisha Jiunge <ArrowRight className="size-4" /></Button>
-                    )}
-                  </div>
-                )}
-
-                {selectedMeeting.status === "ended" && (
-                  <div className="flex items-start gap-3 rounded-2xl border bg-muted/30 p-4">
-                    <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
-                    <div>
-                      <h3 className="text-sm font-semibold">Mkutano umekamilika</h3>
-                      <p className="mt-1 text-sm leading-6 text-muted-foreground">Mkutano huu umemalizika na hauwezi kuunganishwa tena kupitia ukurasa huu.</p>
-                    </div>
-                  </div>
-                )}
-
-                {selectedMeeting.status === "cancelled" && (
-                  <div className="flex items-start gap-3 rounded-2xl border border-destructive/20 bg-destructive/5 p-4">
-                    <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive" />
-                    <div>
-                      <h3 className="text-sm font-semibold">Mkutano umeghairishwa</h3>
-                      <p className="mt-1 text-sm leading-6 text-muted-foreground">Mkutano huu umeghairishwa na haupatikani kwa ajili ya kujiunga.</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <DialogFooter className="border-t bg-muted/10 px-6 py-4 sm:px-7">
-                <Button type="button" variant="outline" className="w-full gap-2 rounded-xl sm:w-auto" onClick={() => setDetailOpen(false)}><X className="size-4" /> Funga</Button>
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+        onOpenChange={handleDialogOpenChange}
+        now={now}
+        isRegistered={selectedMeeting ? isRegistered(selectedMeeting.id) : false}
+        registering={registering}
+        displayName={displayName}
+        onDisplayNameChange={setDisplayName}
+        onRegister={handleRegister}
+        onJoin={() => selectedMeeting && goToLobby(selectedMeeting.id)}
+      />
     </section>
   );
 }
