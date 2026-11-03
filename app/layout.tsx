@@ -19,12 +19,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ongea na DED Mlele",
-    template: "%s | Ongea na DED Mlele",
+    default: "Ongea na DC Mlele",
+    template: "%s | Ongea na DC Mlele",
   },
   description:
     "Mfumo wa kupokea maoni na taarifa kutoka kwa wananchi wa Halmashauri ya Wilaya ya Mlele.",
-  applicationName: "Ongea na DED Mlele",
+  applicationName: "Ongea na DC Mlele",
   keywords: [
     "Mlele",
     "Katavi",

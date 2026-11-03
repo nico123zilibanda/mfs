@@ -22,8 +22,8 @@ export default function GovernmentTopBar() {
         "
       >
         <Image
-          src="/images/banner-hero.jpeg"
-          alt="Malalamiko Portal — President's Office, Public Service Recruitment Secretariat"
+          src="/images/banner-malalamiko.png"
+          alt="Malalamiko Portal"
           width={2048}
           height={134}
           priority

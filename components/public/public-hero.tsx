@@ -6,6 +6,7 @@ import {
   Search,
   Send,
   ShieldCheck,
+  MessageCircle
 } from "lucide-react";
 
 import Container from "@/components/layout/Container";
@@ -19,7 +20,7 @@ export default function PublicHero() {
       ========================================================= */}
       <div className="relative w-full">
         <Image
-          src="/images/ongea_ded.png"
+          src="/images/banner-dc-mlele.png"
           alt="Mfumo wa Malalamiko kwa Wananchi wa Wilaya ya Mlele"
           width={2048}
           height={676}
@@ -122,7 +123,7 @@ export default function PublicHero() {
               "
             >
               <ShieldCheck className="h-4 w-4" />
-              Ongea na DED mlele
+              Ongea na DC mlele
             </div>
 
             <p
@@ -186,7 +187,7 @@ export default function PublicHero() {
                 active:scale-[0.98]
               "
             >
-              <Link href="#feedback-form">
+              <Link href="/public/feedback">
                 Anza
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -223,51 +224,49 @@ export default function PublicHero() {
                 active:scale-[0.98]
               "
             >
-              <Link href="/public/tracking">
-                Fuatilia
-                <Search className="ml-2 h-4 w-4" />
+          <Link href="/public/tracking">
+            Fuatilia
+            <Search className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+
+            {/* Chat with Admin */}
+              <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="
+                h-12
+                min-w-40
+
+                rounded-xl
+
+                border
+                border-cyan-300/40
+
+                bg-transparent
+
+                px-6
+
+                font-bold
+                text-white
+
+                transition-all
+                duration-200
+
+                hover:border-cyan-300
+                hover:bg-cyan-300
+                hover:text-purple-950
+
+                active:scale-[0.98]
+              "
+            >
+              <Link href="/public/chat">
+              Chat with Admin
+                <MessageCircle className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
-
-          {/* Bottom portal strip */}
-          {/* <div
-            className="
-              mx-auto
-              mt-7
-              flex
-              max-w-5xl
-              flex-col
-              items-center
-              justify-between
-              gap-3
-              border-t
-              border-white/10
-              pt-5
-              text-center
-
-              sm:flex-row
-              sm:text-left
-            "
-          >
-            <p className="text-xs text-purple-100/60 sm:text-sm">
-              Halmashauri ya Wilaya ya Mlele
-            </p>
-
-            <div
-              className="
-                flex
-                items-center
-                gap-2
-                text-xs
-                font-medium
-                text-purple-100/60
-              "
-            >
-              <ShieldCheck className="h-4 w-4 text-amber-300" />
-              Malalamiko Portal
-            </div>
-          </div> */}
         </Container>
       </div>
     </section>

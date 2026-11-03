@@ -60,7 +60,7 @@ export default function SystemLoader({
         <div className="mt-8 text-center">
 
           <h1 className="text-2xl font-bold tracking-wide text-purple-800">
-            ONGEA NA DED MLELE
+            ONGEA NA DC MLELE
           </h1>
 
           <p className="mt-2 text-sm text-slate-600">

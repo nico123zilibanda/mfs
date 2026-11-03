@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
 import {
+  ChevronRight,
+  FileText,
   Home,
   LogIn,
   Menu,
@@ -13,42 +15,60 @@ import {
   Search,
   ShieldCheck,
   Sun,
+  type LucideIcon,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 
 import PublicBrand from "./public-brand";
 
-const navigation = [
+type NavItem = {
+  title: string;
+  description: string;
+  href: string;
+  icon: LucideIcon;
+};
+
+const navigation: readonly NavItem[] = [
   {
     title: "Nyumbani",
+    description: "Rudi ukurasa mkuu",
     href: "/",
     icon: Home,
   },
   {
+    title: "Wasilisha Taarifa",
+    description: "Wasilisha maoni, malalamiko au taarifa",
+    href: "/public/feedback",
+    icon: FileText,
+  },
+  {
     title: "Fuatilia Taarifa",
+    description: "Angalia hali ya taarifa yako",
     href: "/public/tracking",
     icon: Search,
   },
-] as const;
+];
+
+function isActivePath(pathname: string | null, href: string) {
+  if (!pathname) return false;
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export default function MobileNavigation() {
   const pathname = usePathname();
-
-  const {
-    theme,
-    setTheme,
-    resolvedTheme,
-  } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -57,399 +77,177 @@ export default function MobileNavigation() {
     setMounted(true);
   }, []);
 
-  /*
-   * resolvedTheme gives the actual theme even when
-   * the selected theme is "system".
-   */
-  const isDark =
-    mounted && resolvedTheme === "dark";
+  // Always close the menu after navigating (including back/forward).
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
-  const toggleTheme = () => {
-    setTheme(isDark ? "light" : "dark");
-  };
+  // resolvedTheme reflects the real theme even when the choice is "system".
+  const isDark = mounted && resolvedTheme === "dark";
+  const toggleTheme = () => setTheme(isDark ? "light" : "dark");
 
-  // Active states
-
-  const isHomeActive =
-    pathname === "/";
-
-  const isTrackingActive =
-    pathname === "/public/tracking" ||
-    pathname.startsWith("/public/tracking/");
-
-  const isLoginActive =
-    pathname === "/login" ||
-    pathname.startsWith("/login/");
+  const isLoginActive = isActivePath(pathname, "/login");
 
   return (
-    <Sheet
-      open={open}
-      onOpenChange={setOpen}
-    >
-      {/* Menu Trigger */}
-
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
+          type="button"
           size="icon"
           variant="ghost"
           aria-label="Fungua menyu"
-          className="
-            rounded-xl
-
-            hover:bg-purple-50
-            hover:text-purple-600
-
-            dark:hover:bg-purple-950/40
-            dark:hover:text-purple-400
-          "
+          className="size-10 rounded-xl border border-transparent text-slate-700 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700 dark:text-slate-200 dark:hover:border-purple-900 dark:hover:bg-purple-950/40 dark:hover:text-purple-300"
         >
-          <Menu
-            className="
-              h-6
-              w-6
-              text-slate-700
-
-              dark:text-slate-200
-            "
-          />
+          <Menu className="size-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
 
-      {/* Mobile Menu */}
-
+      {/* Opens from the left, next to the button that opened it. */}
       <SheetContent
-        side="right"
-        className="
-          flex
-          w-[min(22rem,calc(100vw-2rem))]
-          flex-col
-          border-l
-          border-slate-200
-          bg-white
-          p-0
-
-          dark:border-slate-800
-          dark:bg-slate-950
-        "
+        side="left"
+        className="flex w-[min(22rem,calc(100vw-2rem))] flex-col gap-0 border-r border-slate-200 bg-white p-0 dark:border-slate-800 dark:bg-slate-950"
       >
-        {/* Header */}
+        {/* Tanzanian flag colours */}
+        <div aria-hidden="true" className="flex h-1 w-full shrink-0">
+          <span className="flex-1 bg-[#1eb53a]" />
+          <span className="flex-1 bg-[#fcd116]" />
+          <span className="flex-1 bg-black" />
+          <span className="flex-1 bg-[#00a3dd]" />
+        </div>
 
-        <SheetHeader
-          className="
-            border-b
-            border-slate-200
-            px-6
-            py-6
-
-            dark:border-slate-800
-          "
-        >
+        <SheetHeader className="shrink-0 gap-0 border-b border-slate-200 bg-linear-to-br from-purple-50 via-white to-white p-0 px-5 py-5 pr-14 text-left dark:border-slate-800 dark:from-purple-950/30 dark:via-slate-950 dark:to-slate-950">
+          <SheetTitle className="sr-only">Menyu kuu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Viungo vya kuelekea kurasa za huduma za wananchi na kuingia kwenye mfumo.
+          </SheetDescription>
           <PublicBrand />
         </SheetHeader>
 
-        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto">
+          <nav aria-label="Menyu kuu" className="space-y-1.5 p-4">
+            <p className="mb-3 flex items-center gap-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              <ShieldCheck className="size-3.5" aria-hidden="true" />
+              Huduma za Wananchi
+            </p>
 
-        <nav
-          className="
-            flex-1
-            space-y-2
-            p-5
-          "
-          aria-label="Menyu kuu"
-        >
-          {/* Section Title */}
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const active = isActivePath(pathname, item.href);
 
-          <div
-            className="
-              mb-4
-              flex
-              items-center
-              gap-2
-              px-2
-              text-xs
-              font-semibold
-              uppercase
-              tracking-wider
-              text-slate-400
-            "
-          >
-            <ShieldCheck className="h-3.5 w-3.5" />
-
-            Huduma za Wananchi
-          </div>
-
-          {/* Navigation Links */}
-
-          {navigation.map((item) => {
-            const Icon = item.icon;
-
-            const active =
-              item.href === "/"
-                ? isHomeActive
-                : isTrackingActive;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                aria-current={
-                  active
-                    ? "page"
-                    : undefined
-                }
-                className={cn(
-                  `
-                    group
-                    flex
-                    items-center
-                    gap-3
-                    rounded-xl
-                    px-4
-                    py-3.5
-                    text-sm
-                    font-semibold
-                    transition-all
-                    duration-200
-                  `,
-                  active
-                    ? `
-                        bg-[#6d28d9]
-                        text-white
-                        shadow-lg
-                        shadow-purple-900/20
-                      `
-                    : `
-                        text-slate-600
-                        hover:bg-purple-50
-                        hover:text-[#6d28d9]
-
-                        dark:text-slate-300
-                        dark:hover:bg-purple-950/40
-                        dark:hover:text-purple-400
-                      `
-                )}
-              >
-                <Icon
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    `
-                      h-5
-                      w-5
-                      transition-colors
-                    `,
+                    "group flex items-center gap-3.5 rounded-2xl p-3 outline-none transition-all duration-200",
+                    "focus-visible:ring-2 focus-visible:ring-purple-600/60",
                     active
-                      ? "text-white"
-                      : `
-                          text-slate-400
-                          group-hover:text-[#6d28d9]
-
-                          dark:group-hover:text-purple-400
-                        `
+                      ? "bg-linear-to-br from-purple-600 to-purple-800 text-white shadow-lg shadow-purple-900/25"
+                      : "text-slate-700 hover:bg-purple-50 dark:text-slate-200 dark:hover:bg-purple-950/40",
                   )}
-                />
+                >
+                  <span
+                    className={cn(
+                      "flex size-11 shrink-0 items-center justify-center rounded-xl transition-colors",
+                      active
+                        ? "bg-white/15 text-white ring-1 ring-inset ring-white/20"
+                        : "bg-slate-100 text-slate-500 group-hover:bg-purple-100 group-hover:text-purple-700 dark:bg-slate-900 dark:text-slate-400 dark:group-hover:bg-purple-950 dark:group-hover:text-purple-300",
+                    )}
+                  >
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
 
-                {item.title}
-              </Link>
-            );
-          })}
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold">{item.title}</span>
+                    <span
+                      className={cn(
+                        "mt-0.5 block truncate text-xs",
+                        active ? "text-purple-100" : "text-slate-500 dark:text-slate-400",
+                      )}
+                    >
+                      {item.description}
+                    </span>
+                  </span>
 
-          {/* Theme Toggle */}
+                  <ChevronRight
+                    className={cn(
+                      "size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none",
+                      active ? "text-white/80" : "text-slate-300 dark:text-slate-600",
+                    )}
+                    aria-hidden="true"
+                  />
+                </Link>
+              );
+            })}
+          </nav>
 
-          <div
-            className="
-              mt-6
-              border-t
-              border-slate-200
-              pt-5
+          {/* Appearance */}
+          <div className="border-t border-slate-200 p-4 dark:border-slate-800">
+            <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              Muonekano
+            </p>
 
-              dark:border-slate-800
-            "
-          >
             <button
               type="button"
+              role="switch"
+              aria-checked={isDark}
               onClick={toggleTheme}
-              className="
-                group
-                flex
-                w-full
-                items-center
-                justify-between
-                rounded-xl
-                px-4
-                py-3.5
-                text-sm
-                font-semibold
-                text-slate-600
-                transition-all
-                duration-200
-
-                hover:bg-purple-50
-                hover:text-purple-600
-
-                dark:text-slate-300
-                dark:hover:bg-purple-950/40
-                dark:hover:text-purple-400
-              "
-              aria-label={
-                isDark
-                  ? "Washa hali ya mwanga"
-                  : "Washa hali ya usiku"
-              }
+              className="group flex w-full items-center justify-between gap-3 rounded-2xl p-3 text-left outline-none transition-colors hover:bg-purple-50 focus-visible:ring-2 focus-visible:ring-purple-600/60 dark:hover:bg-purple-950/40"
             >
-              <div className="flex items-center gap-3">
-                {mounted ? (
-                  isDark ? (
-                    <Sun
-                      className="
-                        h-5
-                        w-5
-                        text-amber-500
-                        dark:text-amber-400
-                      "
-                    />
+              <span className="flex items-center gap-3.5">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition-colors group-hover:bg-purple-100 group-hover:text-purple-700 dark:bg-slate-900 dark:text-slate-400 dark:group-hover:bg-purple-950 dark:group-hover:text-purple-300">
+                  {isDark ? (
+                    <Sun className="size-5 text-[#d4a017]" aria-hidden="true" />
                   ) : (
-                    <Moon
-                      className="
-                        h-5
-                        w-5
-                        text-slate-500
-                        group-hover:text-purple-600
-
-                        dark:text-slate-400
-                        dark:group-hover:text-purple-400
-                      "
-                    />
-                  )
-                ) : (
-                  <Moon
-                    className="
-                      h-5
-                      w-5
-                      text-slate-500
-                    "
-                  />
-                )}
-
-                <span>
-                  {mounted && isDark
-                    ? "Hali ya Mwanga"
-                    : "Hali ya Usiku"}
+                    <Moon className="size-5" aria-hidden="true" />
+                  )}
                 </span>
-              </div>
-
-              {/* Toggle Indicator */}
+                <span>
+                  <span className="block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    Hali ya Usiku
+                  </span>
+                  <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+                    {isDark ? "Imewashwa" : "Imezimwa"}
+                  </span>
+                </span>
+              </span>
 
               <span
+                aria-hidden="true"
                 className={cn(
-                  `
-                    relative
-                    h-6
-                    w-11
-                    rounded-full
-                    transition-colors
-                    duration-200
-                  `,
-                  isDark
-                    ? "bg-purple-600"
-                    : "bg-slate-300 dark:bg-slate-700"
+                  "relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200",
+                  isDark ? "bg-purple-600" : "bg-slate-300 dark:bg-slate-700",
                 )}
               >
                 <span
                   className={cn(
-                    `
-                      absolute
-                      top-1
-                      h-4
-                      w-4
-                      rounded-full
-                      bg-white
-                      shadow-sm
-                      transition-transform
-                      duration-200
-                    `,
-                    isDark
-                      ? "translate-x-6"
-                      : "translate-x-1"
+                    "absolute top-1 size-4 rounded-full bg-white shadow-sm transition-transform duration-200 motion-reduce:transition-none",
+                    isDark ? "translate-x-6" : "translate-x-1",
                   )}
                 />
               </span>
             </button>
           </div>
-        </nav>
+        </div>
 
         {/* Login */}
-
-        <div
-          className="
-            border-t
-            border-slate-200
-            p-5
-
-            dark:border-slate-800
-          "
-        >
+        <div className="shrink-0 border-t border-slate-200 bg-slate-50/60 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] dark:border-slate-800 dark:bg-slate-900/40">
           <Button
             asChild
             className={cn(
-              `
-                h-12
-                w-full
-                rounded-xl
-                transition-all
-                duration-200
-              `,
-              isLoginActive
-                ? `
-                    bg-[#4c1d95]
-                    text-white
-                    shadow-lg
-                    shadow-purple-900/25
-                    ring-2
-                    ring-purple-200
-
-                    dark:bg-purple-700
-                    dark:ring-purple-900
-                  `
-                : `
-                    bg-[#6d28d9]
-                    text-white
-                    hover:bg-[#4c1d95]
-
-                    dark:bg-purple-600
-                    dark:hover:bg-purple-700
-                  `
+              "h-12 w-full rounded-xl bg-linear-to-b from-purple-600 to-purple-700 font-semibold text-white shadow-sm shadow-purple-600/25 ring-1 ring-inset ring-white/10 transition-all duration-200 hover:from-purple-500 hover:to-purple-700 active:scale-[0.98]",
+              isLoginActive && "ring-2 ring-purple-300 dark:ring-purple-800",
             )}
           >
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              aria-current={
-                isLoginActive
-                  ? "page"
-                  : undefined
-              }
-            >
-              <LogIn
-                className="
-                  mr-2
-                  h-4
-                  w-4
-                "
-              />
-
+            <Link href="/login" aria-current={isLoginActive ? "page" : undefined}>
+              <LogIn className="mr-2 size-4" aria-hidden="true" />
               Ingia kama Msimamizi
             </Link>
           </Button>
 
-          <p
-            className="
-              mt-4
-              text-center
-              text-xs
-              text-slate-400
-            "
-          >
-            Maoni na Malalamiko Portal
+          <p className="mt-3 text-center text-xs text-slate-400 dark:text-slate-500">
+            Malalamiko Portal
           </p>
         </div>
       </SheetContent>

@@ -81,7 +81,7 @@ export default function LoginHeader() {
             sm:text-3xl
           "
         >
-          ONGEA NA DED MLELE
+          ONGEA NA DC MLELE
         </h1>
 
 

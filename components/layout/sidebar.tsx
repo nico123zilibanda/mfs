@@ -15,6 +15,7 @@ import {
   Trash2,
   MessageSquare,
   Video,
+  BarChart3,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -64,6 +65,11 @@ const navigation = [
     title: "Mikutano Hai",
     href: "/meetings",
     icon: Video,
+  },
+  {
+    title: "Ripoti za Mfumo",
+    href: "/system-reports",
+    icon: BarChart3,
   },
 ] as const;
 
@@ -207,7 +213,7 @@ function SidebarContent({
                 dark:text-white
               "
             >
-              Ongea na DED
+              Ongea na DC
             </h2>
 
             <p

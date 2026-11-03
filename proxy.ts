@@ -12,6 +12,7 @@ export async function proxy(request: NextRequest) {
     "/deleted",
     "/trackings",
     "/chat",
+    "/system-reports",
   ];
 
   const isProtectedRoute =

@@ -345,7 +345,7 @@ function StatusFilters({
       role="group"
       aria-label="Chuja mikutano kwa hali"
       // Horizontal scroll on phones, wrapping on larger screens.
-      className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+      className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
     >
       {STATUS_FILTERS.map((filter) => {
         const active = value === filter.value;

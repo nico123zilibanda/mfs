@@ -151,6 +151,10 @@ export interface MeetingsFilters {
   search?: string;
   page?: number;
   pageSize?: number;
+  /** Inclusive start date (ISO date string, YYYY-MM-DD). */
+  startDate?: string;
+  /** Inclusive end date (ISO date string, YYYY-MM-DD). */
+  endDate?: string;
 }
 
 /**

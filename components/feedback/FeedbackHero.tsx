@@ -175,8 +175,8 @@ export default function FeedbackHero() {
 
           text-slate-950
 
-          sm:text-2xl
-          md:text-2xl
+          sm:text-3xl
+          md:text-3xl
 
           dark:text-white
         "

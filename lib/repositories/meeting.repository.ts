@@ -96,6 +96,15 @@ export async function listMeetings(
   if (filters.search) {
     query = query.ilike("title", `%${filters.search}%`);
   }
+  if (filters.startDate) {
+    query = query.gte("scheduled_start_at", `${filters.startDate}T00:00:00`);
+  }
+  if (filters.endDate) {
+    const nextDay = new Date(`${filters.endDate}T00:00:00`);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayStr = nextDay.toISOString().slice(0, 10);
+    query = query.lt("scheduled_start_at", `${nextDayStr}T00:00:00`);
+  }
 
   const { data, error, count } = await query.range(from, to);
   throwDatabaseError(error, "listing meetings");
@@ -104,13 +113,40 @@ export async function listMeetings(
   const total = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
-  // Build summaries with participant counts
+  // Build summaries with participant counts (use service role to bypass RLS for public counts)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  let countClient = supabase;
+  if (supabaseUrl && serviceRoleKey) {
+    const { createClient } = await import("@supabase/supabase-js");
+    countClient = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    }) as typeof supabase;
+  }
+
   const summaries: MeetingSummary[] = await Promise.all(
     meetings.map(async (m) => {
-      const { count: pc } = await supabase
+      const { count: pc, error: countError } = await countClient
         .from(REGISTRATIONS_TABLE)
         .select("*", { count: "exact", head: true })
         .eq("meeting_id", m.id);
+      if (countError) {
+        // Fallback to regular client if service role fails
+        const { count: pcFallback } = await supabase
+          .from(REGISTRATIONS_TABLE)
+          .select("*", { count: "exact", head: true })
+          .eq("meeting_id", m.id);
+        return {
+          id: m.id,
+          title: m.title,
+          status: m.status,
+          scheduledStartAt: m.scheduledStartAt,
+          roomName: m.roomName,
+          description: m.description,
+          createdAt: m.createdAt,
+          participantCount: pcFallback ?? 0,
+        };
+      }
       return {
         id: m.id,
         title: m.title,

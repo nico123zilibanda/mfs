@@ -21,7 +21,7 @@ const services = [
     title: "Toa Taarifa",
     description:
       "Wasilisha maoni, malalamiko au taarifa.",
-    href: "#feedback-form",
+    href: "/public/feedback",
     icon: FileText,
     button: "Wasilisha",
   },

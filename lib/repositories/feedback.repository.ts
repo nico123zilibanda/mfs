@@ -78,6 +78,17 @@ async function findReports(
     query = query.eq("status", filters.status);
   }
 
+  if (filters.startDate) {
+    query = query.gte("created_at", `${filters.startDate}T00:00:00`);
+  }
+
+  if (filters.endDate) {
+    const nextDay = new Date(`${filters.endDate}T00:00:00`);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayStr = nextDay.toISOString().slice(0, 10);
+    query = query.lt("created_at", `${nextDayStr}T00:00:00`);
+  }
+
   if (filters.search.trim()) {
     const search = filters.search.trim().replace(/[(),]/g, "");
     query = query.or(
